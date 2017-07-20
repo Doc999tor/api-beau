@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body {font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;}
+	</style>
+</head>
+<body>
+	<h3></h3>
+	<p></p>
+	<script>
+		var url = '/customers-details/clients/456/dept';
+		document.querySelector('h3').textContent = 'The URL - ' + url;
+		fetch(url, {method: "POST", })
+		.then(response => {
+			console.log(response);
+			return response.text()
+		}).then(data => {
+			console.log(data);
+			document.querySelector('p').innerHTML = data;
+		})
+	</script>
+</body>
+</html>

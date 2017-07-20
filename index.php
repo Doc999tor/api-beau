@@ -33,4 +33,8 @@ $container['CreatingAppointment\AppointmentsCtrl'] = function () use ($container
 };
 
 require 'routes.php';
+// echo "<pre>";
+// print_r($container->router->getRoutes());
+// echo "</pre>";
+// exit();
 $app->run();

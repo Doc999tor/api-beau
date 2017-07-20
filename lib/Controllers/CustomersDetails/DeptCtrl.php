@@ -1,21 +1,18 @@
 <?php
 
-namespace Lib\Controllers;
+namespace Lib\Controllers\CustomersDetails;
 
+use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class DeptCtrl extends Controller {
 	public function addDept (Request $request, Response $response) {
-		$response = $response->withHeader('Access-Control-Allow-Origin', '*');
 		$body = $request->getParsedBody();
 
-		if (time() % 10 === 0) {
-			return $response->withHeader('Retry-After', 120)->withStatus(503);
-		} else if (
-			isset($body['sum']) && is_numeric($body['sum']) && $body['sum'] > 0 &&
-			isset($body['desc'])
-		) {
+		var_dump($body);exit();
+
+		if ($this->checkCorrectness($body)) {
 			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
@@ -24,15 +21,9 @@ class DeptCtrl extends Controller {
 		}
 	}
 	public function updateDept (Request $request, Response $response, array $args) {
-		$response = $response->withHeader('Access-Control-Allow-Origin', '*');
 		$body = $request->getParsedBody();
 
-		if (time() % 10 === 0) {
-			return $response->withHeader('Retry-After', 120)->withStatus(503);
-		} else if (
-			isset($body['sum']) && is_numeric($body['sum']) && $body['sum'] > 0 &&
-			isset($body['desc'])
-		) {
+		if ($this->checkCorrectness($body)) {
 			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
@@ -41,16 +32,19 @@ class DeptCtrl extends Controller {
 		}
 	}
 	public function deleteDept (Request $request, Response $response, array $args) {
-		$response = $response->withHeader('Access-Control-Allow-Origin', '*');
-
-		if (time() % 10 === 0) {
-			return $response->withHeader('Retry-After', 120)->withStatus(503);
-		} else if ($request->getBody()->getSize()) {
+		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
 			$body->write('body has to be empty');
 			return $response->withStatus(400);
 		} else {
 			return $response->withStatus(204);
 		}
+	}
+
+	private function checkCorrectness(array $body):bool {
+		return isset($body['sum'])
+			&& is_numeric($body['sum'])
+			&& $body['sum'] > 0
+			&& isset($body['desc']);
 	}
 }
