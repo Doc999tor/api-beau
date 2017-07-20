@@ -2,11 +2,10 @@
 
 namespace Lib\Controllers\CreatingAppointment;
 
-use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class ClientsCtrl extends Controller {
+class ClientsCtrl extends CreatingAppointmentController {
 	public function getClients (Request $request, Response $response) {
 		$params = $request->getQueryParams();
 		if (!isset($params['limit'])) {

@@ -10,8 +10,16 @@ $config['displayErrorDetails'] = true;
 // Create app
 $app = new \Slim\App(["settings" => $config]);
 
+$app->add(new \Lib\Middlewares\HeadersMiddleware())
+	->add(new \Lib\Middlewares\Error503Middleware());
+
 // Get container
 $container = $app->getContainer();
+
+# CustomersDetails
+$container['CustomersList\ClientsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersList\ClientsCtrl($container);
+};
 
 # CustomersDetails
 $container['CustomersDetails\ClientsCtrl'] = function () use ($container) {

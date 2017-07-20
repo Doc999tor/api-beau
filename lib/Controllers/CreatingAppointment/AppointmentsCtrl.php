@@ -39,7 +39,6 @@ class AppointmentsCtrl extends Controller {
 			}
 		});
 
-		$response = $response->withHeader('Access-Control-Allow-Origin', '*');
 		if ($response->getStatusCode() == 200) {
 			$response = $response->withStatus(201);
 		}

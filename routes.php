@@ -9,12 +9,17 @@ $app->get('/', function (Request $request, Response $response) {
 
 ### Creating Appointment
 $app->group('/creating-appointment', function () use ($app) {
-	$app->get('/clients', 'CreatingAppointment\ClientsCtrl:getClients');
-	$app->get('/client/{id}', 'CreatingAppointment\ClientsCtrl:getClient');
-	$app->get('/procedures', 'CreatingAppointment\ProceduresCtrl:getProceduresData');
-	$app->post('/appointments', 'CreatingAppointment\AppointmentsCtrl:saveData');
+	$prefix = 'CreatingAppointment/';
+	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
+	$app->get('/client/{id}', $prefix . 'ClientsCtrl:getClient');
+	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
+	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData');
 });
 
+### Customers List
+$app->group('/customers-list', function () use ($app) {
+	$app->get('/clients', 'CustomersList\ClientsCtrl:getClients');
+});
 
 ### Customers Details
 $app->group('/customers-details/clients', function () use ($app) {
@@ -28,17 +33,17 @@ $app->group('/customers-details/clients', function () use ($app) {
 
 	# Dept
 	$app->group('/{client_id:\d+}/dept/{dept_id:\d+}', function () use ($app) {
-		// exit();
-		$app->post('', 'CustomersDetails\DeptCtrl:addDept');
-		$app->put('', 'CustomersDetails\DeptCtrl:updateDept')->add(new \Lib\Middlewares\CorsMiddleware());
-		$app->delete('', 'CustomersDetails\DeptCtrl:deleteDept')->add(new \Lib\Middlewares\CorsMiddleware());
+		$ctrl = 'CustomersDetails\DeptCtrl';
+		$app->post('', $ctrl . ':addDept');
+		$app->put ('', $ctrl . ':updateDept')->add(new \Lib\Middlewares\CorsMiddleware());
+		$app->delete('', $ctrl . ':deleteDept')->add(new \Lib\Middlewares\CorsMiddleware());
 
 		$app->options('', 'enable_cors'); # cors
 	});
 
 	# Map
 	$app->get('/{client_id:\d+}/map', 'CustomersDetails\ClientsCtrl:getMap');
-})->add(new \Lib\Middlewares\Error503Middleware());
+});
 
 function enable_cors (Request $request, Response $response) {
 	return $response
