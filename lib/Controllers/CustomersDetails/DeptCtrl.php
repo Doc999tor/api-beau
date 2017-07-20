@@ -10,8 +10,6 @@ class DeptCtrl extends Controller {
 	public function addDept (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		var_dump($body);exit();
-
 		if ($this->checkCorrectness($body)) {
 			return $response->withStatus(201);
 		} else {

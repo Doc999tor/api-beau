@@ -26,27 +26,23 @@ $app->group('/customers-details/clients', function () use ($app) {
     $app->get('', 'CustomersDetails\ClientsCtrl:getClients');
 
     $app->group('{client_id:\d+}', function () use ($app) {
-		$app->patch('', 'CustomersDetails\ClientsCtrl:setPersonalData')
-			->add(new \Lib\Middlewares\CorsMiddleware());
-		$app->options('', 'enable_cors'); # cors
-	});
+		$app->patch('', 'CustomersDetails\ClientsCtrl:setPersonalData');
+		$app->options('', function (Request $request, Response $response) { return $response; }); # cors
+	})->add(new \Lib\Middlewares\CorsMiddleware());
 
 	# Dept
-	$app->group('/{client_id:\d+}/dept/{dept_id:\d+}', function () use ($app) {
+	$app->group('/{client_id:\d+}/dept', function () use ($app) {
 		$ctrl = 'CustomersDetails\DeptCtrl';
 		$app->post('', $ctrl . ':addDept');
-		$app->put ('', $ctrl . ':updateDept')->add(new \Lib\Middlewares\CorsMiddleware());
-		$app->delete('', $ctrl . ':deleteDept')->add(new \Lib\Middlewares\CorsMiddleware());
 
-		$app->options('', 'enable_cors'); # cors
+		$app->group('/{dept_id:\d+}', function () use ($app, $ctrl) {
+			$app->put ('', $ctrl . ':updateDept');
+			$app->delete('', $ctrl . ':deleteDept')->add(new \Lib\Middlewares\CorsMiddleware());
+
+			$app->options('', function (Request $request, Response $response) { return $response; }); # cors
+		})->add(new \Lib\Middlewares\CorsMiddleware());
 	});
 
 	# Map
 	$app->get('/{client_id:\d+}/map', 'CustomersDetails\ClientsCtrl:getMap');
 });
-
-function enable_cors (Request $request, Response $response) {
-	return $response
-		->withHeader('Access-Control-Allow-Methods', 'PUT,PATCH,DELETE')
-		->withHeader('Access-Control-Allow-Origin', '*');
-}
