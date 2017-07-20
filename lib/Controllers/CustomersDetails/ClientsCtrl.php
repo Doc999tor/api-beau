@@ -15,7 +15,7 @@ class ClientsCtrl extends Controller {
 		$body = $request->getParsedBody();
 
 		$possible_keys = ['phone', 'email', 'vip', 'address', 'status'];
-		$keys = array_keys($body);
+		$keys = is_array($body) ? array_keys($body) : [];
 		if (!($request->getBody() && count($keys) === 1 && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
 			return $response->withStatus(400);

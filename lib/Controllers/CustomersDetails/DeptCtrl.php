@@ -9,6 +9,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class DeptCtrl extends Controller {
 	public function addDept (Request $request, Response $response) {
 		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
 
 		if ($this->checkCorrectness($body)) {
 			return $response->withStatus(201);

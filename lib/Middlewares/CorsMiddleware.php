@@ -10,7 +10,7 @@ class CorsMiddleware {
 	    $response = $next($request, $response);
 
 	    return $response
-	    	->withHeader('Access-Control-Allow-Methods', 'PUT,PATCH,DELETE')
+	    	->withHeader('Access-Control-Allow-Methods', 'POST,PUT,PATCH,DELETE')
 	    	->withHeader('Access-Control-Allow-Origin', '*');
 	}
 }
