@@ -45,4 +45,7 @@ $app->group('/customers-details/clients', function () use ($app) {
 
 	# Map
 	$app->get('/{client_id:\d+}/map', 'CustomersDetails\ClientsCtrl:getMap');
+
+	# Media
+	$app->post('/{client_id:\d+}/media', 'CustomersDetails\ClientsCtrl:addMedia');
 });
