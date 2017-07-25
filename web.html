@@ -28,14 +28,14 @@
 
 		console.log(document.querySelector('input'));
 		document.querySelector('input').addEventListener('change', e => {
-var data = new FormData()
-data.append('file', e.target.files[0]);
-data.append('description', 'description');
-console.log(data);
-fetch(url, {
-	method: "POST",
-	body: data,
-})
+			var data = new FormData()
+			data.append('file', e.target.files[0]);
+			data.append('description', 'description');
+			console.log(data);
+			fetch(url, {
+				method: "POST",
+				body: data,
+			})
 			.then(resp => {console.log(resp);return resp.text();})
 			.then(body => {console.log(body);return body;})
 		});

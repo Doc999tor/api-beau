@@ -17,8 +17,9 @@ $app->group('/creating-appointment', function () use ($app) {
 });
 
 ### Customers List
-$app->group('/customers-list', function () use ($app) {
-	$app->get('/clients', 'CustomersList\ClientsCtrl:getClients');
+$app->group('/customers-list/clients', function () use ($app) {
+	$app->get   ('', 'CustomersList\ClientsCtrl:getClients');
+	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients');
 });
 
 ### Customers Details

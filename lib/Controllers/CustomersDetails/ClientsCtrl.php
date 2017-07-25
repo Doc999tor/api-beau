@@ -58,9 +58,8 @@ class ClientsCtrl extends Controller {
 	}
 
 	public function getMap (Request $request, Response $response) {
-		$map = file_get_contents('public/map.jpg');
+	    $response->write(file_get_contents('public/map.jpg'));
 
-	    $response->write($map);
 	    return $response
 	    	->withHeader('Content-Type', 'image/jpg')
 	    	->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)))

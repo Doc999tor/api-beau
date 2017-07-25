@@ -19,6 +19,27 @@ class ClientsCtrl extends CustomersListController {
 		return $response->withJson($this->generateClients($params['limit'], $q));
 	}
 
+	public function deleteClients (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		if (!isset($params['ids'])) {
+			$response->getBody()->write('ids must be provided');
+			return $response->withStatus(400);
+		}
+		if (!count($params)) {
+			$response->getBody()->write('ids must be a single field here');
+			return $response->withStatus(400);
+		}
+
+		$ids = str_replace(',', '', $params['ids']);
+
+		if (!is_numeric($ids)) {
+			$response->getBody()->write('ids should be numbers');
+			return $response->withStatus(400);
+		}
+
+		return $response;
+	}
 	protected function generateClients($limit, $q) {
 		$clients = [];
 
