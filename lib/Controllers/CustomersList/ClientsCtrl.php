@@ -38,7 +38,7 @@ class ClientsCtrl extends CustomersListController {
 			return $response->withStatus(400);
 		}
 
-		return $response;
+		return $response->withStatus(204);
 	}
 	protected function generateClients($limit, $q) {
 		$clients = [];
