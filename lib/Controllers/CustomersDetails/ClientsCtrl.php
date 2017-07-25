@@ -76,6 +76,9 @@ class ClientsCtrl extends Controller {
 		if (!in_array($file->getClientMediaType(), $permitted_types)) {
 			$response->getBody()->write('MIME type is not supported');
 			return $response->withStatus(400);
+		} else if (!isset($details['description'])) {
+			$response->getBody()->write('description field does not exist');
+			return $response->withStatus(400);
 		}
 		return $response->withStatus(201);
 	}
