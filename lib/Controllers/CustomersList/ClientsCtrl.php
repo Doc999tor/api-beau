@@ -26,7 +26,7 @@ class ClientsCtrl extends CustomersListController {
 			$response->getBody()->write('ids must be provided');
 			return $response->withStatus(400);
 		}
-		if (!count($params)) {
+		if (count($params) !== 1) {
 			$response->getBody()->write('ids must be a single field here');
 			return $response->withStatus(400);
 		}
