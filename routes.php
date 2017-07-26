@@ -9,7 +9,7 @@ $app->get('/', function (Request $request, Response $response) {
 
 ### Creating Appointment
 $app->group('/creating-appointment', function () use ($app) {
-	$prefix = 'CreatingAppointment/';
+	$prefix = 'CreatingAppointment\\';
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
 	$app->get('/client/{id}', $prefix . 'ClientsCtrl:getClient');
 	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
