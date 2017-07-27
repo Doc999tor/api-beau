@@ -14,7 +14,7 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$possible_keys = ['phone', 'email', 'vip', 'address', 'status'];
+		$possible_keys = ['phone', 'email', 'vip', 'address', 'status', 'source'];
 		$keys = is_array($body) ? array_keys($body) : [];
 		if (!($request->getBody() && count($keys) === 1 && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
@@ -49,6 +49,13 @@ class ClientsCtrl extends Controller {
 			case 'address':
 				if (mb_strlen($body['address']) < 4) {
 					$response->getBody()->write('address is too short');
+					return $response->withStatus(400);
+				}
+				break;
+			case 'source':
+				$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
+				if (!in_array($body['source'], $source_options)) {
+					$response->getBody()->write('source is not from the list: ["ads", "fb_page", "family", "friends", "recommendation"]');
 					return $response->withStatus(400);
 				}
 				break;
