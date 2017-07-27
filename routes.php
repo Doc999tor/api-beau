@@ -19,8 +19,9 @@ $app->group('/creating-appointment', function () use ($app) {
 ### Customers List
 $app->group('/customers-list/clients', function () use ($app) {
 	$app->get   ('', 'CustomersList\ClientsCtrl:getClients');
-	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients')->add(new \Lib\Middlewares\CorsMiddleware());
-});
+	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients');
+	$app->options('', function (Request $request, Response $response) { return $response; });
+})->add(new \Lib\Middlewares\CorsMiddleware());
 
 ### Customers Details
 $app->group('/customers-details/clients', function () use ($app) {
