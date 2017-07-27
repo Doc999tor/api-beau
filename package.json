@@ -11,5 +11,8 @@
     "gulp": "^3.9.1",
     "gulp-connect-php": "1.0.0",
     "gulp-watch": "^4.3.5"
+  },
+  "scripts": {
+    "postinstall": "composer install && gulp"
   }
 }

@@ -20,34 +20,43 @@ $app->group('/creating-appointment', function () use ($app) {
 $app->group('/customers-list/clients', function () use ($app) {
 	$app->get   ('', 'CustomersList\ClientsCtrl:getClients');
 	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients');
-	$app->options('', function (Request $request, Response $response) { return $response; });
+	$app->options('', 'cors');
 })->add(new \Lib\Middlewares\CorsMiddleware());
 
 ### Customers Details
 $app->group('/customers-details/clients', function () use ($app) {
-    $app->get('', 'CustomersDetails\ClientsCtrl:getClients');
+	$prefix = 'CustomersDetails\\';
+	$cl_prefix = $prefix . 'ClientsCtrl:';
 
-    $app->group('/{client_id:\d+}', function () use ($app) {
-		$app->patch('', 'CustomersDetails\ClientsCtrl:setPersonalData');
-		$app->options('', function (Request $request, Response $response) { return $response; }); # cors
+	$app->get('', $cl_prefix . 'getClients');
+
+	$app->group('/{client_id:\d+}', function () use ($app, $cl_prefix) {
+		$app->patch('', $cl_prefix . 'setPersonalData');
+		$app->options('', 'cors'); # cors
 	})->add(new \Lib\Middlewares\CorsMiddleware());
 
 	# Dept
-	$app->group('/{client_id:\d+}/dept', function () use ($app) {
-		$ctrl = 'CustomersDetails\DeptCtrl';
-		$app->post('', $ctrl . ':addDept');
+	$app->group('/{client_id:\d+}/dept', function () use ($app, $prefix) {
+		$dept_prefix = $prefix . 'DeptCtrl';
+		$app->post('', $dept_prefix . ':addDept');
 
-		$app->group('/{dept_id:\d+}', function () use ($app, $ctrl) {
-			$app->put ('', $ctrl . ':updateDept');
-			$app->delete('', $ctrl . ':deleteDept');
-
-			$app->options('', function (Request $request, Response $response) { return $response; }); # cors
+		$app->group('/{dept_id:\d+}', function () use ($app, $dept_prefix) {
+			$app->put ('', $dept_prefix . ':updateDept');
+			$app->delete('', $dept_prefix . ':deleteDept');
+			$app->options('', 'cors'); # cors
 		});
 	})->add(new \Lib\Middlewares\CorsMiddleware());
 
 	# Map
-	$app->get('/{client_id:\d+}/map', 'CustomersDetails\ClientsCtrl:getMap');
+	$app->get('/{client_id:\d+}/map', $cl_prefix . 'getMap');
 
 	# Media
-	$app->post('/{client_id:\d+}/media', 'CustomersDetails\ClientsCtrl:addMedia');
+	$app->group('/{client_id:\d+}/media', function () use ($app, $prefix) {
+		$app->post('', 'CustomersDetails\MediaCtrl:addMedia');
+		$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
+		$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
+		$app->options('', 'cors'); # cors
+	})->add(new \Lib\Middlewares\CorsMiddleware());
 });
+
+function cors (Request $request, Response $response) { return $response; }

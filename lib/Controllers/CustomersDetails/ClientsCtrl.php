@@ -65,20 +65,4 @@ class ClientsCtrl extends Controller {
 	    	->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)))
 				->withHeader('Content-Length', strlen($map));
 	}
-
-	public function addMedia (Request $request, Response $response) {
-		$details = $request->getParsedBody();
-		$file = $request->getUploadedFiles()['file'];
-
-		$permitted_types = ['image/jpeg', 'image/png', 'application/pdf', 'application/ogg', 'audio/aac', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
-
-		if (!in_array($file->getClientMediaType(), $permitted_types)) {
-			$response->getBody()->write('MIME type is not supported');
-			return $response->withStatus(400);
-		} else if (!isset($details['description'])) {
-			$response->getBody()->write('description field does not exist');
-			return $response->withStatus(400);
-		}
-		return $response->withStatus(201);
-	}
 }

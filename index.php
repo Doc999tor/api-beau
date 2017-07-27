@@ -28,6 +28,9 @@ $container['CustomersDetails\ClientsCtrl'] = function () use ($container) {
 $container['CustomersDetails\DeptCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\DeptCtrl($container);
 };
+$container['CustomersDetails\MediaCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersDetails\MediaCtrl($container);
+};
 
 # CreatingAppointment
 $container['CreatingAppointment\ClientsCtrl'] = function () use ($container) {

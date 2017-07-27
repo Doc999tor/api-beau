@@ -13,7 +13,7 @@
  -->
 	<input type="file">
 	<script>
-		var url = 'http://api.bewebmaster.co.il/customers-details/clients/456/media';
+		var url = 'http://localhost:9000/customers-details/clients/456/media';
 		// document.querySelector('h3').textContent = 'The URL - ' + url;
 
 
@@ -30,7 +30,7 @@
 		document.querySelector('input').addEventListener('change', e => {
 			var data = new FormData()
 			data.append('file', e.target.files[0]);
-			data.append('description', 'description');
+			data.append('note', 'note');
 			console.log(data);
 			fetch(url, {
 				method: "POST",
