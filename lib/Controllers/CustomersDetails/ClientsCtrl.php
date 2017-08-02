@@ -54,7 +54,7 @@ class ClientsCtrl extends Controller {
 				break;
 			case 'source':
 				$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
-				if (!in_array($body['source'], $source_options)) {
+				if (!in_array(strtolower($body['source']), $source_options)) {
 					$response->getBody()->write('source is not from the list: ["ads", "fb_page", "family", "friends", "recommendation"]');
 					return $response->withStatus(400);
 				}
@@ -65,11 +65,10 @@ class ClientsCtrl extends Controller {
 	}
 
 	public function getMap (Request $request, Response $response) {
-	    $response->write(file_get_contents('public/map.jpg'));
+		$response->write(file_get_contents('public/map.jpg'));
 
-	    return $response
-	    	->withHeader('Content-Type', 'image/jpg')
-	    	->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)))
-				->withHeader('Content-Length', strlen($map));
+		return $response
+			->withHeader('Content-Type', 'image/jpg')
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
 	}
 }
