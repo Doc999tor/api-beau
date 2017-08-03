@@ -5,7 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
 
-$config['displayErrorDetails'] = true;
+$config['displayErrorDetails'] = false;
 
 // Create app
 $app = new \Slim\App(["settings" => $config]);
@@ -44,8 +44,4 @@ $container['CreatingAppointment\AppointmentsCtrl'] = function () use ($container
 };
 
 require 'routes.php';
-// echo "<pre>";
-// print_r($container->router->getRoutes());
-// echo "</pre>";
-// exit();
 $app->run();

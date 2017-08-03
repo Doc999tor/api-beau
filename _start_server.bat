@@ -1,1 +1,0 @@
-start cmd /k "php -S localhost:3000"

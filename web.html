@@ -13,7 +13,7 @@
  -->
 	<input type="file">
 	<script>
-		var url = 'http://localhost:9000/customers-details/clients/456/media';
+		var url = 'http://localhost:3000/customers-details/clients/456/media';
 		// document.querySelector('h3').textContent = 'The URL - ' + url;
 
 
@@ -31,7 +31,7 @@
 			var data = new FormData()
 			data.append('file', e.target.files[0]);
 			data.append('note', 'note');
-			console.log(data);
+			console.log(data.getAll('file'));
 			fetch(url, {
 				method: "POST",
 				body: data,
