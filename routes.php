@@ -52,10 +52,11 @@ $app->group('/customers-details/clients', function () use ($app) {
 
 	# Media
 	$app->group('/{client_id:\d+}/media', function () use ($app, $prefix) {
+
 		$app->post('', 'CustomersDetails\MediaCtrl:addMedia');
 		$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
 		$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
-		$app->options('', 'cors'); # cors
+		$app->options('/{media_id:\d+}', 'cors'); # cors
 	})->add(new \Lib\Middlewares\CorsMiddleware());
 });
 
