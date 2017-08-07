@@ -11,7 +11,10 @@ class MediaCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$files = $request->getUploadedFiles();
 
-		if (!isset($files['file'])) {
+		if ($request->getHeader('Content-Length')[0] > \Lib\Helpers\Utils::returnBytes(ini_get('post_max_size'))) {
+			$response->getBody()->write('file is too big, it should be under ' . ini_get("post_max_size"));
+			return $response->withStatus(400);
+		} else if (!isset($files['file'])) {
 			$response->getBody()->write('file is not sent or sent not under "file" field');
 			return $response->withStatus(400);
 		}
