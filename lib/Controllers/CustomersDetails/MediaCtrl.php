@@ -18,7 +18,7 @@ class MediaCtrl extends Controller {
 
 		$file = $files['file'];
 
-		$permitted_types = ['image/jpeg', 'image/png', 'application/pdf', 'application/ogg', 'audio/aac', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
+		$permitted_types = ['image/jpeg', 'image/png', 'image/webm', 'application/pdf', 'application/ogg', 'audio/aac', 'audio/mp4', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
 
 		if (!in_array($file->getClientMediaType(), $permitted_types)) {
 			$response->getBody()->write('MIME type is not supported');
