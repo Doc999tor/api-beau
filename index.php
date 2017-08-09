@@ -5,13 +5,22 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
 
-$config['displayErrorDetails'] = false;
+$config['displayErrorDetails'] = true;
+$config['determineRouteBeforeAppMiddleware'] = true;
 
 // Create app
 $app = new \Slim\App(["settings" => $config]);
 
 $app->add(new \Lib\Middlewares\HeadersMiddleware())
-	->add(new \Lib\Middlewares\Error503Middleware());
+	->add(new \Lib\Middlewares\Error503Middleware())
+	->add(new \Tuupola\Middleware\Cors([
+		"origin" => ["*"],
+		"methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+		"headers.allow" => [],
+		"headers.expose" => ['Retry-After'],
+		"credentials" => false,
+		"cache" => 0,
+	]));
 
 // Get container
 $container = $app->getContainer();
