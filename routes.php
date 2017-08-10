@@ -62,6 +62,12 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 		$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
 		$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
 	})->add(new \Tuupola\Middleware\Cors($cors_settings));
+
+	# Social
+	$app->group('/{client_id:\d+}/social', function () use ($app, $prefix) {
+		$app->post('', 'CustomersDetails\SocialCtrl:addSocial');
+		$app->delete('/{media_id:\d+}', 'CustomersDetails\SocialCtrl:deleteSocial');
+	})->add(new \Tuupola\Middleware\Cors($cors_settings));
 });
 
 $app->options('/{routes:.+}', 'cors')->add(new \Tuupola\Middleware\Cors($cors_settings));
