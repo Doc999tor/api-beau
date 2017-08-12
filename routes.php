@@ -70,7 +70,7 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 	})->add(new \Tuupola\Middleware\Cors($cors_settings));
 });
 
-$app->get('/503', function (Request $request, Response $response):Response {
+$app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });
 
