@@ -22,7 +22,7 @@ $app->group('/creating-appointment', function () use ($app) {
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
 	$app->get('/client/{id}', $prefix . 'ClientsCtrl:getClient');
 	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
-	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData');
+	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Customers List
@@ -45,7 +45,7 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 	# Dept
 	$app->group('/{client_id:\d+}/dept', function () use ($app, $prefix) {
 		$dept_prefix = $prefix . 'DeptCtrl';
-		$app->post('', $dept_prefix . ':addDept');
+		$app->post('', $dept_prefix . ':addDept')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 
 		$app->group('/{dept_id:\d+}', function () use ($app, $dept_prefix) {
 			$app->put ('', $dept_prefix . ':updateDept');
@@ -58,14 +58,14 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 
 	# Media
 	$app->group('/{client_id:\d+}/media', function () use ($app, $prefix) {
-		$app->post('', 'CustomersDetails\MediaCtrl:addMedia');
+		$app->post('', 'CustomersDetails\MediaCtrl:addMedia')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 		$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
 		$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
 	})->add(new \Tuupola\Middleware\Cors($cors_settings));
 
 	# Social
 	$app->group('/{client_id:\d+}/social', function () use ($app, $prefix) {
-		$app->post('', 'CustomersDetails\SocialCtrl:addSocial');
+		$app->post('', 'CustomersDetails\SocialCtrl:addSocial')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 		$app->delete('/{media_id:\d+}', 'CustomersDetails\SocialCtrl:deleteSocial');
 	})->add(new \Tuupola\Middleware\Cors($cors_settings));
 });
