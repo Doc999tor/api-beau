@@ -11,7 +11,6 @@ class HeadersMiddleware {
         if ($request->getMethod() === 'GET') {
 			$response = $response->withHeader('X-Robots-Tag', 'noindex, nofollow');
         }
-		return $response
-			->withHeader('Access-Control-Allow-Origin', '*');
+		return $response;
     }
 }

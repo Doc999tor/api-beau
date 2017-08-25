@@ -3,15 +3,6 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$cors_settings = [
-    "origin" => ["*"],
-    "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    "headers.allow" => [],
-    "headers.expose" => ['Retry-After'],
-    "credentials" => false,
-    "cache" => 0,
-];
-
 $app->get('/', function (Request $request, Response $response) {
 	return $response->getBody()->write('GET /');
 });
@@ -29,18 +20,16 @@ $app->group('/creating-appointment', function () use ($app) {
 $app->group('/customers-list/clients', function () use ($app) {
 	$app->get   ('', 'CustomersList\ClientsCtrl:getClients');
 	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients');
-})->add(new \Tuupola\Middleware\Cors($cors_settings));
+});
 
 ### Customers Details
-$app->group('/customers-details/clients', function () use ($app, $cors_settings) {
+$app->group('/customers-details/clients', function () use ($app) {
 	$prefix = 'CustomersDetails\\';
 	$cl_prefix = $prefix . 'ClientsCtrl:';
 
 	$app->get('', $cl_prefix . 'getClients');
 
-	$app->group('/{client_id:\d+}', function () use ($app, $cl_prefix) {
-		$app->patch('', $cl_prefix . 'setPersonalData');
-	})->add(new \Tuupola\Middleware\Cors($cors_settings));
+	$app->patch('/{client_id:\d+}', $cl_prefix . 'setPersonalData');
 
 	# Dept
 	$app->group('/{client_id:\d+}/dept', function () use ($app, $prefix) {
@@ -51,7 +40,7 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 			$app->put ('', $dept_prefix . ':updateDept');
 			$app->delete('', $dept_prefix . ':deleteDept');
 		});
-	})->add(new \Tuupola\Middleware\Cors($cors_settings));
+	});
 
 	# Map
 	$app->get('/{client_id:\d+}/map', $cl_prefix . 'getMap');
@@ -61,18 +50,24 @@ $app->group('/customers-details/clients', function () use ($app, $cors_settings)
 		$app->post('', 'CustomersDetails\MediaCtrl:addMedia')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 		$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
 		$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
-	})->add(new \Tuupola\Middleware\Cors($cors_settings));
+	});
 
 	# Social
 	$app->group('/{client_id:\d+}/social', function () use ($app, $prefix) {
-		$app->post('', 'CustomersDetails\SocialCtrl:addSocial')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
-		$app->delete('/{media_id:\d+}', 'CustomersDetails\SocialCtrl:deleteSocial');
-	})->add(new \Tuupola\Middleware\Cors($cors_settings));
+		$app->post('', $prefix . 'SocialCtrl:addSocial')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+		$app->delete('/{media_id:\d+}', $prefix . 'SocialCtrl:deleteSocial');
+	});
+
+	# Signature
+	$app->group('/{client_id:\d+}/signature', function () use ($app, $prefix) {
+		$app->put('', $prefix . 'SignatureCtrl:addSignature');
+		$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
+	});
 });
 
 $app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });
 
-$app->options('/{routes:.+}', 'cors')->add(new \Tuupola\Middleware\Cors($cors_settings));
+$app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
