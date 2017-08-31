@@ -14,7 +14,7 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$possible_keys = ['phone', 'email', 'vip', 'address', 'status', 'source'];
+		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source'];
 		$keys = is_array($body) ? array_keys($body) : [];
 		if (!($request->getBody() && count($keys) === 1 && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
@@ -34,9 +34,9 @@ class ClientsCtrl extends Controller {
 					return $response->withStatus(400);
 				}
 				break;
-			case 'vip':
-				if (!in_array($body['vip'], ['true', 'false'])) {
-					$response->getBody()->write('vip value is incorrect');
+			case 'isFavorite':
+				if (!in_array($body['isFavorite'], ['true', 'false'])) {
+					$response->getBody()->write('isFavorite value is incorrect');
 					return $response->withStatus(400);
 				}
 				break;
