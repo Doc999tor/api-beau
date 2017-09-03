@@ -11,9 +11,18 @@ $app->get('/', function (Request $request, Response $response) {
 $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\';
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
-	$app->get('/client/{id}', $prefix . 'ClientsCtrl:getClient');
+	$app->get('/client/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
 	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+});
+
+### Clients
+$app->group('/add-client/clients', function () use ($app) {
+	$prefix = 'AddClient\\ClientsCtrl:';
+	$app->get('/{id:\d+}', $prefix . 'getClient');
+	$app->get('',    $prefix . 'getClients');
+	$app->delete('', $prefix . 'removeUser');
+	$app->post  ('', $prefix . 'addUser')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Customers List
@@ -63,6 +72,8 @@ $app->group('/customers-details/clients', function () use ($app) {
 		$app->put('', $prefix . 'SignatureCtrl:addSignature');
 		$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 	});
+
+	$app->put('/{client_id:\d+}/send-link-fill-up', $cl_prefix . 'sendLinkFillUpPersonalData');
 });
 
 $app->any('/503', function (Request $request, Response $response):Response {

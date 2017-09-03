@@ -25,6 +25,11 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 // Get container
 $container = $app->getContainer();
 
+# Clients
+$container['AddClient\ClientsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\AddClient\ClientsCtrl($container);
+};
+
 # CustomersDetails
 $container['CustomersList\ClientsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersList\ClientsCtrl($container);

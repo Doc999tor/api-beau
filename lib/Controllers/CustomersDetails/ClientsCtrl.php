@@ -14,7 +14,7 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source'];
+		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 		$keys = is_array($body) ? array_keys($body) : [];
 		if (!($request->getBody() && count($keys) === 1 && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
@@ -59,6 +59,12 @@ class ClientsCtrl extends Controller {
 					return $response->withStatus(400);
 				}
 				break;
+			case 'permit_ads':
+				if (!in_array($body['permit_ads'], ['true', 'false'])) {
+					$response->getBody()->write('permit_ads value is incorrect');
+					return $response->withStatus(400);
+				}
+				break;
 		}
 
 		return $response->withStatus(204);
@@ -68,7 +74,15 @@ class ClientsCtrl extends Controller {
 		$response->write(file_get_contents('public/map.jpg'));
 
 		return $response
-			->withHeader('Content-Type', 'image/jpg')
+			->withHeader('Content-Type', 'image/jpeg')
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
+	}
+
+	public function sendLinkFillUpPersonalData (Request $request, Response $response) :Response {
+		if ($request->getParsedBody()) {
+			$response->getBody()->write('body should be empty');
+			return $response->withStatus(400);
+		}
+		return $response->withStatus(204);
 	}
 }
