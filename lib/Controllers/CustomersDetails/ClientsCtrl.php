@@ -16,7 +16,7 @@ class ClientsCtrl extends Controller {
 
 		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 		$keys = is_array($body) ? array_keys($body) : [];
-		if (!($request->getBody() && count($keys) === 1 && in_array($keys[0], $possible_keys))) {
+		if (!($request->getBody() && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
 			return $response->withStatus(400);
 		}
@@ -56,6 +56,9 @@ class ClientsCtrl extends Controller {
 				$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
 				if (!in_array(strtolower($body['source']), $source_options)) {
 					$response->getBody()->write('source is not from the list: ["ads", "fb_page", "family", "friends", "recommendation"]');
+					return $response->withStatus(400);
+				} else if ($body['source'] === 'recommendation' && !(isset($body['recommended_by']) && is_int((int)$body['recommended_by']) && (int)$body['recommended_by'] > 1)) {
+					$response->getBody()->write('recommended_by should be a positive integer');
 					return $response->withStatus(400);
 				}
 				break;
