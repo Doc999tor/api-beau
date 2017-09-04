@@ -11,7 +11,7 @@ $app->get('/', function (Request $request, Response $response) {
 $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\';
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
-	$app->get('/client/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
+	$app->get('/clients/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
 	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });

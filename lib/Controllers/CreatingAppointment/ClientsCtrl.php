@@ -29,8 +29,10 @@ class ClientsCtrl extends CreatingAppointmentController {
 			return $response->withStatus(400);
 		}
 
-		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
-		return $response->withJson($this->generateClient('', $id, true));
+		$client = $this->generateClient('');
+		$client['id'] = $id;
+
+		return $response->withJson($client);
 	}
 	protected function generateClients($limit, $q) {
 		$clients = [];
