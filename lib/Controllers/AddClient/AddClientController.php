@@ -22,7 +22,7 @@ class AddClientController extends Controller {
 		$words_count = mt_rand($phrase_min_word_count, $phrase_max_word_count);
 
 		$phrase = '';
-		if ($q && strlen($word_max_length) > strlen($q)) {
+		if (strlen($word_max_length) > strlen($q)) {
 			$word_max_length -= strlen($q);
 		}
 

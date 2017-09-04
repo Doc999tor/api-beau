@@ -13,7 +13,6 @@ class ClientsCtrl extends AddClientController {
 
 		return $response->withJson($this->generateClients(50, $q));
 	}
-
 	public function getClient (Request $request, Response $response, $args) {
 		$params = $request->getQueryParams();
 
@@ -24,19 +23,17 @@ class ClientsCtrl extends AddClientController {
 
 		return $response->withJson($this->generateClient('', $id, true));
 	}
-	protected function generateClients($limit, $q) {
+
+	protected function generateClients(int $limit, string $q = '') {
 		$clients = [];
 
 		// Reducing $limit as length of $q rises
 		switch (mb_strlen($q)) {
-			case 3: $limit = (time()%10 > 4) ? round(mt_rand(0, $limit)) : 0;
-				break;
-			case 4: $limit = (time()%10 > 5) ? round(mt_rand(0, $limit)) : 0;
-				break;
-			case 5: $limit = (time()%10 > 6) ? round(mt_rand(0, $limit)) : 0;
-				break;
+			case 0: $limit = mt_rand(0, $limit);	break;
+			case 3: $limit = (time()%10 > 4) ? round(mt_rand(0, $limit)) : 0; break;
+			case 4: $limit = (time()%10 > 5) ? round(mt_rand(0, $limit)) : 0; break;
+			case 5: $limit = (time()%10 > 6) ? round(mt_rand(0, $limit)) : 0; break;
 			default: $limit = 0;
-				break;
 		}
 
 		for ($i=0; $i < $limit; $i++) {
@@ -45,7 +42,7 @@ class ClientsCtrl extends AddClientController {
 
 		return $clients;
 	}
-	protected function generateClient($q = '', $id = 0, $is_full = false) {
+	protected function generateClient(string $q = '', int $id = 0, bool $is_full = false) {
 		return [
 			'id' => rand(0, 30000),
 			'name' => $this->generatePhrase($q, 1, 2),
