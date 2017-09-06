@@ -46,8 +46,19 @@ $app->group('/customers-details/clients', function () use ($app) {
 		$app->post('', $dept_prefix . ':addDept')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 
 		$app->group('/{dept_id:\d+}', function () use ($app, $dept_prefix) {
-			$app->put ('', $dept_prefix . ':updateDept');
+			$app->put   ('', $dept_prefix . ':updateDept');
 			$app->delete('', $dept_prefix . ':deleteDept');
+		});
+	});
+
+	# Note
+	$app->group('/{client_id:\d+}/notes', function () use ($app, $prefix) {
+		$note_prefix = $prefix . 'NotesCtrl';
+		$app->post('', $note_prefix . ':addNote')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+
+		$app->group('/{note_id:\d+}', function () use ($app, $note_prefix) {
+			$app->patch ('', $note_prefix . ':updateNote');
+			$app->delete('', $note_prefix . ':deleteNote');
 		});
 	});
 

@@ -42,6 +42,9 @@ $container['CustomersDetails\ClientsCtrl'] = function () use ($container) {
 $container['CustomersDetails\DeptCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\DeptCtrl($container);
 };
+$container['CustomersDetails\NotesCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersDetails\NotesCtrl($container);
+};
 $container['CustomersDetails\MediaCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\MediaCtrl($container);
 };
