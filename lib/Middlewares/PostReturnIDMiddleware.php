@@ -2,14 +2,16 @@
 
 namespace Lib\Middlewares;
 
-use \Psr\Http\Message\ServerRequestInterface	as Request;
-use \Psr\Http\Message\ResponseInterface			as Response;
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface		 as Response;
 
 class PostReturnIDMiddleware {
 	public function __invoke(Request $request, Response $response, callable $next) {
 		$response = $next($request, $response);
 
-		$body = $response->getBody()->write(self::getRandomID());
+		if ($response->getStatusCode() === 201) {
+			$body = $response->getBody()->write(self::getRandomID());
+		}
 
 		return $response;
 	}

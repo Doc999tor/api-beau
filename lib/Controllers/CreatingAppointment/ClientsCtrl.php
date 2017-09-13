@@ -6,7 +6,9 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class ClientsCtrl extends CreatingAppointmentController {
-	public function getClients (Request $request, Response $response) {
+	private $addressHandler;
+
+	public function getClients (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 		if (!isset($params['limit'])) {
 			$response->getBody()->write('limit field is missing');
@@ -21,7 +23,7 @@ class ClientsCtrl extends CreatingAppointmentController {
 		return $response->withJson($this->generateClients($params['limit'], $q));
 	}
 
-	public function getClient (Request $request, Response $response, $args) {
+	public function getClient (Request $request, Response $response, $args):Response {
 		$params = $request->getQueryParams();
 
 		$id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
@@ -81,6 +83,7 @@ class ClientsCtrl extends CreatingAppointmentController {
 		$client = [
 			'id' => rand(0, 30000),
 			'name' => $this->generatePhrase($q, 1, 2),
+			"address" => $this->getRandomAddress(),
 		];
 
 		if (mt_rand(0,10) < 9) {
@@ -97,5 +100,26 @@ class ClientsCtrl extends CreatingAppointmentController {
 			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);
 		}
 		return $client;
+	}
+
+	private function getRandomAddress(): string {
+		if (empty($addressHandler)) {
+			$addressHandler = fopen($_SERVER['DOCUMENT_ROOT'] . '/metadata/addresses_israel.php', 'r');
+		}
+
+		$max_addresses = 48345;
+		$line_counter = 1;
+		$needed_line = mt_rand($line_counter, $max_addresses);
+
+		// echo "<pre>";
+		// print_r($needed_line);
+		// echo "</pre>";
+		// die();
+
+		while ($line_counter++ < $needed_line) { fgets($addressHandler); }
+
+		$random_address = json_decode(fgets($addressHandler), true);
+
+		return $random_address['settlement'] . ', ' . $random_address['street'] . ', ' . mt_rand(1, 100);
 	}
 }

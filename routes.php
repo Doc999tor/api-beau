@@ -12,8 +12,9 @@ $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\';
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
-	$app->get('/procedures', $prefix . 'ProceduresCtrl:getProceduresData');
-	$app->post('/appointments', $prefix . 'AppointmentsCtrl:saveData')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+
+	$app->get ('/procedures',   $prefix . 'ProceduresCtrl:getProceduresData');
+	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Clients
@@ -22,7 +23,7 @@ $app->group('/add-client/clients', function () use ($app) {
 	$app->get('/{id:\d+}', $prefix . 'getClient');
 	$app->get('',    $prefix . 'getClients');
 	$app->delete('', $prefix . 'removeUser');
-	$app->post  ('', $prefix . 'addUser')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->post  ('', $prefix . 'addClient')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Customers List

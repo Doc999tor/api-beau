@@ -48,4 +48,11 @@ class ClientsCtrl extends AddClientController {
 			'name' => $this->generatePhrase($q, 1, 2),
 		];
 	}
+
+	public function addClient (Request $request, Response $response, array $args):Response {
+		$params = $request->getQueryParams();
+		$body = $request->getParsedBody();
+
+		return $response->withStatus(201);
+	}
 }

@@ -7,48 +7,64 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class AppointmentsCtrl extends Controller {
-	public function saveData (Request $request, Response $response) {
-		// $params = $request->getQueryParams();
-		$params = $request->getParsedBody();
 
-		$must_fields = ['date', 'start', 'end', 'client_id', 'procedure'];
-		$canbe_fields = ['comments'];
+	public function add (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
 
-		for ($i=0, $count = count($must_fields); $i < $count; $i++) {
-			if (!isset($params[$must_fields[$i]])) {
-				$response = $this->setResponseBody($response, 'Field ' . $must_fields[$i] . ' has to be an array of integers');
-			}
-			switch ($must_fields[$i]) {
-				case 'procedure':
-					if (is_null(json_decode($params[$must_fields[$i]]))) {
-						$response = $this->setResponseBody($response, 'Field ' . $must_fields[$i] . ' has to be an array of integers');
-					}
-					break;
-
-				default: break;
-			}
+		$is_body_correct = $this->checkCorrectness($body);
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write($is_body_correct['msg']);
+			return $response->withStatus(400);
 		}
-
-		if (count($must_fields) !== count($params)) {
-			$response = $this->setResponseBody($response, 'Number of fields is incorrect');
-		}
-
-		array_walk($canbe_fields, function ($field) {
-			if (isset($params[$field]) && empty($params[$field])) {
-				$this->setResponseBody($response, "Field {$canbe_fields[$i]} if passed, should not be empty");
-			}
-		});
-
-		if ($response->getStatusCode() == 200) {
-			$response = $response->withStatus(201);
-		}
-		return $response;
 	}
 
-	private function setResponseBody(Response $response, $msg, $status_code = 400) {
-		$response = $response->withStatus($status_code);
-		$body = $response->getBody();
-		$body->write($msg . " <br>");
-		return $response->withBody($body);
+	private function checkCorrectness (array $body): array {
+		$correct_body = ["date", "start", "client_id", "procedures", "reminders", "is_reminders_set", "note", "address"];
+
+		$is_correct = true;
+		$msg = '';
+
+		if (count($body) !== count($correct_body)) {
+			$is_correct = false;
+			$msg = 'body has to have ' . count($correct_body) . ' arguments';
+		}
+
+		if (!empty(array_diff($correct_body, array_keys($body)))) {
+			$is_correct = false;
+			$msg = implode(', ', array_keys(array_diff($correct_body, array_keys($body)))) . ' arguments should exist';
+		}
+
+		if (!\DateTime::createFromFormat('Y-m-d H:i', $body['date'] . ' ' . $body['start'])) {
+			$is_correct = false;
+			$msg = 'date and start has to be Y-m-d H:i format, like 1970-01-01 00:00';
+		}
+
+		if (!preg_match('/^-?\d+$/', $body['client_id'])) {
+			$is_correct = false;
+			$msg = 'client_id has to be a positive integer or -1 for occasional client';
+		}
+
+		$procedures = json_decode($body['procedures']);
+		if (gettype($procedures) !== 'array' || count(array_filter($procedures, 'is_int')) !== count($procedures)) {
+			$is_correct = false;
+			$msg = 'procedures have to be an array of integers';
+		}
+
+		if (in_array($body['is_reminders_set'], ['true', 'false'])) {
+			$reminders = array_map('intval', json_decode($body['reminders']) ?? []);
+			if ($body['is_reminders_set'] === 'true' && (!json_decode($body['reminders']) || count(array_filter($reminders, function ($rem) { return is_int($rem / 3600); })) !== count($reminders))) {
+				$is_correct = false;
+				$msg = 'reminders is set incorrectly, it has to be seconds multiple of 3600';
+			}
+		} else {
+			$is_correct = false;
+			$msg = 'is_reminders_set has to be or true or false';
+		}
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 }
