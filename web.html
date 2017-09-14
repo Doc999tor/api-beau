@@ -16,7 +16,8 @@
 	<br>
 	<img alt="">
 	<script>
-		var url = 'http://api.bewebmaster.co.il/customers-details/clients/456/signature';
+		var url = 'http://localhost:3000/add-client/clients';
+		// var url = 'http://localhost:3000/customers-details/clients/456/media';
 		// var url = 'http://api.bewebmaster.co.il/customers-details/clients/456/media';
 		document.querySelector('h3').textContent = 'The URL - ' + url;
 
@@ -37,14 +38,18 @@
 			reader.onload = function (e) {
 				preview.src = reader.result;
 
-				// var data = new FormData()
-				// data.append('sign', );
-				// console.log(data.get('sign'));
-				var headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
+				var data = new FormData()
+				// data.append('photo', reader.result);
+				data.append('name', 'reader.result');
+				data.append('phone', '06541+');
+				data.append('approved_marketing', 'true');
+				data.append('signature', reader.result);
+				// console.log(data.get('photo'));
+				// var headers = new Headers({'Content-Type': 'multipart/form-data'});
 				fetch(url, {
-					method: "PUT",
-					headers: headers,
-					body: 'sign=' + reader.result,
+					method: "POST",
+					// headers: headers,
+					body: data,
 				})
 				.then(resp => {console.log(resp);return resp.text();})
 				.then(body => {console.log(body);return body;})
