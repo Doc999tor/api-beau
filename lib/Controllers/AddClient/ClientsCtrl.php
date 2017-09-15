@@ -77,11 +77,11 @@ class ClientsCtrl extends AddClientController {
 			$msg .= implode(', ', array_keys($diff_keys)) . ' arguments should not exist' . "<br>";
 		}
 
-		if (isset($body['phone']) && !preg_match('/^[0-9-+*#]+$/', $body['phone'])) { $is_correct = false; $msg .= 'phone number does\'nt match the pattern - /^[0-9-+*#]+$/' . "<br>"; }
+		if (isset($body['phone']) && !preg_match('/^[0-9-+*#]+$/', $body['phone'])) { $is_correct = false; $msg .= 'phone number doesn\'t match the pattern - /^[0-9-+*#]+$/' . "<br>"; }
 		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', $body['email'])) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 
-		if (isset($body['birthdate']) && !$this->checkDate($body['birthdate'])) { $is_correct = false; $msg .= 'date and start has to be Y-m-d H:i format, like 1970-01-01 00:00' . "<br>"; }
+		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be Y-m-d format, like 1970-01-01' . "<br>"; }
 
 		if (isset($body['filling_up']) && !in_array($body['filling_up'], ['true', 'false'])) { $is_correct = false; $msg .= 'filling_up can be true or false' . "<br>"; }
 		if (isset($body['sex']) && !in_array($body['sex'], ['male', 'female'])) { $is_correct = false; $msg .= 'sex can be male or female' . "<br>"; }
@@ -103,7 +103,7 @@ class ClientsCtrl extends AddClientController {
 				}
 				if (isset($note->reminder)) {
 					if ($note->reminder === false) { return true; }
-					else { return $note->reminder === true && isset($note->date) && $this->checkDate($note->date); }
+					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d H:i', $note->date); }
 				} else {
 					return false;
 				}
@@ -131,6 +131,5 @@ class ClientsCtrl extends AddClientController {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 
-	private function checkDate (string $date):bool { return (bool)\DateTime::createFromFormat('Y-m-d H:i', $date); }
 	private function isValidUrl (string $url):bool { return preg_match('/^\w.*\..{2,}$/', $url); }
 }
