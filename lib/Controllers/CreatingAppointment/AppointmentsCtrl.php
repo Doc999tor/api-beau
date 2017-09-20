@@ -23,20 +23,20 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkCorrectness (array $body): array {
-		$correct_body = ["date", "start", "client_id", "procedures", "reminders", "is_reminders_set", "note", "address"];
+		$correct_body = ["date", "start", "client_id", "procedures", "is_reminders_set", "note", "address"];
 
 		$is_correct = true;
 		$msg = '';
 
-		if (count($body) !== count($correct_body)) {
-			$is_correct = false;
-			$msg = 'body has to have ' . count($correct_body) . ' arguments';
-		}
+		// if (count($body) !== count($correct_body)) {
+		// 	$is_correct = false;
+		// 	$msg = 'body has to have ' . count($correct_body) . ' arguments';
+		// }
 
-		if (!empty(array_diff($correct_body, array_keys($body)))) {
-			$is_correct = false;
-			$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' arguments should exist';
-		}
+		// if (!empty(array_diff($correct_body, array_keys($body)))) {
+		// 	$is_correct = false;
+		// 	$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' arguments should exist';
+		// }
 
 		if (!\DateTime::createFromFormat('Y-m-d H:i', $body['date'] . ' ' . $body['start'])) {
 			$is_correct = false;

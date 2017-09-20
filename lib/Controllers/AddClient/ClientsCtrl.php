@@ -52,29 +52,38 @@ class ClientsCtrl extends AddClientController {
 	public function addClient (Request $request, Response $response):Response {
 		$files = $request->getUploadedFiles();
 
+		if (!empty($files)) {
+			$is_files_correct = $this->checkFilesCorrectness($files);
+		}
+
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
-		$is_body_correct = $this->checkCorrectness($body);
-		if ($is_body_correct['is_correct']) {
+		$is_body_correct = $this->checkBodyCorrectness($body);
+
+		if (isset($body['approved_marketing']) && $body['approved_marketing'] === 'true' && !isset($files['signature'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= 'if the user permits getting ads, he has to sign' . "<br>";
+		}
+
+		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
-			$body->write($is_body_correct['msg']);
+			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
 			return $response->withStatus(400);
 		}
 	}
-	private function checkCorrectness (array $body): array {
-		$correct_body = ['name', 'photo', 'phone', 'email', 'address', 'birthdate', 'filling_up', 'sex', 'approved_marketing', 'signature', 'depts', 'notes', 'social', 'source', 'recommended_by'];
+	private function checkBodyCorrectness (array $body): array {
+		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'filling_up', 'sex', 'approved_marketing', 'depts', 'notes', 'social', 'source', 'recommended_by'];
 
 		$is_correct = true;
 		$msg = '';
 
 		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
-		$msg .= json_encode($diff_keys);
 		if (!empty($diff_keys)) {
 			$is_correct = false;
-			$msg .= implode(', ', array_keys($diff_keys)) . ' arguments should not exist' . "<br>";
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
 		if (isset($body['phone']) && !preg_match('/^[0-9-+*#]+$/', $body['phone'])) { $is_correct = false; $msg .= 'phone number doesn\'t match the pattern - /^[0-9-+*#]+$/' . "<br>"; }
@@ -87,7 +96,6 @@ class ClientsCtrl extends AddClientController {
 		if (isset($body['sex']) && !in_array($body['sex'], ['male', 'female'])) { $is_correct = false; $msg .= 'sex can be male or female' . "<br>"; }
 
 		if (isset($body['approved_marketing']) && $body['approved_marketing'] !== 'true') { $is_correct = false; $msg .= 'approved_marketing can be true or not to exist' . "<br>"; }
-		if (isset($body['approved_marketing']) && $body['approved_marketing'] === 'true' && !isset($body['signature'])) { $is_correct = false; $msg .= 'if th user permits getting ads, he has to sign' . "<br>"; }
 
 		if (isset($body['depts'])) {
 			$depts = json_decode($body['depts']);
@@ -125,6 +133,32 @@ class ClientsCtrl extends AddClientController {
 			if ($body['source'] === 'recommendation') {
 				if (!isset($body['recommended_by'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
 				else if (!preg_match('/^\d+$/', $body['recommended_by'])) { $is_correct = false; $msg .= 'recommended_by client_id has to be integer' . "<br>"; }
+			}
+		}
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function checkFilesCorrectness(array $files): array {
+		$correct_body = ['photo', 'signature'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff(array_keys($files), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
+
+		for ($i=0; $i < count($correct_body); $i++) {
+			$file_name = $correct_body[$i];
+
+			if (isset($files[$file_name])) {
+				$file_meta = $files[$file_name];
+				if ($file_meta->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
+				if ($file_meta->getSize() > \Lib\Helpers\UTILS::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
+				if (substr($file_meta->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
 			}
 		}
 
