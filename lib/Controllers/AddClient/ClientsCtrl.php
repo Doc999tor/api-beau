@@ -157,7 +157,7 @@ class ClientsCtrl extends AddClientController {
 			if (isset($files[$file_name])) {
 				$file_meta = $files[$file_name];
 				if ($file_meta->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
-				if ($file_meta->getSize() > \Lib\Helpers\UTILS::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
+				if ($file_meta->getSize() > \Lib\Helpers\Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
 				if (substr($file_meta->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
 			}
 		}
