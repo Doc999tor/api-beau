@@ -54,7 +54,7 @@ class ClientsCtrl extends AddClientController {
 
 		if (!empty($files)) {
 			$is_files_correct = $this->checkFilesCorrectness($files);
-		}
+		} else {$is_files_correct = ["is_correct" => true, "msg" => ''];}
 
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
@@ -142,6 +142,10 @@ class ClientsCtrl extends AddClientController {
 	private function checkFilesCorrectness(array $files): array {
 		$correct_body = ['photo', 'signature'];
 
+		echo "<pre>";
+		print_r($files);
+		echo "</pre>";
+
 		$is_correct = true;
 		$msg = '';
 
@@ -155,10 +159,15 @@ class ClientsCtrl extends AddClientController {
 			$file_name = $correct_body[$i];
 
 			if (isset($files[$file_name])) {
-				$file_meta = $files[$file_name];
-				if ($file_meta->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
-				if ($file_meta->getSize() > \Lib\Helpers\Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
-				if (substr($file_meta->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
+				$file = $files[$file_name];
+				if ($file->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
+				if ($file->getSize() > \Lib\Helpers\Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
+				if (substr($file->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
+
+				$extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+				$filename = preg_replace('/^php/', '', basename($file->file, '.tmp'));
+
+				$file->moveTo('image' . DIRECTORY_SEPARATOR . "{$file_name}-{$filename}.{$extension}");
 			}
 		}
 
@@ -166,4 +175,24 @@ class ClientsCtrl extends AddClientController {
 	}
 
 	private function isValidUrl (string $url):bool { return preg_match('/^\w.*\..{2,}$/', $url); }
+
+	public function getMedia (Request $request, Response $response):Response {
+		$directory = '/image';
+		$files = array_filter(glob($_SERVER['DOCUMENT_ROOT'] . $directory . '/*.*'), function ($f) {
+			return !(strrpos($f, 'undefined.png') !== false || strrpos($f, '0.png') !== false);
+		});
+		usort($files, function ($a, $b) {
+			return filemtime($a) > filemtime($b) ? -1 : 1;
+		});
+		return $this->view->render($response, 'medialist.html', [
+			"directory" => $directory,
+			"files" => array_map(function ($file) {
+				return [
+					"name" => basename($file),
+					"size" => round(filesize($file) / 1024),
+					"dimensions" => getimagesize($file),
+				];
+			}, $files),
+		]);
+	}
 }

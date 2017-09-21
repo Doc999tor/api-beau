@@ -24,6 +24,8 @@ $app->group('/add-client/clients', function () use ($app) {
 	$app->get('',    $prefix . 'getClients');
 	$app->delete('', $prefix . 'removeUser');
 	$app->post  ('', $prefix . 'addClient')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+
+	$app->get('/media', $prefix . 'getMedia');
 });
 
 ### Customers List

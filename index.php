@@ -25,6 +25,18 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 // Get container
 $container = $app->getContainer();
 
+// Register component on container
+$container['view'] = function ($container) {
+	$view = new \Slim\Views\Twig('views', [
+		'cache' => false
+	]);
+	$view->addExtension(new \Slim\Views\TwigExtension(
+		$container['router'],
+		$container['request']->getUri()
+	));
+
+	return $view;
+};
 # Clients
 $container['AddClient\ClientsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\AddClient\ClientsCtrl($container);
