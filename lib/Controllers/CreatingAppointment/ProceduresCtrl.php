@@ -41,12 +41,15 @@ class ProceduresCtrl extends CreatingAppointmentController {
 	protected function generateProcedure($q = '') {
 		return [
 			"id" => mt_rand(0, 30000),  // AvodaID
-			"time" => 15 * $this->rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
+			"name" => $this->generatePhrase($q, 1, 6), // Name
+			"duration" => 15 * $this->rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"price" => 50 * $this->rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
-			"categoryId" => mt_rand(0, 30000), // smallint, SpecializationID
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
-			"shortName" => $this->generatePhrase($q, 1, 3, 1, 5), // ShortName
-			"name" => $this->generatePhrase($q, 1, 6, 2, 10) // Name
+			"category" => [
+				"id" => mt_rand(0, 30000), // smallint, SpecializationID
+				"name" => $this->generatePhrase('', 1, 2) // Name
+			],
+			"shortName" => $this->generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
 }
