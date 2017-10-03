@@ -58,4 +58,18 @@ class ClientsCtrl extends CustomersListController {
 		];
 		return $client;
 	}
+
+	public function checkPhoneNumberExists (Request $request, Response $response, array $args):Response {
+		$number = filter_var($args['number'], FILTER_SANITIZE_STRING);
+
+		$body = $response->getBody();
+
+		if (!preg_match('/^[\d()+\-*\/]+$/', $number)) {
+			$body->write("the number - $number is incorrect");
+			return $response->withStatus(400);
+		}
+
+		$body->write(time() % 9 ? 'true' : 'false');
+		return $response;
+	}
 }

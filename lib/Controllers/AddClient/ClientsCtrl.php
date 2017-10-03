@@ -142,10 +142,6 @@ class ClientsCtrl extends AddClientController {
 	private function checkFilesCorrectness(array $files): array {
 		$correct_body = ['photo', 'signature'];
 
-		echo "<pre>";
-		print_r($files);
-		echo "</pre>";
-
 		$is_correct = true;
 		$msg = '';
 

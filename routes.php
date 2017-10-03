@@ -32,8 +32,11 @@ $app->group('/add-client/clients', function () use ($app) {
 
 ### Customers List
 $app->group('/customers-list/clients', function () use ($app) {
-	$app->get   ('', 'CustomersList\ClientsCtrl:getClients');
-	$app->delete('', 'CustomersList\ClientsCtrl:deleteClients');
+	$prefix = 'CustomersList\ClientsCtrl:';
+	$app->get   ('', $prefix . 'getClients');
+	$app->delete('', $prefix . 'deleteClients');
+
+	$app->get('/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });
 
 ### Customers Details
