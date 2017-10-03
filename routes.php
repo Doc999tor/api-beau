@@ -15,6 +15,7 @@ $app->group('/creating-appointment', function () use ($app) {
 
 	$app->get ('/procedures',   $prefix . 'ProceduresCtrl:getAllProcedures');
 	$app->get ('/procedures/bi',   $prefix . 'ProceduresCtrl:getBIProcedures');
+	$app->post('/procedures', $prefix . 'ProceduresCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 

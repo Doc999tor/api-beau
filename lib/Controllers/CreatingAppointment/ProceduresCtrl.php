@@ -52,4 +52,32 @@ class ProceduresCtrl extends CreatingAppointmentController {
 			"shortName" => $this->generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
+
+	public function methodName (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkBodyCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
+	private function checkBodyCorrectness($body) {
+		$correct_body = ['name', 'duration', 'price', 'color', 'category'];
+
+		$is_correct = true;
+		$msg = '';
+
+		if (empty($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
+		if (isset($body['duration']) && !intval($body['duration'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
+		if (isset($body['duration']) && !intval($body['duration'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
 }
