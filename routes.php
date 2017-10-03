@@ -13,7 +13,8 @@ $app->group('/creating-appointment', function () use ($app) {
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
 
-	$app->get ('/procedures',   $prefix . 'ProceduresCtrl:getProceduresData');
+	$app->get ('/procedures',   $prefix . 'ProceduresCtrl:getAllProcedures');
+	$app->get ('/procedures/bi',   $prefix . 'ProceduresCtrl:getBIProcedures');
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
