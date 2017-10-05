@@ -88,7 +88,7 @@ $app->group('/customers-details/clients', function () use ($app) {
 
 	# Signature
 	$app->group('/{client_id:\d+}/signature', function () use ($app, $prefix) {
-		$app->put('', $prefix . 'SignatureCtrl:addSignature');
+		$app->post('', $prefix . 'SignatureCtrl:addSignature');
 		$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 	});
 

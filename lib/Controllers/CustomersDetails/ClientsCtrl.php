@@ -16,6 +16,10 @@ class ClientsCtrl extends Controller {
 
 		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 		$keys = is_array($body) ? array_keys($body) : [];
+		if (empty($keys)) {
+			$response->getBody()->write('body is missing');
+			return $response->withStatus(400);
+		}
 		if (!($request->getBody() && in_array($keys[0], $possible_keys))) {
 			$response->getBody()->write('body is malformed');
 			return $response->withStatus(400);
