@@ -1,0 +1,110 @@
+var config = {
+  translations: {
+    language: 'en',
+    back: 'Back',
+    new_client: 'New customer',
+    save: 'Save',
+    send: 'Send',
+    cancel: 'Cancel',
+    add_picture: 'Add a picture',
+    name: 'Name',
+    last_name: 'Last name',
+    phone: 'Phone',
+    link_to_detail: 'Send a link',
+    permitted: 'The client have permitted sending ads',
+    not_permitted: 'The client haven`t permitted sending ads',
+    signature_added: 'Signature added successfully',
+    add_signature: 'Add client`s signature',
+    save_signature: 'Save signature',
+    clear: 'Clear',
+    btn_delete: 'Remove',
+    btn_replace: 'Change',
+    email: 'Email',
+    adress: 'Adress',
+    birthdate: 'Birthdate',
+    male: 'Male',
+    female: 'Female',
+    other: 'Other',
+    description_debt: 'Description of debt',
+    add_debt: 'Add debt',
+    debt: 'Debt',
+    description_notes: 'Description',
+    reminder: 'Set a reminder',
+    add_note: 'Add note',
+    notes: 'Notes',
+    add_traffic_source: 'Add traffic source',
+    traffic_source: 'Traffic source',
+    recommended_by: 'Recommended by:',
+    add_social_net: 'Add a social media link',
+    social_net: 'Social media link',
+    url: 'Url',
+    customer: 'Customer',
+    enter_phone: 'Please enter a corect phone number',
+    phone_number: 'Phone number...',
+    tel_list: {
+      main: 'Main',
+      mobile: 'Mobile',
+      working: 'Working',
+      home: 'Home',
+      office: 'Office'
+    },
+    notes_list: {
+      hours: 'Hours',
+      days: 'Days',
+      weeks: 'Weeks',
+      months: 'Months'
+    },
+    source_list: {
+      ads: 'ads',
+      fb_page: 'fb_page',
+      family: 'family',
+      friends: 'friends',
+      recommendation: 'recommendation'
+    },
+    social_list: {
+      facebook: 'facebook',
+      instagram: 'instagram',
+      linkedin: 'linkedin',
+      twitter: 'twitter',
+      pinterest: 'pinterest',
+      google: 'google+',
+      vk: 'vk',
+      website: 'website'
+    },
+    dates: {
+      months: {
+        January: 'January',
+        February: 'February',
+        March: 'March',
+        April: 'April',
+        May: 'May',
+        June: 'June',
+        July: 'July',
+        August: 'August',
+        September: 'September',
+        October: 'October',
+        November: 'November',
+        December: 'December'
+      }
+    }
+  },
+  urls: {
+    adress: 'https://maps.googleapis.com/maps/api/geocode/json',
+    main: 'http://api.bewebmaster.co.il',
+    soc_net: '../public/add-client/media/soc_net',
+    media: '../public/add-client/media/'
+  },
+  data: {
+    isRtL: false,
+    name: '',
+    phone: '',
+    email: '',
+    approved_marketing: false,
+    filling_up: false,
+    currency: '₪',
+    debt_step: 10,
+    depts: [],
+    notes: [],
+    social: []
+  }
+}

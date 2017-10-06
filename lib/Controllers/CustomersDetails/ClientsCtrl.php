@@ -11,6 +11,18 @@ class ClientsCtrl extends Controller {
 		return $response->getBody()->write('GET clients');
 	}
 
+	public function index (Request $request, Response $response):Response {
+		$path = 'customers-details';
+		$static_prefix = str_repeat('../', substr_count($request->getUri()->getPath(), '/'));
+		$base_path = $request->getUri()->getBasePath();
+
+		return $this->view->render($response, $path . '.html', [
+			'base_path' => $base_path,
+			'prefix' => $static_prefix,
+			"path" => $path,
+		]);
+	}
+
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
