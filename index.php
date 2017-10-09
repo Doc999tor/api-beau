@@ -78,5 +78,10 @@ $container['CreatingAppointment\AppointmentsCtrl'] = function () use ($container
 	return new \Lib\Controllers\CreatingAppointment\AppointmentsCtrl($container);
 };
 
+# Reminders
+$container['RemindersCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\RemindersCtrl($container);
+};
+
 require 'routes.php';
 $app->run();

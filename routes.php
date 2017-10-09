@@ -99,6 +99,16 @@ $app->group('/customers-details', function () use ($app) {
 	$app->put('/clients/{client_id:\d+}/send-link-fill-up', $cl_prefix . 'sendLinkFillUpPersonalData');
 });
 
+### Reminders
+$app->group('/reminders', function () use ($app) {
+	$prefix = 'RemindersCtrl:';
+	$app->get   ('', $prefix . 'index');
+	$app->get   ('/clients', $prefix . 'getClients');
+	$app->post  ('', $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->put   ('/{reminder_id:\d+}', $prefix . 'update');
+	$app->delete('/{reminder_id:\d+}', $prefix . 'delete');
+});
+
 $app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });

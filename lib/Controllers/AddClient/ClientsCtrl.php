@@ -34,7 +34,7 @@ class ClientsCtrl extends AddClientController {
 		return $response->withJson($this->generateClient('', $id, true));
 	}
 
-	protected function generateClients(int $limit, string $q = '') {
+	public function generateClients(int $limit, string $q = '') {
 		$clients = [];
 
 		// Reducing $limit as length of $q rises
@@ -53,9 +53,11 @@ class ClientsCtrl extends AddClientController {
 		return $clients;
 	}
 	protected function generateClient(string $q = '', int $id = 0, bool $is_full = false) {
+		$id = mt_rand(0, 30000);
 		return [
-			'id' => rand(0, 30000),
+			'id' => $id,
 			'name' => $this->generatePhrase($q, 1, 2),
+			"profile_pic" => $id . '.jpg',
 		];
 	}
 

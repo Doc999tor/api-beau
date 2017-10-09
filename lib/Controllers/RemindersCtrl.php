@@ -1,0 +1,63 @@
+<?php
+
+namespace Lib\Controllers;
+
+use Lib\Controllers\Controller as Controller;
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+
+class RemindersCtrl extends Controller {
+	public function index (Request $request, Response $response):Response {return $response;}
+
+	public function add (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+
+		list($is_correct, $msg) = $this->checkCorrectness($body);
+		if (!$is_correct) {
+			$body = $response->getBody();
+			$body->write($msg);
+			return $response->withStatus(400);
+		} else { return $response->withStatus(201); }
+	}
+
+	public function update (Request $request, Response $response, array $args):Response {
+		$body = $request->getParsedBody();
+
+		list($is_correct, $msg) = $this->checkCorrectness($body);
+		if (!$is_correct) {
+			$body = $response->getBody();
+			$body->write($msg);
+			return $response->withStatus(400);
+		} else { return $response->withStatus(204); }
+	}
+
+	public function delete (Request $request, Response $response, array $args):Response {
+		if ($request->getBody()->getSize()) {
+			$body = $response->getBody();
+			$body->write('body has to be empty');
+			return $response->withStatus(400);
+		}
+		return $response->withStatus(204);
+	}
+
+	public function getClients (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$q = $body['q'] ?? '';
+
+		$clients_length = 50;
+		$clients_manager = new \Lib\Controllers\AddClient\ClientsCtrl($this->container);
+		$clients_list = $clients_manager->generateClients(50, $q);
+		return $response->withJson($clients_list);
+	}
+
+	private function checkCorrectness ($body) {
+		$msg = ''; $is_correct = true;
+
+		if (!mb_strlen($body['text'])) { $msg .= '<br> text has to be one letter at least'; $is_correct = false; }
+		if (!in_array($body['is_done'], ['true', 'false'])) { $msg .= '<br> is_done has to be true or false'; $is_correct = false; }
+		if (isset($body['client_id']) && !ctype_digit($body['client_id'])) { $msg .= '<br> client_id has to be integer'; $is_correct = false; }
+		if (!\DateTime::createFromFormat('Y-m-d H:i', $body['reminder_date'])) { $msg .= '<br> reminder_date has to be in Y-m-d H:i format, 1970-01-01 06:00 for example'; $is_correct = false; }
+
+		return [$is_correct, $msg];
+	}
+}
