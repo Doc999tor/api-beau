@@ -50,7 +50,7 @@ $app->group('/customers-details', function () use ($app) {
 
 	$app->get('/clients', $cl_prefix . 'getClients');
 
-	$app->patch('/{client_id:\d+}', $cl_prefix . 'setPersonalData');
+	$app->patch('/clients/{client_id:\d+}', $cl_prefix . 'setPersonalData');
 
 	# Dept
 	$app->group('/clients/{client_id:\d+}/dept', function () use ($app, $prefix) {
