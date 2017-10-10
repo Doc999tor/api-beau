@@ -106,6 +106,7 @@ $app->group('/reminders', function () use ($app) {
 	$app->get   ('/clients', $prefix . 'getClients');
 	$app->post  ('', $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->put   ('/{reminder_id:\d+}', $prefix . 'update');
+	$app->patch ('/{reminder_id:\d+}', $prefix . 'isDone');
 	$app->delete('/{reminder_id:\d+}', $prefix . 'delete');
 });
 

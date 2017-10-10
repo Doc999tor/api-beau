@@ -31,6 +31,18 @@ class RemindersCtrl extends Controller {
 		} else { return $response->withStatus(204); }
 	}
 
+	public function isDone (Request $request, Response $response):Response {
+		$request_body = $request->getBody();
+		$request_body_msg = $request_body->getContents();
+		if ($request_body_msg !== 'is_done=true') {
+			$response_body = $response->getBody();
+			$response_body->write('body is incorrect - ' . $request_body_msg);
+			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
+		}
+	}
+
 	public function delete (Request $request, Response $response, array $args):Response {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
