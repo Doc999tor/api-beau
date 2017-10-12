@@ -3,10 +3,6 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->get('/', function (Request $request, Response $response) {
-	return $response->withStatus(401);
-});
-
 ### Creating Appointment
 $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\';
@@ -19,7 +15,7 @@ $app->group('/creating-appointment', function () use ($app) {
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
-### Clients
+### Adding Clients
 $app->group('/add-client', function () use ($app) {
 	$prefix = 'AddClient\\ClientsCtrl:';
 	$app->get('/', $prefix . 'index');

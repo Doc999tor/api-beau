@@ -35,7 +35,7 @@ class AppointmentsCtrl extends Controller {
 
 		// if (!empty(array_diff($correct_body, array_keys($body)))) {
 		// 	$is_correct = false;
-		// 	$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' arguments should exist';
+		// 	$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' argument should exist';
 		// }
 
 		if (!\DateTime::createFromFormat('Y-m-d H:i', $body['date'] . ' ' . $body['start'])) {

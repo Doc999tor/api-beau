@@ -49,11 +49,11 @@ class ProceduresCtrl extends CreatingAppointmentController {
 				"id" => mt_rand(0, 30000), // smallint, SpecializationID
 				"name" => $this->generatePhrase('', 1, 2) // Name
 			],
-			"shortName" => $this->generatePhrase($q, 1, 3, 2, 7), // ShortName
+			// "shortName" => $this->generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
 
-	public function methodName (Request $request, Response $response):Response {
+	public function add (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
@@ -63,21 +63,33 @@ class ProceduresCtrl extends CreatingAppointmentController {
 			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
-			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
+			$body->write("<br>" . $is_body_correct['msg']);
 			return $response->withStatus(400);
 		}
 	}
 
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['name', 'duration', 'price', 'color', 'category'];
+		$correct_body = ['name', 'duration', 'price', 'color', 'category_id'];
 
 		$is_correct = true;
 		$msg = '';
 
+		if (!empty(array_diff($correct_body, array_keys($body)))) {
+			$is_correct = false;
+			$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' argument should exist';
+		}
+
 		if (empty($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
-		if (isset($body['duration']) && !intval($body['duration'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
-		if (isset($body['duration']) && !intval($body['duration'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
+		if (isset($body['duration']) && !ctype_digit($body['duration'])) { $is_correct = false; $msg .= 'duration ahve to be an integer' . "<br>"; }
+		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price have to be a number' . "<br>"; }
+		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= 'color has to be a valid hex value' . "<br>"; }
+		if (isset($body['category_id']) && !ctype_digit($body['category_id'])) { $is_correct = false; $msg .= 'category_id have to be an integer' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function checkColorValue($color) {
+		$hex_color_parts = 3;
+		return $hex_color_parts === count(array_filter(str_split($color, mb_strlen($color)/3), 'ctype_xdigit'));
 	}
 }

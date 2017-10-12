@@ -9,9 +9,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class SignatureCtrl extends Controller {
 	public function addSignature (Request $request, Response $response) {
 		$files = $request->getUploadedFiles();
-		echo "<pre>";
-		print_r($files);
-		echo "</pre>";
 
 		$file_name = 'sign';
 		$error = '';
