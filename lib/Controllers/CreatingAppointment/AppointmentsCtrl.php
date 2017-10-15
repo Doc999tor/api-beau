@@ -23,7 +23,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkCorrectness (array $body): array {
-		$correct_body = ["date", "start", "client_id", "procedures", "is_reminders_set", "note", "address"];
+		$correct_body = ["date", "client_id", "procedures", "is_reminders_set", "note", "address"];
 
 		$is_correct = true;
 		$msg = '';
