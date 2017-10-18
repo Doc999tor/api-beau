@@ -38,13 +38,13 @@ $container['view'] = function ($container) {
 	return $view;
 };
 # Clients
-$container['AddClient\ClientsCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\AddClient\ClientsCtrl($container);
+$container['AddClientCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\AddClientCtrl($container);
 };
 
 # CustomersDetails
-$container['CustomersList\ClientsCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\CustomersList\ClientsCtrl($container);
+$container['CustomersList'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersList($container);
 };
 
 # CustomersDetails
@@ -71,8 +71,8 @@ $container['CustomersDetails\SignatureCtrl'] = function () use ($container) {
 $container['CreatingAppointment\ClientsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CreatingAppointment\ClientsCtrl($container);
 };
-$container['CreatingAppointment\ProceduresCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\CreatingAppointment\ProceduresCtrl($container);
+$container['ProceduresCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\ProceduresCtrl($container);
 };
 $container['CreatingAppointment\AppointmentsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CreatingAppointment\AppointmentsCtrl($container);

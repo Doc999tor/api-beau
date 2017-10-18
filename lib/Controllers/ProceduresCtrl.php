@@ -1,26 +1,23 @@
 <?php
 
-namespace Lib\Controllers\CreatingAppointment;
+namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class ProceduresCtrl extends CreatingAppointmentController {
+class ProceduresCtrl extends Controller {
 	public function getAllProcedures (Request $request, Response $response) {
 		$DEFAULT_LIMIT = 20;
 
 		$params = $request->getQueryParams();
-		if (!isset($params['limit'])) {
-			$params['limit'] = $DEFAULT_LIMIT;
-		}
-		if (!isset($params['offset'])) {
-			$params['offset'] = 0;
-		}
+
+		$limit = $params['limit'] ? filter_var($params['limit'], FILTER_SANITIZE_NUMBER_INT) : $DEFAULT_LIMIT;
+		$offset = $params['offset'] ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
 		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
 		$procedures = [];
-		for ($i=0; $i < $params['limit']; $i++) {
-			$procedures []= $this->generateProcedure($q);
+		for ($i=0; $i < $limit; $i++) {
+			$procedures []= $this->generateProcedure(mt_rand(0, 30000), $q);
 		}
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -28,28 +25,32 @@ class ProceduresCtrl extends CreatingAppointmentController {
 	}
 
 	public function getBIProcedures (Request $request, Response $response):Response {
-		$DEFAULT_LIMIT = 6;
+		$BI_LIMIT = 6;
 
 		$procedures = [];
-		for ($i=0; $i < $DEFAULT_LIMIT; $i++) {
-			$procedures []= $this->generateProcedure();
+		for ($i=0; $i < $BI_LIMIT; $i++) {
+			$procedures []= $this->generateProcedure(mt_rand(0, 30000));
 		}
 
 		return $response->withJson($procedures);
 	}
 
-	protected function generateProcedure($q = '') {
+	public function get (Request $request, Response $response, array $args):Response {
+		return $response->withJson($this->generateProcedure(filter_var($args['procedure_id'], FILTER_SANITIZE_NUMBER_INT)));
+	}
+
+	protected function generateProcedure($id, $q = '') {
 		return [
-			"id" => mt_rand(0, 30000),  // AvodaID
-			"name" => $this->generatePhrase($q, 1, 6), // Name
-			"duration" => 15 * $this->rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
-			"price" => 50 * $this->rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
+			"id" => $id,  // AvodaID
+			"name" => \Lib\Helpers\Utils::generatePhrase($q, 1, 6), // Name
+			"duration" => 15 * \Lib\Helpers\Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
+			"price" => 50 * \Lib\Helpers\Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
 				"id" => mt_rand(0, 30000), // smallint, SpecializationID
-				"name" => $this->generatePhrase('', 1, 2) // Name
+				"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 2) // Name
 			],
-			// "shortName" => $this->generatePhrase($q, 1, 3, 2, 7), // ShortName
+			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
 

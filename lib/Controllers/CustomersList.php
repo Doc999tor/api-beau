@@ -1,11 +1,11 @@
 <?php
 
-namespace Lib\Controllers\CustomersList;
+namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class ClientsCtrl extends CustomersListController {
+class CustomersList extends Controller {
 	public function index (Request $request, Response $response):Response {
 		$path = 'customers-list';
 		$static_prefix = str_repeat('../', substr_count($request->getUri()->getPath(), '/'));
@@ -64,7 +64,7 @@ class ClientsCtrl extends CustomersListController {
 	protected function generateClient($q = '', $id = 0) {
 		$client = [
 			'id' => rand(0, 30000),
-			'name' => $this->generatePhrase($q, 1, 2),
+			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
 			"last_appoinment" => date("Y-m-d H:i", mt_rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 90)), # 3 months back and forth
 		];

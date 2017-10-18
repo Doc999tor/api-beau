@@ -9,15 +9,12 @@ $app->group('/creating-appointment', function () use ($app) {
 	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
 
-	$app->get ('/procedures',   $prefix . 'ProceduresCtrl:getAllProcedures');
-	$app->get ('/procedures/bi',   $prefix . 'ProceduresCtrl:getBIProcedures');
-	$app->post('/procedures', $prefix . 'ProceduresCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Adding Clients
 $app->group('/add-client', function () use ($app) {
-	$prefix = 'AddClient\\ClientsCtrl:';
+	$prefix = 'AddClientCtrl:';
 	$app->get('/', $prefix . 'index');
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 	$app->get('/clients',    $prefix . 'getClients');
@@ -29,7 +26,7 @@ $app->group('/add-client', function () use ($app) {
 
 ### Customers List
 $app->group('/customers-list', function () use ($app) {
-	$prefix = 'CustomersList\ClientsCtrl:';
+	$prefix = 'CustomersList:';
 	$app->get   ('/', $prefix . 'index');
 	$app->get   ('/clients', $prefix . 'getClients');
 	$app->delete('/clients', $prefix . 'deleteClients');
@@ -104,6 +101,16 @@ $app->group('/reminders', function () use ($app) {
 	$app->put   ('/{reminder_id:\d+}', $prefix . 'update');
 	$app->patch ('/{reminder_id:\d+}', $prefix . 'isDone');
 	$app->delete('/{reminder_id:\d+}', $prefix . 'delete');
+});
+
+### Procedures
+$app->group('/procedures', function () use ($app) {
+	$prefix = 'ProceduresCtrl:';
+
+	$app->get ('',    $prefix . 'getAllProcedures');
+	$app->get ('/bi', $prefix . 'getBIProcedures');
+	$app->get ('/{procedure_id:\d+}', $prefix . 'get');
+	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 $app->any('/503', function (Request $request, Response $response):Response {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Lib\Controllers\AddClient;
+namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class ClientsCtrl extends AddClientController {
+class AddClientCtrl extends Controller {
 	public function index (Request $request, Response $response):Response {
 		$static_prefix = str_repeat('../', substr_count($request->getUri()->getPath(), '/'));
 		$base_path = $request->getUri()->getBasePath();
@@ -56,7 +56,7 @@ class ClientsCtrl extends AddClientController {
 		$id = mt_rand(0, 30000);
 		return [
 			'id' => $id,
-			'name' => $this->generatePhrase($q, 1, 2),
+			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			"profile_pic" => $id . '.jpg',
 		];
 	}
