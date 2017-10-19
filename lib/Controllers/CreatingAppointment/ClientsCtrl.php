@@ -80,8 +80,10 @@ class ClientsCtrl extends CreatingAppointmentController {
 		return $clients;
 	}
 	protected function generateClient($q = '', $id = 0, $is_full = false) {
+		$id = rand(0, 30000);
 		$client = [
-			'id' => rand(0, 30000),
+			'id' => $id,
+			"profile_image" => $id . '.jpg',
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			"address" => $this->getRandomAddress(),
 		];

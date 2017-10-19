@@ -62,8 +62,10 @@ class CustomersList extends Controller {
 		return $clients;
 	}
 	protected function generateClient($q = '', $id = 0) {
+		$id = rand(0, 30000);
 		$client = [
-			'id' => rand(0, 30000),
+			'id' => $id,
+			"profile_image" => $id . '.jpg',
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
 			"last_appoinment" => date("Y-m-d H:i", mt_rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 90)), # 3 months back and forth
