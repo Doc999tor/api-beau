@@ -19,7 +19,7 @@ class ProceduresCtrl extends Controller {
 
 		$procedures = [];
 		for ($i=0; $i < $limit; $i++) {
-			$procedures []= $this->generateProcedure(mt_rand(0, 30000), $q);
+			$procedures []= $this->generateProcedure(mt_rand(0, 150), $q);
 		}
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -31,7 +31,7 @@ class ProceduresCtrl extends Controller {
 
 		$procedures = [];
 		for ($i=0; $i < $BI_LIMIT; $i++) {
-			$procedures []= $this->generateProcedure(mt_rand(0, 30000));
+			$procedures []= $this->generateProcedure(mt_rand(0, 150));
 		}
 
 		return $response->withJson($procedures);
@@ -42,6 +42,8 @@ class ProceduresCtrl extends Controller {
 	}
 
 	protected function generateProcedure($id, $q = '') {
+		$possible_categories = ['', 'עיצוב שיער', 'קוסמטיקה', 'טיפולי פנים', 'טיפולי גוף', 'מניקור פדיקור'];
+		$category_id = mt_rand(1, 5);
 		return [
 			"id" => $id,  // AvodaID
 			"name" => \Lib\Helpers\Utils::generatePhrase($q, 1, 6), // Name
@@ -49,8 +51,8 @@ class ProceduresCtrl extends Controller {
 			"price" => 50 * \Lib\Helpers\Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
-				"id" => mt_rand(0, 5), // smallint, SpecializationID
-				"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 2) // Name
+				"id" => $category_id, // smallint, SpecializationID
+				"name" => $possible_categories[$category_id] // Name
 			],
 			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
