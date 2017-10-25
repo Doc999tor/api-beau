@@ -11,8 +11,10 @@ class ProceduresCtrl extends Controller {
 
 		$params = $request->getQueryParams();
 
-		$limit = $params['limit'] ? filter_var($params['limit'], FILTER_SANITIZE_NUMBER_INT) : $DEFAULT_LIMIT;
-		$offset = $params['offset'] ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
+		$rand = mt_rand(0, 10);
+		$limit = $rand > 3 ? 12 : $DEFAULT_LIMIT;
+
+		$offset = isset($params['offset']) ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
 		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
 		$procedures = [];
@@ -47,7 +49,7 @@ class ProceduresCtrl extends Controller {
 			"price" => 50 * \Lib\Helpers\Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
-				"id" => mt_rand(0, 30000), // smallint, SpecializationID
+				"id" => mt_rand(0, 5), // smallint, SpecializationID
 				"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 2) // Name
 			],
 			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
