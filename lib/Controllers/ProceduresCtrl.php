@@ -6,7 +6,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class ProceduresCtrl extends Controller {
-	public function getAllProcedures (Request $request, Response $response) {
+	public function getAll (Request $request, Response $response) {
 		$DEFAULT_LIMIT = 20;
 
 		$params = $request->getQueryParams();
@@ -26,7 +26,7 @@ class ProceduresCtrl extends Controller {
 		return $response->withJson($procedures);
 	}
 
-	public function getBIProcedures (Request $request, Response $response):Response {
+	public function getBI (Request $request, Response $response):Response {
 		$BI_LIMIT = 6;
 
 		$procedures = [];
@@ -37,7 +37,7 @@ class ProceduresCtrl extends Controller {
 		return $response->withJson($procedures);
 	}
 
-	public function get (Request $request, Response $response, array $args):Response {
+	public function getOne (Request $request, Response $response, array $args):Response {
 		return $response->withJson($this->generateProcedure(filter_var($args['procedure_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 

@@ -107,15 +107,31 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/procedures', function () use ($app) {
 	$prefix = 'ProceduresCtrl:';
 
-	$app->get ('',    $prefix . 'getAllProcedures');
-	$app->get ('/bi', $prefix . 'getBIProcedures');
-	$app->get ('/{procedure_id:\d+}', $prefix . 'get');
+	$app->get ('',    $prefix . 'getAll');
+	$app->get ('/bi', $prefix . 'getBI');
+	$app->get ('/{procedure_id:\d+}', $prefix . 'getOne');
+	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+});
+
+### SMS Templates
+$app->group('/templates', function () use ($app) {
+	$prefix = 'TemplatesCtrl:';
+
+	$app->get ('',    $prefix . 'getAll');
+	$app->get ('/{template_name:\w+}',    $prefix . 'getOne');
 	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 $app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });
+
+// $app->get('/image/{client_id:\d+}.jpg', function (Request $request, Response $response, array $args) {
+// 	$response->write(file_get_contents('http://lorempixel.com/200/200/people/' . $args['client_id']));
+// 	return $response
+// 		// ->withHeader('Content-Type', 'image/jpeg')
+// 		->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
+// });
 
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
