@@ -4,9 +4,14 @@ $container['AddClientCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\AddClientCtrl($container);
 };
 
-# CustomersDetails
+# CustomersList
 $container['CustomersList'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersList($container);
+};
+
+# GroupsCtrl
+$container['GroupsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\GroupsCtrl($container);
 };
 
 # CustomersDetails

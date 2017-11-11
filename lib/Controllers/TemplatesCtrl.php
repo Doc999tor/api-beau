@@ -45,6 +45,9 @@ class TemplatesCtrl extends Controller {
 
 		$tag_list = array_keys($this->templates_list);
 		preg_match_all('/(\$\$(?P<tag>\w+)\$\$)/', $body['text'], $used_tags);
+		echo "<pre>";
+		print_r($used_tags);
+		echo "</pre>";
 		$excess_tags = array_diff($used_tags['tag'], $tag_list);
 		if (count($excess_tags)) {
 			$is_correct = false; $msg .= implode(',', $excess_tags) . ' tags are not this list: ' . implode(',', $tag_list);

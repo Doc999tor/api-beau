@@ -34,6 +34,12 @@ $app->group('/customers-list', function () use ($app) {
 	$app->get('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });
 
+### Groups
+$app->group('/groups', function () use ($app) {
+	$prefix = 'GroupsCtrl:';
+	$app->get('/{group_id:\d+}/clients', $prefix . 'getGroupClients');
+});
+
 ### Customers Details
 $app->group('/customers-details', function () use ($app) {
 	$prefix = 'CustomersDetails\\';

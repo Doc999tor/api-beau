@@ -28,7 +28,7 @@ class CustomersList extends Controller {
 		}
 		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
-		return $response->withJson($this->generateClients($params['limit'], $q));
+		return $response->withJson(self::generateClients($params['limit'], $q));
 	}
 
 	public function deleteClients (Request $request, Response $response):Response {
@@ -52,17 +52,17 @@ class CustomersList extends Controller {
 
 		return $response->withStatus(204);
 	}
-	protected function generateClients($limit, $q) {
+	public static function generateClients($limit, $q = '') {
 		$clients = [];
 
 		for ($i=0; $i < $limit; $i++) {
-			$clients []= $this->generateClient($q);
+			$clients []= self::generateClient($q);
 		}
 
 		return $clients;
 	}
-	protected function generateClient($q = '', $id = 0) {
-		$id = rand(0, 30000);
+	protected static function generateClient($q = '', $id = 0) {
+		$id = rand(0, 300);
 		$client = [
 			'id' => $id,
 			"profile_image" => "/{$id}.jpg",
