@@ -5,11 +5,15 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 ### Creating Appointment
 $app->group('/creating-appointment', function () use ($app) {
-	$prefix = 'CreatingAppointment\\';
-	$app->get('/clients', $prefix . 'ClientsCtrl:getClients');
-	$app->get('/clients/{id:\d+}', $prefix . 'ClientsCtrl:getClient');
+	$prefix = 'CreatingAppointment\\ClientsCtrl:';
+	$app->get('/clients', $prefix . 'getClients');
+	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 
-	$app->post('/appointments', $prefix . 'AppointmentsCtrl:add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$prefix = 'CreatingAppointment\\AppointmentsCtrl:';
+	$app->post('/appointments', $prefix . 'addAppointment')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->post('/meeting', $prefix . 'addMeeting')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->post('/break', $prefix . 'addBreak')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->post('/vacation', $prefix . 'addVacation')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 });
 
 ### Adding Clients
