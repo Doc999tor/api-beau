@@ -10,6 +10,8 @@ $app->group('/creating-appointment', function () use ($app) {
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 
 	$prefix = 'CreatingAppointment\\AppointmentsCtrl:';
+	$app->get('/calendar', $prefix . 'getCalendar');
+
 	$app->post('/appointments', $prefix . 'addAppointment')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/break', $prefix . 'addBreak')->add(new \Lib\Middlewares\PostReturnIDMiddleware());

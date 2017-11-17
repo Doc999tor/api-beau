@@ -19,7 +19,7 @@ class ProceduresCtrl extends Controller {
 
 		$procedures = [];
 		for ($i=0; $i < $limit; $i++) {
-			$procedures []= $this->generateProcedure(mt_rand(0, 150), $q);
+			$procedures []= self::generateProcedure(mt_rand(0, 150), $q);
 		}
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -31,17 +31,17 @@ class ProceduresCtrl extends Controller {
 
 		$procedures = [];
 		for ($i=0; $i < $BI_LIMIT; $i++) {
-			$procedures []= $this->generateProcedure(mt_rand(0, 150));
+			$procedures []= self::generateProcedure(mt_rand(0, 150));
 		}
 
 		return $response->withJson($procedures);
 	}
 
 	public function getOne (Request $request, Response $response, array $args):Response {
-		return $response->withJson($this->generateProcedure(filter_var($args['procedure_id'], FILTER_SANITIZE_NUMBER_INT)));
+		return $response->withJson(self::generateProcedure(filter_var($args['procedure_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
-	protected function generateProcedure($id, $q = '') {
+	public static function generateProcedure($id, $q = '') {
 		$possible_categories = ['', 'עיצוב שיער', 'קוסמטיקה', 'טיפולי פנים', 'טיפולי גוף', 'מניקור פדיקור'];
 		$category_id = mt_rand(1, 5);
 		return [

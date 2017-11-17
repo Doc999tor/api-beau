@@ -3,10 +3,44 @@
 namespace Lib\Controllers\CreatingAppointment;
 
 use Lib\Controllers\Controller as Controller;
+use Lib\Controllers\ProceduresCtrl as ProceduresCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class AppointmentsCtrl extends Controller {
+	public function getCalendar (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		if ((!isset($params['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $params['start'])) || (!isset($params['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $params['end']))) {
+			$response->getBody()->write('start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00');
+			return $response->withStatus(400);
+		} else {
+			if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {
+				$response->getBody()->write('worker_id has to be an integer');
+				return $response->withStatus(400);
+			} else {
+				$appointments = [];
+				$appointments_limit = rand() % 4 !== 0 ? 0 : rand(1, 5);
+				for ($i=0; $i < $appointments_limit; $i++) {
+					$appointments []= $this->generateAppointment($params['start']);
+				}
+				return $response->withJson($appointments);
+			}
+		}
+	}
+
+	private function generateAppointment($date) {
+		$procedures_count = rand(1, 5);
+		return [
+			"id" => rand(1, 1000),
+			"date" => $date,
+			"client_id" => rand(1, 120),
+			"procedures" => array_map(function ($v) {
+				return ProceduresCtrl::generateProcedure(rand(1, 50));
+			}, array_fill(0, $procedures_count, null))
+		];
+	}
+
 	public function addAppointment (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
