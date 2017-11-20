@@ -57,7 +57,7 @@ class ClientsCtrl extends Controller {
 				}
 				break;
 			case 'gender':
-				if (!in_array($body['gender'], ['male', 'female'])) {
+				if (!in_array($body['gender'], ['male', 'female', 'null'])) {
 					$response->getBody()->write('gender can be male or female');
 					return $response->withStatus(400);
 				}
@@ -110,7 +110,7 @@ class ClientsCtrl extends Controller {
 	}
 
 	public function sendLinkFillUpPersonalData (Request $request, Response $response) :Response {
-		if ($request->getParsedBody()) {
+		if ($request->getBody()->getSize()) {
 			$response->getBody()->write('body should be empty');
 			return $response->withStatus(400);
 		}

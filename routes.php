@@ -101,7 +101,7 @@ $app->group('/customers-details', function () use ($app) {
 		$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 	});
 
-	$app->put('/clients/{client_id:\d+}/send-link-fill-up', $cl_prefix . 'sendLinkFillUpPersonalData');
+	$app->post('/clients/{client_id:\d+}/filling-up', $cl_prefix . 'sendLinkFillUpPersonalData');
 });
 
 ### Reminders
