@@ -26,7 +26,7 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$possible_keys = ['phone', 'email', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
+		$possible_keys = ['phone', 'email', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 		$keys = is_array($body) ? array_keys($body) : [];
 		if (empty($keys)) {
 			$response->getBody()->write('body is missing');
@@ -47,6 +47,18 @@ class ClientsCtrl extends Controller {
 			case 'email':
 				if (!(strpos($body['email'], '@') > 0)) {
 					$response->getBody()->write('email is incorrect');
+					return $response->withStatus(400);
+				}
+				break;
+			case 'birthdate':
+				if (!\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) {
+					$response->getBody()->write('birthdate is incorrect, it has to be Y-m-d H:i format, like 1970-01-01');
+					return $response->withStatus(400);
+				}
+				break;
+			case 'gender':
+				if (!in_array($body['gender'], ['male', 'female'])) {
+					$response->getBody()->write('gender can be male or female');
 					return $response->withStatus(400);
 				}
 				break;
