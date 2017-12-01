@@ -15,11 +15,14 @@ class TimelineCtrl extends Controller {
 		$end_date = filter_var($params['end'], FILTER_SANITIZE_STRING);
 
 		$period = new \DatePeriod(new \DateTime($start_date), new \DateInterval('P1D'), new \DateTime($end_date));
-		// var_dump($period);
-		// $period->rewind();
-		// $dates = iterator_to_array($period);
+		$dates = iterator_to_array($period);
+		array_push($dates, new \DateTime($end_date));
 
-		return $response->withJson($this->generateAppointment($period->start));
+		$data = array_map(function (\DateTime $date) {
+			return $this->generateAppointment($date);
+		}, $dates);
+
+		return $response->withJson(["name" => "appoinments", "data" => $data, "is_end" => !(rand(1, 5) % 5)]);
 	}
 	public function getGallery (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
