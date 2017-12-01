@@ -29,8 +29,7 @@ class TimelineCtrl extends Controller {
 	}
 	public function getSms (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-
-		return $response->getBody()->write('response body');
+		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']));
 	}
 
 	private function generateAppointments(\DateTime $date) {
@@ -68,6 +67,13 @@ class TimelineCtrl extends Controller {
 		];
 		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		return $media;
+	}
+	private function generateSms(\DateTime $date): array {
+		return [
+			"id" => rand(1, 1000),
+			"date" => $date->format('Y-m-d'),
+			"text" => Utils::generatePhrase('', 1, 21),
+		];
 	}
 
 	private function timelineGenericMethod ($name, $start, $end): array {
