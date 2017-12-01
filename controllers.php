@@ -33,6 +33,9 @@ $container['CustomersDetails\SocialCtrl'] = function () use ($container) {
 $container['CustomersDetails\SignatureCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\SignatureCtrl($container);
 };
+$container['CustomersDetails\TimelineCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersDetails\TimelineCtrl($container);
+};
 
 # CreatingAppointment
 $container['CreatingAppointment\ClientsCtrl'] = function () use ($container) {

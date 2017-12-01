@@ -102,6 +102,16 @@ $app->group('/customers-details', function () use ($app) {
 	});
 
 	$app->post('/clients/{client_id:\d+}/filling-up', $cl_prefix . 'sendLinkFillUpPersonalData');
+
+	# Timeline
+	$app->group('/clients/{client_id:\d+}/timeline', function () use ($app, $prefix) {
+		$prefix = 'CustomersDetails\TimelineCtrl:';
+		$app->get('/appointments', $prefix . 'getAppoinments');
+		$app->get('/gallery', $prefix . 'getGallery');
+		$app->get('/depts', $prefix . 'getDepts');
+		$app->get('/notes', $prefix . 'getNotes');
+		$app->get('/sms', $prefix . 'getSms');
+	});
 });
 
 ### Reminders

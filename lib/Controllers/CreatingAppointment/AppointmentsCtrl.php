@@ -121,7 +121,6 @@ class AppointmentsCtrl extends Controller {
 		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
-		if (isset($body['note']) && !mb_strlen($body['note']) || isset($body['address']) && !mb_strlen($body['address'])) {$is_correct = false; $msg .= ' note and address cannot be empty strings <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
@@ -133,7 +132,6 @@ class AppointmentsCtrl extends Controller {
 
 		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
 
-		if (isset($body['note']) && !mb_strlen($body['note'])) {$is_correct = false; $msg .= ' note cannot be empty string <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];

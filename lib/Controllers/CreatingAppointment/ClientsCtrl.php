@@ -2,6 +2,7 @@
 
 namespace Lib\Controllers\CreatingAppointment;
 
+use \Lib\Helpers\Utils as Utils;
 use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -85,8 +86,8 @@ class ClientsCtrl extends Controller {
 		$client = [
 			'id' => $id,
 			"profile_image" => "/{$id}.jpg",
-			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
-			"address" => $this->getRandomAddress(),
+			'name' => Utils::generatePhrase($q, 1, 2),
+			"address" => Utils::getRandomAddress(),
 		];
 
 		if (mt_rand(0,10) < 9) {
@@ -103,21 +104,5 @@ class ClientsCtrl extends Controller {
 			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);
 		}
 		return $client;
-	}
-
-	private function getRandomAddress(): string {
-		if (empty($addressHandler)) {
-			$addressHandler = fopen($_SERVER['DOCUMENT_ROOT'] . '/metadata/addresses_israel.php', 'r');
-		}
-
-		$max_addresses = 48345;
-		$line_counter = 1;
-		$needed_line = mt_rand($line_counter, $max_addresses);
-
-		while ($line_counter++ < $needed_line) { fgets($addressHandler); }
-
-		$random_address = json_decode(fgets($addressHandler), true);
-
-		return $random_address['settlement'] . ', ' . $random_address['street'] . ', ' . mt_rand(1, 100);
 	}
 }

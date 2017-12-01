@@ -44,4 +44,20 @@ class Utils {
 	public static function rand_with_average ($start = 0, $end = 1000, $average_end = 50, $average_probability = 0.1) {
 		return mt_rand(0, 10) / 10 > $average_probability ? floor(mt_rand($start, $average_end)) : floor(mt_rand($start, $end));
 	}
+
+	public static function getRandomAddress(): string {
+		if (empty($addressHandler)) {
+			$addressHandler = fopen($_SERVER['DOCUMENT_ROOT'] . '/metadata/addresses_israel.php', 'r');
+		}
+
+		$max_addresses = 48345;
+		$line_counter = 1;
+		$needed_line = mt_rand($line_counter, $max_addresses);
+
+		while ($line_counter++ < $needed_line) { fgets($addressHandler); }
+
+		$random_address = json_decode(fgets($addressHandler), true);
+
+		return $random_address['settlement'] . ', ' . $random_address['street'] . ', ' . mt_rand(1, 100);
+	}
 }
