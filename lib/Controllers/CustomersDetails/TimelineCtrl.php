@@ -11,23 +11,11 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class TimelineCtrl extends Controller {
 	public function getAppoinments (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		$start_date = filter_var($params['start'], FILTER_SANITIZE_STRING);
-		$end_date = filter_var($params['end'], FILTER_SANITIZE_STRING);
-
-		$period = new \DatePeriod(new \DateTime($start_date), new \DateInterval('P1D'), new \DateTime($end_date));
-		$dates = iterator_to_array($period);
-		array_push($dates, new \DateTime($end_date));
-
-		$data = array_map(function (\DateTime $date) {
-			return $this->generateAppointment($date);
-		}, $dates);
-
-		return $response->withJson(["name" => "appoinments", "data" => $data, "is_end" => !(rand(1, 5) % 5)]);
+		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']));
 	}
 	public function getGallery (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-
-		return $response->getBody()->write('response body');
+		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']));
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -45,7 +33,7 @@ class TimelineCtrl extends Controller {
 		return $response->getBody()->write('response body');
 	}
 
-	private function generateAppointment(\DateTime $date) {
+	private function generateAppointments(\DateTime $date) {
 		$procedures_count = rand(1, 5);
 		$is_deleted = !(rand(1, 5) % 5);
 
@@ -71,5 +59,31 @@ class TimelineCtrl extends Controller {
 		if (!(rand(1, 3) % 3)) { $appoinment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		if (!(rand(1, 3) % 3)) { $appoinment['address'] = Utils::getRandomAddress(); }
 		return $appoinment;
+	}
+	private function generateGallery(\DateTime $date): array {
+		$media = [
+			"id" => rand(1, 1000),
+			"date" => $date->format('Y-m-d'),
+			"name" => Utils::generatePhrase('', 1, 1) . '.jpg',
+		];
+		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
+		return $media;
+	}
+
+	private function timelineGenericMethod ($name, $start, $end): array {
+		$start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
+		$end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
+
+		$period = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); // DatePeriod returns collection of dates excludes the end date
+
+		$dates = array_values(array_filter(iterator_to_array($period), function () {
+			return rand(1,2) % 2;
+		}));
+
+		$data = array_map(function (\DateTime $date) use ($name) {
+			return $this->{'generate' . ucfirst($name)}($date);
+		}, $dates);
+
+		return ["name" => $name, "data" => $data, "is_end" => !(rand(1, 5) % 5)];
 	}
 }
