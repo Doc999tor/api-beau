@@ -24,8 +24,7 @@ class TimelineCtrl extends Controller {
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-
-		return $response->getBody()->write('response body');
+		return $response->withJson($this->timelineGenericMethod('note', $params['start'], $params['end']));
 	}
 	public function getSms (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -74,6 +73,21 @@ class TimelineCtrl extends Controller {
 			"date" => $date->format('Y-m-d'),
 			"text" => Utils::generatePhrase('', 1, 21),
 		];
+	}
+	private function generateNote(\DateTime $date): array {
+		$reminder = !(rand(1, 4) % 4);
+		$note = [
+			"id" => rand(1, 1000),
+			"date" => $date->format('Y-m-d'),
+			"text" => Utils::generatePhrase('', 1, 21),
+		];
+		if ($reminder) {
+			$reminder_date = clone $date;
+			$reminder_date->add(new \DateInterval('P' . rand(1, 15) . 'D'));
+			$note['reminder'] = $reminder;
+			$note['reminder_date'] = $reminder_date->format('Y-m-d');
+		}
+		return $note;
 	}
 
 	private function timelineGenericMethod ($name, $start, $end): array {
