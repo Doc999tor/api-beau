@@ -19,8 +19,7 @@ class TimelineCtrl extends Controller {
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-
-		return $response->getBody()->write('response body');
+		return $response->withJson($this->timelineGenericMethod('dept', $params['start'], $params['end']));
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -66,6 +65,19 @@ class TimelineCtrl extends Controller {
 		];
 		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		return $media;
+	}
+	private function generateDept(\DateTime $date): array {
+		$is_note = !(rand(1, 4) % 4);
+
+		$dept = [
+			"id" => rand(1, 1000),
+			"sum" => (string)rand(1,30) . (rand(1,2) % 2 ? '5' : '0'),
+			"date" => $date->format('Y-m-d'),
+		];
+		if ($is_note) {
+			$dept['desc'] = Utils::generatePhrase('', 1, 21);
+		}
+		return $dept;
 	}
 	private function generateSms(\DateTime $date): array {
 		return [
