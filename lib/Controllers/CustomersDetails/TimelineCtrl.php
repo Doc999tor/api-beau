@@ -69,13 +69,24 @@ class TimelineCtrl extends Controller {
 	private function generateDept(\DateTime $date): array {
 		$is_note = !(rand(1, 4) % 4);
 
+		$is_deleted = !(rand(1, 5) % 5);
+		$deleted_date = clone $date;
+		$deleted_date->sub(new \DateInterval('P' . rand(3, 10) . 'D'));
+
+		$is_modified = !(rand(1, 5) % 5);
+		$modified_date = clone $date;
+		$modified_date->sub(new \DateInterval('P' . rand(3, 10) . 'D'));
+
 		$dept = [
 			"id" => rand(1, 1000),
 			"sum" => (string)rand(1,30) . (rand(1,2) % 2 ? '5' : '0'),
 			"date" => $date->format('Y-m-d'),
 		];
-		if ($is_note) {
-			$dept['desc'] = Utils::generatePhrase('', 1, 21);
+		if ($is_note) { $dept['desc'] = Utils::generatePhrase('', 1, 21); }
+		if ($is_modified) { $dept['modified_date'] = $modified_date->format('Y-m-d'); }
+		if ($is_deleted) {
+			$dept['is_deleted'] = $is_deleted;
+			$dept['deleted_date'] = $deleted_date->format('Y-m-d');
 		}
 		return $dept;
 	}
