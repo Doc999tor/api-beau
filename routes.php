@@ -111,7 +111,7 @@ $app->group('/customers-details', function () use ($app) {
 		$app->get('/depts', $prefix . 'getDepts');
 		$app->get('/notes', $prefix . 'getNotes');
 		$app->get('/sms', $prefix . 'getSms');
-		$app->get('/punch_cards', $prefix . 'getPunch_cards');
+		$app->get('/punch_cards', $prefix . 'getPunchCards');
 	});
 	# Punch_cards
 	$app->group('/clients/{client_id:\d+}/punch_cards', function () use ($app) {
