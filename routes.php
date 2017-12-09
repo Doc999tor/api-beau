@@ -111,6 +111,12 @@ $app->group('/customers-details', function () use ($app) {
 		$app->get('/depts', $prefix . 'getDepts');
 		$app->get('/notes', $prefix . 'getNotes');
 		$app->get('/sms', $prefix . 'getSms');
+		$app->get('/punch_cards', $prefix . 'getPunch_cards');
+	});
+	# Punch_cards
+	$app->group('/clients/{client_id:\d+}/punch_cards', function () use ($app) {
+		$app->post('', 'CustomersDetails\PunchCardsCtrl:addPunchCard')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+		$app->delete('/{punch_card_id:\d+}', 'CustomersDetails\PunchCardsCtrl:deletePunchCard');
 	});
 });
 

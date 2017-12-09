@@ -21,6 +21,9 @@ $container['CustomersDetails\ClientsCtrl'] = function () use ($container) {
 $container['CustomersDetails\DeptCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\DeptCtrl($container);
 };
+$container['CustomersDetails\PunchCardsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersDetails\PunchCardsCtrl($container);
+};
 $container['CustomersDetails\NotesCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\NotesCtrl($container);
 };
