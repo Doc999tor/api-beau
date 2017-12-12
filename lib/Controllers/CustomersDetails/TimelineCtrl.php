@@ -106,7 +106,7 @@ class TimelineCtrl extends Controller {
 		switch ($date_kind) {
 			case 1:
 				// punch_card creation
-				$punch_card['added_date'] = $date->format('Y-m-d');
+				$punch_card['date'] = $date->format('Y-m-d');
 				$punch_card['uses'] = [];
 				break;
 			case 2:
@@ -114,7 +114,7 @@ class TimelineCtrl extends Controller {
 				$added_interval = rand(3, 10);
 				$added_date = clone $date;
 				$added_date->sub(new \DateInterval("P{$added_interval}D"));
-				$punch_card['added_date'] = $added_date->format('Y-m-d');
+				$punch_card['date'] = $added_date->format('Y-m-d');
 				$punch_card['uses'] = [
 					["id" => rand(1, 150), "date" => $date->format('Y-m-d H:m'),],
 				];
@@ -124,7 +124,7 @@ class TimelineCtrl extends Controller {
 				$added_interval = rand(3, 10);
 				$added_date = clone $date;
 				$added_date->sub(new \DateInterval("P{$added_interval}D"));
-				$punch_card['added_date'] = $added_date->format('Y-m-d');
+				$punch_card['date'] = $added_date->format('Y-m-d');
 				$use_date = clone $date;
 				$use_date->sub(new \DateInterval('P' . rand(1, $added_interval - 1) . 'DT' . rand(8, 16) . 'H'));
 				$punch_card['uses'] = [
