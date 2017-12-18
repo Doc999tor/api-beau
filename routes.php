@@ -115,8 +115,12 @@ $app->group('/customers-details', function () use ($app) {
 	});
 	# Punch_cards
 	$app->group('/clients/{client_id:\d+}/punch_cards', function () use ($app) {
-		$app->post('', 'CustomersDetails\PunchCardsCtrl:addPunchCard')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
-		$app->delete('/{punch_card_id:\d+}', 'CustomersDetails\PunchCardsCtrl:deletePunchCard');
+		$prefix = 'CustomersDetails\PunchCardsCtrl:';
+		$app->post('', $prefix . 'addPunchCard')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+		$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard');
+
+		$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+		$app->delete('/{punch_card_id:\d+}/use/{use_id:\d+}', $prefix . 'unuse');
 	});
 });
 
