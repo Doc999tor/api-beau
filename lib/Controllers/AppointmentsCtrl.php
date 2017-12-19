@@ -1,6 +1,6 @@
 <?php
 
-namespace Lib\Controllers\CreatingAppointment;
+namespace Lib\Controllers;
 
 use Lib\Controllers\Controller as Controller;
 use Lib\Controllers\ProceduresCtrl as ProceduresCtrl;
@@ -11,7 +11,33 @@ class AppointmentsCtrl extends Controller {
 	public function getCalendar (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 
-		if ((!isset($params['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $params['start'])) || (!isset($params['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $params['end']))) {
+		if (isset($params['category_id'])) {
+			if (ctype_digit($params['category_id'])) {
+				$appointments = [];
+				if (rand(1,3) % 3 === 0) {
+					return $response->withJson($appointments);
+				} else {
+					$range_dates = range(1, rand(5,50), rand(1,5));
+					shuffle($range_dates);
+					$range_dates = array_slice($range_dates, 0, rand(1,20));
+					sort($range_dates);
+
+					$today = new \DateTime();
+					$appointments = [];
+					for ($i=0, $appointments_limit = count($range_dates); $i < $appointments_limit; $i++) {
+						$interval = new \DateInterval("P{$range_dates[$i]}D");
+						$date = (clone $today)->sub($interval);
+						$appointments []= $this->generateAppointment($date->format('Y-m-d'));
+					}
+					return $response->withJson($appointments);
+				}
+			} else {
+				$response->getBody()->write('category_id has to be an integer');
+				return $response->withStatus(400);
+			}
+		}
+
+		if ((!isset($params['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['start'])) || (!isset($params['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['end']))) {
 			$response->getBody()->write('start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00');
 			return $response->withStatus(400);
 		} else {
@@ -99,7 +125,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['start'])) { $is_correct = false; $msg .= ' start has to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) { $is_correct = false; $msg .= ' start has to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
 
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
@@ -118,7 +144,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
@@ -130,7 +156,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 

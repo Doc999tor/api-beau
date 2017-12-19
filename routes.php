@@ -3,19 +3,22 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-### Creating Appointment
-$app->group('/creating-appointment', function () use ($app) {
-	$prefix = 'CreatingAppointment\\ClientsCtrl:';
-	$app->get('/clients', $prefix . 'getClients');
-	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
-
-	$prefix = 'CreatingAppointment\\AppointmentsCtrl:';
-	$app->get('/calendar', $prefix . 'getCalendar');
+### Appointments
+$app->group('/appointments', function () use ($app) {
+	$prefix = 'AppointmentsCtrl:';
+	$app->get('', $prefix . 'getCalendar');
 
 	$app->post('/appointments', $prefix . 'addAppointment')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/break', $prefix . 'addBreak')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/vacation', $prefix . 'addVacation')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+});
+
+### Creating Appointment
+$app->group('/creating-appointment', function () use ($app) {
+	$prefix = 'CreatingAppointment\\ClientsCtrl:';
+	$app->get('/clients', $prefix . 'getClients');
+	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 });
 
 ### Adding Clients
@@ -139,10 +142,13 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/procedures', function () use ($app) {
 	$prefix = 'ProceduresCtrl:';
 
-	$app->get ('',    $prefix . 'getAll');
-	$app->get ('/bi', $prefix . 'getBI');
-	$app->get ('/{procedure_id:\d+}', $prefix . 'getOne');
+	$app->get    ('',    $prefix . 'getAll');
+	$app->get    ('/bi', $prefix . 'getBI');
+	$app->get    ('/{procedure_id:\d+}', $prefix . 'getOne');
+	$app->delete ('/{procedure_id:\d+}', $prefix . 'deleteProcedure');
 	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+
+	$app->delete ('/category/{category_id:\d+}', $prefix . 'deleteCategory');
 });
 
 ### SMS Templates

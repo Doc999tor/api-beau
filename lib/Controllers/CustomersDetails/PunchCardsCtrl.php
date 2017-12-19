@@ -38,7 +38,7 @@ class PunchCardsCtrl extends Controller {
 		$time = filter_var($body['date'], FILTER_SANITIZE_STRING);
 
 		$is_correct = true; $msg = '';
-		if (!\DateTime::createFromFormat('Y-m-d\Th:i:s.u\Z', $time)) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $time)) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(201);

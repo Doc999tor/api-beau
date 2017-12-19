@@ -73,6 +73,25 @@ class ProceduresCtrl extends Controller {
 		}
 	}
 
+	public function deleteProcedure (Request $request, Response $response):Response {
+		if ($request->getBody()->getSize()) {
+			$body = $response->getBody();
+			$body->write('body has to be empty');
+			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
+		}
+	}
+
+	public function deleteCategory (Request $request, Response $response):Response {
+		if ($request->getBody()->getSize()) {
+			$body = $response->getBody();
+			$body->write('body has to be empty');
+			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
+		}
+	}
 	private function checkBodyCorrectness($body) {
 		$correct_body = ['name', 'duration', 'price', 'color', 'category_id'];
 

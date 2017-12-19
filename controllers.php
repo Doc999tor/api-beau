@@ -44,11 +44,13 @@ $container['CustomersDetails\TimelineCtrl'] = function () use ($container) {
 $container['CreatingAppointment\ClientsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CreatingAppointment\ClientsCtrl($container);
 };
+# Procedures list
 $container['ProceduresCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\ProceduresCtrl($container);
 };
-$container['CreatingAppointment\AppointmentsCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\CreatingAppointment\AppointmentsCtrl($container);
+# Appointments
+$container['AppointmentsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\AppointmentsCtrl($container);
 };
 
 # Reminders
