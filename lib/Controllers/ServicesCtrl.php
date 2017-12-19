@@ -83,6 +83,26 @@ class ServicesCtrl extends Controller {
 		}
 	}
 
+	public function addCategory (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$name = filter_var($body['name'], FILTER_SANITIZE_STRING);
+		$added = filter_var($body['added'], FILTER_SANITIZE_STRING);
+
+		$is_correct = true; $msg = '';
+		if (empty($name)) { $is_correct = false; $msg .= "name cannot be empty<br>"; }
+		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $added)) { $is_correct = false; $msg .= "added has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+
+		if ($is_correct) {
+			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $msg);
+			return $response->withStatus(400);
+		}
+	}
+
 	public function deleteCategory (Request $request, Response $response):Response {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();

@@ -148,7 +148,7 @@ $app->group('/catalog/services', function () use ($app) {
 	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)+}', $prefix . 'deleteServices');
 	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 
-	$app->post   ('/categories', $prefix . 'addCategory');
+	$app->post   ('/categories', $prefix . 'addCategory')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->delete ('/categories/{category_id:\d+}', $prefix . 'deleteCategory');
 });
 
