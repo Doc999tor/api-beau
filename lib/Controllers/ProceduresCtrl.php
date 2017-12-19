@@ -93,7 +93,7 @@ class ProceduresCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['name', 'duration', 'price', 'color', 'category_id'];
+		$correct_body = ['name', 'duration', 'price', 'color', 'category_id', 'added'];
 
 		$is_correct = true;
 		$msg = '';
@@ -108,6 +108,8 @@ class ProceduresCtrl extends Controller {
 		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price has to be a number' . "<br>"; }
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit($body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
+
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z<br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

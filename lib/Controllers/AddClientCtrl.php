@@ -87,7 +87,7 @@ class AddClientCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'filling_up', 'sex', 'approved_marketing', 'depts', 'notes', 'social', 'source', 'recommended_by'];
+		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'filling_up', 'sex', 'approved_marketing', 'depts', 'notes', 'social', 'source', 'recommended_by', 'added'];
 
 		$is_correct = true;
 		$msg = '';
@@ -147,6 +147,8 @@ class AddClientCtrl extends Controller {
 				else if (!preg_match('/^\d+$/', $body['recommended_by'])) { $is_correct = false; $msg .= 'recommended_by client_id has to be integer' . "<br>"; }
 			}
 		}
+
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z<br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
