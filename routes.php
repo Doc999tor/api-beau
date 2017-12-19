@@ -138,17 +138,18 @@ $app->group('/reminders', function () use ($app) {
 	$app->delete('/{reminder_id:\d+}', $prefix . 'delete');
 });
 
-### Procedures
-$app->group('/procedures', function () use ($app) {
-	$prefix = 'ProceduresCtrl:';
+### Catalog
+$app->group('/catalog/services', function () use ($app) {
+	$prefix = 'ServicesCtrl:';
 
 	$app->get    ('',    $prefix . 'getAll');
 	$app->get    ('/bi', $prefix . 'getBI');
-	$app->get    ('/{procedure_id:\d+}', $prefix . 'getOne');
-	$app->delete ('/{procedure_id:\d+}', $prefix . 'deleteProcedure');
+	$app->get    ('/{service_id:\d+}', $prefix . 'getService');
+	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)+}', $prefix . 'deleteServices');
 	$app->post('',    $prefix . 'add')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 
-	$app->delete ('/category/{category_id:\d+}', $prefix . 'deleteCategory');
+	$app->post   ('/categories', $prefix . 'addCategory');
+	$app->delete ('/categories/{category_id:\d+}', $prefix . 'deleteCategory');
 });
 
 ### SMS Templates

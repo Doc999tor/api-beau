@@ -123,12 +123,12 @@ class AddClientCtrl extends Controller {
 				}
 				if (isset($note->reminder)) {
 					if ($note->reminder === false) { return true; }
-					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d H:i', $note->date); }
+					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $note->date); }
 				} else {
 					return false;
 				}
 				return true;
-			})) !== count($notes)) { $is_correct = false; $msg .= 'notes are malformed' . "<br>"; }
+			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note.date has to be UTC<br>"; }
 		}
 
 		if (isset($body['social'])) {

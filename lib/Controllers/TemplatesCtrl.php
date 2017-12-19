@@ -22,7 +22,7 @@ class TemplatesCtrl extends Controller {
 		  "client_last_name" => ["value" => "ישראלי", "average_length" => 6],
 		  "client_next_appointment_date" => ["value" => "2017-11-01", "average_length" => 10],
 		  "client_next_appointment_time" => ["value" => "11:11", "average_length" => 5],
-		  "client_next_appointment_procedures_list" => ["value" => "hair styling, Massage, Acupuncture", "average_length" => 34],
+		  "client_next_appointment_services_list" => ["value" => "hair styling, Massage, Acupuncture", "average_length" => 34],
 		  "online_booking_link" => ["value" => "http://fashion-in-israel.com", "average_length" => 28]
 		];
 	}

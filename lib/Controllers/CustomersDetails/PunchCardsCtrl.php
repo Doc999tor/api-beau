@@ -59,7 +59,7 @@ class PunchCardsCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['procedure_id', 'uses', 'sum', 'date'];
+		$correct_body = ['service_id', 'uses', 'sum', 'date'];
 
 		$is_correct = true;
 		$msg = '';
@@ -69,7 +69,7 @@ class PunchCardsCtrl extends Controller {
 			$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' argument should exist';
 		}
 
-		if (isset($body['procedure_id']) && !ctype_digit($body['procedure_id'])) { $is_correct = false; $msg .= 'procedure_id has to be an integer' . "<br>"; }
+		if (isset($body['service_id']) && !ctype_digit($body['service_id'])) { $is_correct = false; $msg .= 'service_id has to be an integer' . "<br>"; }
 		if (isset($body['uses']) && !ctype_digit($body['uses'])) { $is_correct = false; $msg .= 'uses have to be an integer' . "<br>"; }
 		if (isset($body['sum']) && !ctype_digit($body['sum'])) { $is_correct = false; $msg .= 'sum has to be an integer' . "<br>"; }
 		if (isset($body['date']) && !\DateTime::createFromFormat('Y-m-d\Th:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }

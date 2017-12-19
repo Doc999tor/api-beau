@@ -4,7 +4,7 @@ namespace Lib\Controllers\CustomersDetails;
 
 use \Lib\Helpers\Utils as Utils;
 use Lib\Controllers\Controller as Controller;
-use Lib\Controllers\ProceduresCtrl as ProceduresCtrl;
+use Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -35,7 +35,7 @@ class TimelineCtrl extends Controller {
 	}
 
 	private function generateAppointments(\DateTime $date) {
-		$procedures_count = rand(1, 5);
+		$services_count = rand(1, 5);
 		$is_deleted = !(rand(1, 5) % 5);
 
 		$added_date = clone $date;
@@ -47,9 +47,9 @@ class TimelineCtrl extends Controller {
 			"added_date" => $added_date->format('Y-m-d'),
 			"worker_id" => rand(1, 5),
 			"worker_name" => Utils::generatePhrase('', 1, 2),
-			"procedures" => array_map(function ($v) {
-				return ProceduresCtrl::generateProcedure(rand(1, 50));
-			}, array_fill(0, $procedures_count, null)),
+			"services" => array_map(function ($v) {
+				return ServicesCtrl::generateService(rand(1, 50));
+			}, array_fill(0, $services_count, null)),
 		];
 		if ($is_deleted) {
 			$appoinment['is_deleted'] = true;
@@ -95,12 +95,12 @@ class TimelineCtrl extends Controller {
 		return $dept;
 	}
 	private function generatePunch_cards(\DateTime $date) {
-		$procedures_count = 10;
+		$services_count = 10;
 		$punch_card = [
 			"id" => rand(1, 10),
-			"procedure_name" => Utils::generatePhrase('', 1, 3),
-			"procedure_id" => rand(1, 50),
-			"procedure_count" => $procedures_count,
+			"service_name" => Utils::generatePhrase('', 1, 3),
+			"service_id" => rand(1, 50),
+			"service_count" => $services_count,
 		];
 		$date_kind = rand(1, 3);
 		switch ($date_kind) {

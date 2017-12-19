@@ -3,7 +3,7 @@
 namespace Lib\Controllers;
 
 use Lib\Controllers\Controller as Controller;
-use Lib\Controllers\ProceduresCtrl as ProceduresCtrl;
+use Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -56,14 +56,14 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function generateAppointment($date) {
-		$procedures_count = rand(1, 5);
+		$services_count = rand(1, 5);
 		return [
 			"id" => rand(1, 1000),
 			"date" => $date,
 			"client_id" => rand(1, 120),
-			"procedures" => array_map(function ($v) {
-				return ProceduresCtrl::generateProcedure(rand(1, 50));
-			}, array_fill(0, $procedures_count, null))
+			"services" => array_map(function ($v) {
+				return ServicesCtrl::generateService(rand(1, 50));
+			}, array_fill(0, $services_count, null))
 		];
 	}
 
@@ -121,7 +121,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['start', 'client_id', 'procedures', 'duration', 'is_reminders_set', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -129,8 +129,8 @@ class AppointmentsCtrl extends Controller {
 
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
-		$procedures = json_decode($body['procedures']);
-		if (gettype($procedures) !== 'array' || count(array_filter($procedures, 'is_int')) !== count($procedures)) { $is_correct = false; $msg .= ' procedures have to be an array of integers <br>'; }
+		$services = json_decode($body['services']);
+		if (gettype($services) !== 'array' || count(array_filter($services, 'is_int')) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of integers <br>'; }
 		if (!isset($body['duration']) || !ctype_digit($body['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
 		if (!in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }

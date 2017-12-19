@@ -5,7 +5,7 @@ namespace Lib\Controllers;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class ProceduresCtrl extends Controller {
+class ServicesCtrl extends Controller {
 	public function getAll (Request $request, Response $response) {
 		$DEFAULT_LIMIT = 20;
 
@@ -17,31 +17,31 @@ class ProceduresCtrl extends Controller {
 		$offset = isset($params['offset']) ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
 		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
-		$procedures = [];
+		$services = [];
 		for ($i=0; $i < $limit; $i++) {
-			$procedures []= self::generateProcedure(mt_rand(0, 150), $q);
+			$services []= self::generateService(mt_rand(0, 150), $q);
 		}
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
-		return $response->withJson($procedures);
+		return $response->withJson($services);
 	}
 
 	public function getBI (Request $request, Response $response):Response {
 		$BI_LIMIT = 6;
 
-		$procedures = [];
+		$services = [];
 		for ($i=0; $i < $BI_LIMIT; $i++) {
-			$procedures []= self::generateProcedure(mt_rand(0, 150));
+			$services []= self::generateService(mt_rand(0, 150));
 		}
 
-		return $response->withJson($procedures);
+		return $response->withJson($services);
 	}
 
-	public function getOne (Request $request, Response $response, array $args):Response {
-		return $response->withJson(self::generateProcedure(filter_var($args['procedure_id'], FILTER_SANITIZE_NUMBER_INT)));
+	public function getService (Request $request, Response $response, array $args):Response {
+		return $response->withJson(self::generateService(filter_var($args['service_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
-	public static function generateProcedure($id, $q = '') {
+	public static function generateService($id, $q = '') {
 		$possible_categories = ['', 'עיצוב שיער', 'קוסמטיקה', 'טיפולי פנים', 'טיפולי גוף', 'מניקור פדיקור'];
 		$category_id = mt_rand(1, 5);
 		return [
@@ -73,7 +73,7 @@ class ProceduresCtrl extends Controller {
 		}
 	}
 
-	public function deleteProcedure (Request $request, Response $response):Response {
+	public function deleteServices (Request $request, Response $response):Response {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
 			$body->write('body has to be empty');
@@ -109,7 +109,7 @@ class ProceduresCtrl extends Controller {
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit($body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z<br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
