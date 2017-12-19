@@ -38,7 +38,7 @@ class AppointmentsCtrl extends Controller {
 		}
 
 		if ((!isset($params['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['start'])) || (!isset($params['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['end']))) {
-			$response->getBody()->write('start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00');
+			$response->getBody()->write('start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
 			return $response->withStatus(400);
 		} else {
 			if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {
@@ -121,11 +121,11 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ["start", "client_id", "procedures", "duration", "is_reminders_set", "note", "address", "worker_id"];
+		$correct_body = ['start', 'client_id', 'procedures', 'duration', 'is_reminders_set', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) { $is_correct = false; $msg .= ' start has to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) { $is_correct = false; $msg .= ' start has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
@@ -137,28 +137,34 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ["start", "end", "is_all_day", "note", "address", "worker_id"];
+		$correct_body = ['start', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkBreakCorrectness (array $body): array {
-		$correct_body = ["start", "end", "worker_id"];
+		$correct_body = ['start', 'end', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= ' start and end have to exist and to be Y-m-d H:i format, like 1970-01-01 00:00 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
+
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

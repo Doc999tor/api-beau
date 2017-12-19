@@ -8,7 +8,7 @@ $app->group('/appointments', function () use ($app) {
 	$prefix = 'AppointmentsCtrl:';
 	$app->get('', $prefix . 'getCalendar');
 
-	$app->post('/appointments', $prefix . 'addAppointment')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
+	$app->post('', $prefix . 'addAppointment')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/break', $prefix . 'addBreak')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
 	$app->post('/vacation', $prefix . 'addVacation')->add(new \Lib\Middlewares\PostReturnIDMiddleware());
