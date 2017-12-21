@@ -31,9 +31,9 @@ var _config = {
     }
   },
   urls: {
-    base: 'http://api.bewebmaster.co.il',
-    clientsList: 'http://api.bewebmaster.co.il/customers-list/clients',
-    checkedClients: 'http://api.bewebmaster.co.il/customers-list/clients?ids=',
+    base: 'https://api.bewebmaster.co.il',
+    clientsList: 'https://api.bewebmaster.co.il/customers-list/clients',
+    checkedClients: 'https://api.bewebmaster.co.il/customers-list/clients?ids=',
     clientsListLimit: '?limit=',
     clientsListOffset: '&offset=',
     clientsSearch: '?q=',
@@ -47,61 +47,61 @@ var _config = {
   schedule: {
     linkToAll: '/schedule',
     users: [
-      {
-        id: 1,
-        name: 'Ahuva Ben Shoshan',
-        last_appoinment: '2017-10-01 15:15',
-        phone: '054-4668824'
-      },
-      {
-        id: 2,
-        name: 'Aviel Gardi Ben Ahmed Ben Amit',
-        last_appoinment: '2017-10-02 17:00',
-        phone: '054-4668824'
-      },
-      {
-        id: 3,
-        name: 'Shulamit Nathan',
-        last_appoinment: '2017-10-03 11:30',
-        phone: '054-4668824'
-      },
-      {
-        id: 2,
-        name: 'Ahuva Ben Shoshan',
-        last_appoinment: '2017-10-04 09:00',
-        phone: '054-4668824'
-      },
-      {
-        id: 2,
-        name: 'Aviel Gardi Ben Ahmed Ben Amit',
-        last_appoinment: '2017-10-08 11:45',
-        phone: '054-4668824'
-      },
-      {
-        id: 2,
-        name: 'Shulamit Nathan',
-        last_appoinment: '2017-10-08 14:00',
-        phone: '054-4668824'
-      },
-      {
-        id: 4,
-        name: 'Ahuva Ben Shoshan',
-        last_appoinment: '2017-10-10 15:00',
-        phone: '054-4668824'
-      },
-      {
-        id: 5,
-        name: 'Ahuva Ben Shoshan2',
-        last_appoinment: '2017-10-10 15:15',
-        phone: '054-4668824'
-      },
-      {
-        id: 5,
-        name: 'Ahuva Ben Shoshan',
-        last_appoinment: '2017-10-11 16:45',
-        phone: '054-4668824'
-      }
-    ]
+{
+  id: 1,
+  name: 'Ahuva Ben Shoshan',
+  last_appoinment: '2017-12-18 10:00',
+  phone: '054-4668824'
+},
+{
+  id: 2,
+  name: 'Aviel Gardi Ben Ahmed Ben Amit',
+  last_appoinment: '2017-12-19 16:30',
+  phone: '054-4668824'
+},
+{
+  id: 3,
+  name: 'Shulamit Nathan',
+  last_appoinment: '2017-12-20 11:00',
+  phone: '054-4668824'
+},
+{
+  id: 2,
+  name: 'Ahuva Ben Shoshan',
+  last_appoinment: '2017-12-27 15:00',
+  phone: '054-4668824'
+},
+{
+  id: 2,
+  name: 'Aviel Gardi Ben Ahmed Ben Amit',
+  last_appoinment: '2018-01-01 12:30',
+  phone: '054-4668824'
+},
+{
+  id: 2,
+  name: 'Shulamit Nathan',
+  last_appoinment: '2018-01-02 15:30',
+  phone: '054-4668824'
+},
+{
+  id: 4,
+  name: 'Ahuva Ben Shoshan',
+  last_appoinment: '2018-01-08 09:00',
+  phone: '054-4668824'
+},
+{
+  id: 5,
+  name: 'Ahuva Ben Shoshan2',
+  last_appoinment: '2018-01-11 13:00',
+  phone: '054-4668824'
+},
+{
+  id: 5,
+  name: 'Ahuva Ben Shoshan',
+  last_appoinment: '2018-01-15 16:00',
+  phone: '054-4668824'
+}
+]
   },
   inactive: {
     linkToAll: '/inactive',
