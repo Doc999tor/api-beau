@@ -38,7 +38,7 @@ $app->group('/customers-list', function () use ($app) {
 	$prefix = 'CustomersList:';
 	$app->get   ('/', $prefix . 'index');
 	$app->get   ('/clients', $prefix . 'getClients');
-	$app->delete('/clients', $prefix . 'deleteClients');
+	$app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)+}', $prefix . 'deleteClients');
 
 	$app->get('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });

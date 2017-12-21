@@ -32,25 +32,19 @@ class CustomersList extends Controller {
 	}
 
 	public function deleteClients (Request $request, Response $response):Response {
-		$params = $request->getQueryParams();
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
 
-		if (!isset($params['ids'])) {
-			$response->getBody()->write('ids must be provided');
+		$is_correct = true; $msg = '';
+		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+
+		if ($is_correct) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $msg);
 			return $response->withStatus(400);
 		}
-		if (count($params) !== 1) {
-			$response->getBody()->write('ids must be a single field here');
-			return $response->withStatus(400);
-		}
-
-		$ids = str_replace(',', '', $params['ids']);
-
-		if (!is_numeric($ids)) {
-			$response->getBody()->write('ids should be numbers');
-			return $response->withStatus(400);
-		}
-
-		return $response->withStatus(204);
 	}
 	public static function generateClients($limit, $q = '') {
 		$clients = [];
@@ -68,7 +62,7 @@ class CustomersList extends Controller {
 			"profile_image" => "/{$id}.jpg",
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
-			"last_appointment" => date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'), # 3 months back and 1 forth
+			"last_appointment" => date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . 'T' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00') . ':00Z', # 3 months back and 1 forth
 		];
 		return $client;
 	}
