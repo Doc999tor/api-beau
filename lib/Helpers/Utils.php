@@ -2,18 +2,19 @@
 namespace Lib\Helpers;
 
 class Utils {
-	public static function returnBytes ($val) {
+	public static function returnBytes (string $val):int {
 		$val = trim($val);
 		$last = strtolower($val[strlen($val)-1]);
+		$bytes = (int)substr($val, 0, -1);
 
 		switch($last) {
 		    // The 'G' modifier is available since PHP 5.1.0
-		    case 'g': $val *= 1024;
-		    case 'm': $val *= 1024;
-		    case 'k': $val *= 1024;
+		    case 'g': $bytes *= 1024;
+		    case 'm': $bytes *= 1024;
+		    case 'k': $bytes *= 1024;
 		}
 
-		return $val;
+		return $bytes;
 	}
 
 	public static function generateWord ($word_min_length = 2, $word_max_length = 12) {

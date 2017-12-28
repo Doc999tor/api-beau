@@ -26,13 +26,13 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 $container = $app->getContainer();
 
 // Register component on container
-$container['view'] = function ($container) {
+$container['view'] = function ($c) {
 	$view = new \Slim\Views\Twig('views', [
 		'cache' => false
 	]);
 	$view->addExtension(new \Slim\Views\TwigExtension(
-		$container['router'],
-		$container['request']->getUri()
+		$c['router'],
+		$c['request']->getUri()
 	));
 
 	return $view;

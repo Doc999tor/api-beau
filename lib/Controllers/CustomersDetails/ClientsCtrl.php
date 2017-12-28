@@ -26,79 +26,21 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$possible_keys = ['phone', 'email', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
-		$keys = is_array($body) ? array_keys($body) : [];
-		if (empty($keys)) {
-			$response->getBody()->write('body is missing');
+		$is_body_correct = $this->checkBodyCorrectness($body);
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
 			return $response->withStatus(400);
 		}
-		if (!($request->getBody() && in_array($keys[0], $possible_keys))) {
-			$response->getBody()->write('body is malformed');
-			return $response->withStatus(400);
-		}
+	}
 
-		switch ($keys[0]) {
-			case 'phone':
-				if (!preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) {
-					$response->getBody()->write('phone value is incorrect');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'email':
-				if (!(strpos($body['email'], '@') > 0)) {
-					$response->getBody()->write('email is incorrect');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'birthdate':
-				if (!\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) {
-					$response->getBody()->write('birthdate is incorrect, it has to be Y-m-d H:i format, like 1970-01-01');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'gender':
-				if (!in_array($body['gender'], ['male', 'female', 'null'])) {
-					$response->getBody()->write('gender can be male or female');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'isFavorite':
-				if (!in_array($body['isFavorite'], ['true', 'false'])) {
-					$response->getBody()->write('isFavorite value is incorrect');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'status':
-				if (mb_strlen($body['status']) < 2) {
-					$response->getBody()->write('status value is too short');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'address':
-				if (mb_strlen($body['address']) < 4) {
-					$response->getBody()->write('address is too short');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'source':
-				$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
-				if (!in_array(strtolower($body['source']), $source_options)) {
-					$response->getBody()->write('source is not from the list: ["ads", "fb_page", "family", "friends", "recommendation"]');
-					return $response->withStatus(400);
-				} else if ($body['source'] === 'recommendation' && !(isset($body['recommended_by']) && is_int((int)$body['recommended_by']) && (int)$body['recommended_by'] > 1)) {
-					$response->getBody()->write('recommended_by should be a positive integer');
-					return $response->withStatus(400);
-				}
-				break;
-			case 'permit_ads':
-				if (!in_array($body['permit_ads'], ['true', 'false'])) {
-					$response->getBody()->write('permit_ads value is incorrect');
-					return $response->withStatus(400);
-				}
-				break;
-		}
+	public function setProfileImage (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+		$body = $request->getParsedBody();
 
-		return $response->withStatus(204);
+		return $response->getBody()->write('response body');
 	}
 
 	public function getMap (Request $request, Response $response) {
@@ -115,5 +57,61 @@ class ClientsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 		return $response->withStatus(204);
+	}
+
+	public function setPersonalDataFromClient (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+		$body = $request->getParsedBody();
+
+		return $response->getBody()->write('response body');
+	}
+	public function setProfileImageFromClient (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		$is_body_correct = ['is_correct' => true, 'msg' => ''];
+		if (!isset($params['b']) || !ctype_digit($params['b'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] = 'b has to be an integer';
+		} else if (!isset($params['c']) || !ctype_alnum($params['c'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] = 'c has to be an alphanumeric';
+		} else {
+			$is_body_correct = MediaCtrl::checkMedia($request, 'photo');
+		}
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
+	private function checkClientData ($body) {
+		$possible_keys = ['phone', 'email', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff(array_keys($body), $possible_keys); # nonexpected fields exist
+		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode(', ', $diff_keys) . " arguments should not exist<br>"; }
+
+		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= 'phone value is incorrect';}
+		if (!(isset($body['email']) && strpos($body['email'], '@') > 0)) { $is_correct = false; $msg .= 'email is incorrect';}
+		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate is incorrect, it has to be Y-m-d H:i format, like 1970-01-01';}
+		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= 'gender can be male or female';}
+		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= 'isFavorite value is incorrect';}
+		if (isset($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= 'status value is too short';}
+		if (isset($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= 'address is too short';}
+
+		if (isset($body['source'])) {
+			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
+			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= 'source is not from the list: [' . implode(',', $source_options) . ']';}
+			else if ($body['source'] === 'recommendation' && !(isset($body['recommended_by']) && is_int((int)$body['recommended_by']) && (int)$body['recommended_by'] > 1)) { $is_correct = false; $msg .= 'recommended_by should be a positive integer';}
+		}
+		if (isset($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= 'permit_ads value is incorrect';}
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 }
