@@ -60,21 +60,36 @@ class ClientsCtrl extends Controller {
 	}
 
 	public function setPersonalDataFromClient (Request $request, Response $response):Response {
-		$params = $request->getQueryParams();
 		$body = $request->getParsedBody();
 
-		return $response->getBody()->write('response body');
-	}
-	public function setProfileImageFromClient (Request $request, Response $response):Response {
-		$params = $request->getQueryParams();
-
 		$is_body_correct = ['is_correct' => true, 'msg' => ''];
-		if (!isset($params['b']) || !ctype_digit($params['b'])) {
+		if (!isset($body['b']) || !ctype_digit($body['b'])) {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] = 'b has to be an integer';
-		} else if (!isset($params['c']) || !ctype_alnum($params['c'])) {
+		} else if (!isset($body['c']) || !ctype_alnum($body['c'])) {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] = 'c has to be an alphanumeric';
+		} else {
+			$is_body_correct = $this->checkClientData(array_diff_key($body, array_flip(['b', 'c'])));
+		}
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+	public function setProfileImageFromClient (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+
+		$is_body_correct = ['is_correct' => true, 'msg' => ''];
+		$is_body_correct['msg'] = $this->checkClientAuthData(
+			array_intersect_key($body, array_flip(['b', 'c']))
+		);
+		if ($is_body_correct['msg']) {
+			$is_body_correct['is_correct'] = false;
 		} else {
 			$is_body_correct = MediaCtrl::checkMedia($request, 'photo');
 		}
@@ -87,9 +102,32 @@ class ClientsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function addNoteFromClient (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+
+		$is_body_correct = ['is_correct' => true, 'msg' => ''];
+		$is_body_correct['msg'] = $this->checkClientAuthData(
+			array_intersect_key($body, array_flip(['b', 'c']))
+		);
+		if ($is_body_correct['msg']) {
+			$is_body_correct['is_correct'] = false;
+		} else {
+			$error_msg = NotesCtrl::checkCorrectnessBody(array_diff_key($body, array_flip(['b', 'c'])));
+			$is_body_correct['is_correct'] = !$error_msg;
+			$is_body_correct['msg'] = $error_msg;
+		}
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
 
 	private function checkClientData ($body) {
-		$possible_keys = ['phone', 'email', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
+		$possible_keys = ['name', 'phone', 'email', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 
 		$is_correct = true;
 		$msg = '';
@@ -113,5 +151,15 @@ class ClientsCtrl extends Controller {
 		if (isset($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= 'permit_ads value is incorrect';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function checkClientAuthData(array $authData):string {
+		$msg = '';
+		if (!isset($authData['b']) || !ctype_digit($authData['b'])) {
+			$msg = 'b has to be an integer';
+		} else if (!isset($authData['c']) || !ctype_alnum($authData['c'])) {
+			$msg = 'c has to be an alphanumeric';
+		}
+		return $msg;
 	}
 }

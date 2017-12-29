@@ -9,31 +9,20 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class NotesCtrl extends Controller {
 	public function addNote (Request $request, Response $response) {
 		$body = $request->getParsedBody();
-		$body = is_array($body) ? $body : [];
 
-		if ($this->checkCorrectness($body)) {
-			return $response->withStatus(201);
-		} else {
+		$error_msg = self::checkCorrectnessBody($body);
+		if ($error_msg) {
 			$body = $response->getBody();
-			$body->write("text has to be bigger than 2 chars, \n reminder has to be a true or false, \n 'date has to be in Y-m-d H:i format, 1970-01-01 06:00 for example");
+			$body->write($error_msg);
 			return $response->withStatus(400);
 		}
+
+		return $response->withStatus(201);
 	}
 	public function updateNote (Request $request, Response $response, array $args) {
 		$body = $request->getParsedBody();
 
-		$error_msg = '';
-
-		if (isset($body['text']) && mb_strlen($body['text']) < 3) {
-			$error_msg = 'text has to be bigger than 2 chars';
-		}
-		if (isset($body['reminder']) && !in_array($body['reminder'], ['false', 'true'])) {
-			$error_msg = 'reminder has to be a true or false';
-		}
-		if (isset($body['reminder_date']) && \DateTime::createFromFormat('Y-m-d H:i', $body['reminder_date']) === false) {
-			$error_msg = 'date has to be in Y-m-d H:i format, 1970-01-01 06:00 for example';
-		}
-
+		$error_msg = self::checkCorrectnessBody($body);
 		if ($error_msg) {
 			$body = $response->getBody();
 			$body->write($error_msg);
@@ -52,18 +41,19 @@ class NotesCtrl extends Controller {
 		}
 	}
 
-	private function checkCorrectness(array $body):bool {
-		if (isset($body['text']) && mb_strlen($body['text']) > 2) {
-			if (!isset($body['reminder'])) {
-				return true;
-			} else if (isset($body['reminder']) && (in_array($body['reminder'], ['false', 'true'])) && isset($body['reminder_date']) && \DateTime::createFromFormat('Y-m-d H:i', $body['reminder_date'])) {
-				return true;
-			} else {
-				return false;
-			}
-			return true;
-		} else {
-			return false;
+	public static function checkCorrectnessBody(array $body):string {
+		$error_msg = '';
+
+		if (isset($body['text']) && mb_strlen($body['text']) < 3) {
+			$error_msg .= 'text has to be bigger than 2 chars <br>';
 		}
+		if (isset($body['reminder']) && !in_array($body['reminder'], ['false', 'true'])) {
+			$error_msg .= 'reminder has to be a true or false <br>';
+		}
+		if (isset($body['reminder_date']) && !\DateTime::createFromFormat('Y-m-d\Th:i:s.u\Z', $body['reminder_date'])) {
+			$error_msg .= 'reminder_date has to be UTC format, like  2017-12-18T02:09:54.486Z<br>';
+		}
+
+		return $error_msg;
 	}
 }

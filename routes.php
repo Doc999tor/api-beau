@@ -174,6 +174,7 @@ $app->group('/filling-up', function () use ($app) {
 	$prefix = 'CustomersDetails\\ClientsCtrl';
 	$app->patch('', $prefix . ':setPersonalDataFromClient');
 	$app->post ('/photo', $prefix . ':setProfileImageFromClient');
+	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
 
 $app->options('/{routes:.+}', 'cors');
