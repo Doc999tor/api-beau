@@ -40,9 +40,9 @@ $app->group('/customers-list', function () use ($app) {
 	$prefix = 'CustomersList:';
 	$app->get   ('/', $prefix . 'index');
 	$app->get   ('/clients', $prefix . 'getClients');
-	$app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)+}', $prefix . 'deleteClients');
+	$app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)*}', $prefix . 'deleteClients');
 
-	$app->get('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
+	$app->get   ('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });
 
 ### Groups
@@ -150,8 +150,9 @@ $app->group('/catalog/services', function () use ($app) {
 	$app->get    ('',    $prefix . 'getAll');
 	$app->get    ('/bi', $prefix . 'getBI');
 	$app->get    ('/{service_id:\d+}', $prefix . 'getService');
-	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)+}', $prefix . 'deleteServices');
-	$app->post('',    $prefix . 'add')->add(new ReturnID());
+	$app->put    ('/{service_id:\d+}', $prefix . 'update');
+	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete');
+	$app->post   ('', $prefix . 'add')->add(new ReturnID());
 
 	$app->post   ('/categories', $prefix . 'addCategory')->add(new ReturnID());
 	$app->delete ('/categories/{category_id:\d+}', $prefix . 'deleteCategory');

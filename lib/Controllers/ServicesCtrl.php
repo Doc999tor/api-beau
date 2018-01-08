@@ -63,6 +63,10 @@ class ServicesCtrl extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= ' added has exist and to be UTC format, like 2017-12-18T02:09:54.486Z <br>';
+		}
 
 		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(201);
@@ -73,7 +77,22 @@ class ServicesCtrl extends Controller {
 		}
 	}
 
-	public function deleteServices (Request $request, Response $response):Response {
+	public function update (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkBodyCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
+	public function delete (Request $request, Response $response):Response {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
 			$body->write('body has to be empty');
@@ -113,14 +132,15 @@ class ServicesCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['name', 'duration', 'price', 'color', 'category_id', 'added'];
+		$correct_body = ['name', 'duration', 'price', 'color', 'category_id'];
 
 		$is_correct = true;
 		$msg = '';
 
-		if (!empty(array_diff($correct_body, array_keys($body)))) {
+		$diff_keys = array_diff($correct_body, array_keys($body));
+		if (!empty($diff_keys)) {
 			$is_correct = false;
-			$msg = implode(', ', array_diff($correct_body, array_keys($body))) . ' argument should exist';
+			$msg = implode(', ', $diff_keys) . ' argument should exist';
 		}
 
 		if (empty($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
@@ -128,8 +148,6 @@ class ServicesCtrl extends Controller {
 		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price has to be a number' . "<br>"; }
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit($body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
-
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
