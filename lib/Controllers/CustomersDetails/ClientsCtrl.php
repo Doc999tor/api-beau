@@ -135,20 +135,19 @@ class ClientsCtrl extends Controller {
 		$diff_keys = array_diff(array_keys($body), $possible_keys); # nonexpected fields exist
 		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode(', ', $diff_keys) . " arguments should not exist<br>"; }
 
-		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= 'phone value is incorrect';}
-		if (!(isset($body['email']) && strpos($body['email'], '@') > 0)) { $is_correct = false; $msg .= 'email is incorrect';}
-		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate is incorrect, it has to be Y-m-d H:i format, like 1970-01-01';}
-		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= 'gender can be male or female';}
-		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= 'isFavorite value is incorrect';}
-		if (isset($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= 'status value is too short';}
-		if (isset($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= 'address is too short';}
+		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect';}
+		if (isset($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect';}
+		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be Y-m-d H:i format, like 1970-01-01';}
+		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be male or female';}
+		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect';}
+		if (isset($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short';}
+		if (isset($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= ' address is too short';}
 
 		if (isset($body['source'])) {
 			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
-			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= 'source is not from the list: [' . implode(',', $source_options) . ']';}
-			else if ($body['source'] === 'recommendation' && !(isset($body['recommended_by']) && is_int((int)$body['recommended_by']) && (int)$body['recommended_by'] > 1)) { $is_correct = false; $msg .= 'recommended_by should be a positive integer';}
+			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [' . implode(',', $source_options) . ']';}
 		}
-		if (isset($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= 'permit_ads value is incorrect';}
+		if (isset($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value is incorrect';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
