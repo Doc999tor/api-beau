@@ -13,26 +13,19 @@ class AppointmentsCtrl extends Controller {
 
 		if (isset($params['category_id'])) {
 			if (ctype_digit($params['category_id'])) {
-				$appointments = [];
-				if (rand(1,3) % 3 === 0) {
-					return $response->withJson($appointments);
-				} else {
-					$range_dates = range(1, rand(5,50), rand(1,5));
-					shuffle($range_dates);
-					$range_dates = array_slice($range_dates, 0, rand(1,20));
-					sort($range_dates);
-
-					$today = new \DateTime();
-					$appointments = [];
-					for ($i=0, $appointments_limit = count($range_dates); $i < $appointments_limit; $i++) {
-						$interval = new \DateInterval("P{$range_dates[$i]}D");
-						$date = (clone $today)->sub($interval);
-						$appointments []= $this->generateAppointment($date->format('Y-m-d'));
-					}
-					return $response->withJson($appointments);
-				}
+				return $response->withJson($this->createAppointments());
 			} else {
 				$response->getBody()->write('category_id has to be an integer');
+				return $response->withStatus(400);
+			}
+		} else if (isset($params['service_id'])) {
+			$ids = json_decode('[' . $params['service_id'] . ']');
+			if (empty(array_filter($ids, function ($v) {
+				return !is_numeric($v);
+			}))) {
+				return $response->withJson($this->createAppointments());
+			} else {
+				$response->getBody()->write('service_id has to be an integers list');
 				return $response->withStatus(400);
 			}
 		}
@@ -167,5 +160,24 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function createAppointments () {
+		$appointments = [];
+		if (rand(1,3) % 3 !== 0) {
+			$range_dates = range(1, rand(5,50), rand(1,5));
+			shuffle($range_dates);
+			$range_dates = array_slice($range_dates, 0, rand(1,20));
+			sort($range_dates);
+
+			$today = new \DateTime();
+			$appointments = [];
+			for ($i=0, $appointments_limit = count($range_dates); $i < $appointments_limit; $i++) {
+				$interval = new \DateInterval("P{$range_dates[$i]}D");
+				$date = (clone $today)->sub($interval);
+				$appointments []= $this->generateAppointment($date->format('Y-m-d'));
+			}
+		}
+		return $appointments;
 	}
 }
