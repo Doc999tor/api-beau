@@ -2,10 +2,11 @@
 
 namespace Lib\Controllers;
 
-use Lib\Controllers\Controller as Controller;
-use Lib\Controllers\ServicesCtrl as ServicesCtrl;
+use \Lib\Controllers\Controller as Controller;
+use \Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Lib\Helpers\Utils as Utils;
 
 class AppointmentsCtrl extends Controller {
 	public function getCalendar (Request $request, Response $response):Response {
@@ -41,23 +42,39 @@ class AppointmentsCtrl extends Controller {
 				$appointments = [];
 				$appointments_limit = rand() % 4 !== 0 ? 0 : rand(1, 5);
 				for ($i=0; $i < $appointments_limit; $i++) {
-					$appointments []= $this->generateAppointment($params['start']);
+					$appointments []= $this->generateAppointment(new \DateTime($params['start']));
 				}
 				return $response->withJson($appointments);
 			}
 		}
 	}
 
-	private function generateAppointment($date) {
+	private function generateAppointment(\DateTime $date) {
+		// var_dump($date);
 		$services_count = rand(1, 5);
-		return [
+		$appointment = [
 			"id" => rand(1, 1000),
-			"date" => $date,
+			'name' => Utils::generatePhrase('', 1, 3),
+			"start" => $date->format('Y-m-d\TH:i:s\Z'),
+			'end' => (clone $date)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d\TH:i:s\Z'),
+			'price' => rand(0,50)*10,
+			'profile_picture' => Utils::generateWord() . '.jpg',
+			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
+				return rand(0, 9);
+			}, array_fill(0, 8, 0))),
 			"client_id" => rand(1, 120),
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateService(rand(1, 50));
 			}, array_fill(0, $services_count, null))
 		];
+		if (rand(0,1)) {
+			$appointment['location'] = Utils::getRandomAddress();
+		}
+		if (rand(0,1)) {
+			$appointment['note'] = Utils::generatePhrase('', 0, 15);
+		}
+
+		return $appointment;
 	}
 
 	public function addAppointment (Request $request, Response $response):Response {
@@ -175,7 +192,7 @@ class AppointmentsCtrl extends Controller {
 			for ($i=0, $appointments_limit = count($range_dates); $i < $appointments_limit; $i++) {
 				$interval = new \DateInterval("P{$range_dates[$i]}D");
 				$date = (clone $today)->sub($interval);
-				$appointments []= $this->generateAppointment($date->format('Y-m-d'));
+				$appointments []= $this->generateAppointment($date);
 			}
 		}
 		return $appointments;
