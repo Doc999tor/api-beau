@@ -12,6 +12,7 @@ class AppointmentsCtrl extends Controller {
 	public function getCalendar (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 
+		# category_id
 		if (isset($params['category_id'])) {
 			if (ctype_digit($params['category_id'])) {
 				return $response->withJson($this->createAppointments());
@@ -31,7 +32,14 @@ class AppointmentsCtrl extends Controller {
 			}
 		}
 
-		if ((!isset($params['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['start'])) || (!isset($params['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['end']))) {
+		# regular appointments api
+		if (
+			(
+				!isset($params['start']) || (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['start']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $params['start']))
+			) || (
+				!isset($params['end']) || (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $params['end']))
+			)
+		) {
 			$response->getBody()->write('start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
 			return $response->withStatus(400);
 		} else {
@@ -40,7 +48,7 @@ class AppointmentsCtrl extends Controller {
 				return $response->withStatus(400);
 			} else {
 				$appointments = [];
-				$appointments_limit = rand() % 4 !== 0 ? 0 : rand(1, 5);
+				$appointments_limit = rand() % 3 ? rand(1, 7) : 0;
 				for ($i=0; $i < $appointments_limit; $i++) {
 					$appointments []= $this->generateAppointment(new \DateTime($params['start']));
 				}

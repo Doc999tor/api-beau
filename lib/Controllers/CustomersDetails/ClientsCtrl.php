@@ -133,7 +133,7 @@ class ClientsCtrl extends Controller {
 		$msg = '';
 
 		$diff_keys = array_diff(array_keys($body), $possible_keys); # nonexpected fields exist
-		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode( <br>', ', $diff_keys) . " arguments should not exist<br>"; }
+		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode("<br>", $diff_keys) . " arguments should not exist<br>"; }
 
 		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
 		if (isset($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
