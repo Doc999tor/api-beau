@@ -123,7 +123,7 @@ $app->group('/customers-details', function () use ($app) {
 		# Punch_cards
 		$app->group('/punch_cards', function () use ($app) {
 			$prefix = 'CustomersDetails\PunchCardsCtrl:';
-			$app->post('', $prefix . 'addPunchCard')->add(new ReturnID());
+			$app->post('', $prefix . 'add')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard');
 
 			$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new ReturnID());

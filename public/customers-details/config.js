@@ -106,7 +106,7 @@ var config = {
   },
   urls: {
     adress: 'https://maps.googleapis.com/maps/api/geocode/json',
-    main: 'http://api.bewebmaster.co.il',
+    main: 'https://api.bewebmaster.co.il',
     appointment: '/creating-appointment/',
     groups_img: '../public/customers-details/media/groups/',
     gallery: '../public/customers-details/media/galery/',

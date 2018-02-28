@@ -7,7 +7,14 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
-	public function addPunchCard (Request $request, Response $response) {
+	public function get (Request $request, Response $response):Response {
+
+
+
+		return $response->getBody()->write('response body');
+	}
+
+	public function add (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
@@ -38,7 +45,7 @@ class PunchCardsCtrl extends Controller {
 		$time = filter_var($body['date'], FILTER_SANITIZE_STRING);
 
 		$is_correct = true; $msg = '';
-		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $time)) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $time)) { $is_correct = false; $msg .= " date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(201);
@@ -77,5 +84,30 @@ class PunchCardsCtrl extends Controller {
 		if (isset($body['expiration']) && !\DateTime::createFromFormat('Y-m-d', $body['expiration'])) { $is_correct = false; $msg .= 'expiration has to be Y-m-d format, like 1970-01-01' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	public function generatePunchCard() {
+		$punch_card = [
+			"id" => rand(1, 51),
+			"sum" => 450,
+			"date" => "2017-01-01",
+			"expiration" => "2017-12-31",
+		];
+		$service = \Lib\Controllers\ServicesCtrl::generateService();
+		$punch_card['service_name'] = $service['name'];
+		$punch_card['service_id'] = $service['id'];
+		$punch_card['service_count'] = array_rand([3, 5, 7, 10, 20]);
+		$punch_card['sum'] = ($punch_card['service_count'] - 1*rand(0,1)) * $service['price'];
+
+		$punch_card['date'] = (new \DateTime())
+			->modify(rand(0,180) . ' days ago')
+			->format('Y-m-d');
+
+		if (rand(1, 3) % 3) {
+			$punch_card['expiration'] = (new \DateTime())
+				->modify('+' . rand(0,6) . ' month')
+				->modify('last day of')
+				->format('Y-m-d');
+		}
 	}
 }
