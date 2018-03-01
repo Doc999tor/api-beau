@@ -8,10 +8,13 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
 	public function get (Request $request, Response $response):Response {
+		$punch_cards = [];
 
+		for ($i=0, $punch_cards_count = rand(1,3); $i < $punch_cards_count; $i++) {
+			$punch_cards []= $this->generatePunchCard();
+		}
 
-
-		return $response->getBody()->write('response body');
+		return $response->withJson($punch_cards);
 	}
 
 	public function add (Request $request, Response $response) {
@@ -87,21 +90,34 @@ class PunchCardsCtrl extends Controller {
 	}
 
 	public function generatePunchCard() {
-		$punch_card = [
-			"id" => rand(1, 51),
-			"sum" => 450,
-			"date" => "2017-01-01",
-			"expiration" => "2017-12-31",
-		];
-		$service = \Lib\Controllers\ServicesCtrl::generateService();
+		$punch_card = [ "id" => rand(1, 51) ];
+
+		$service = \Lib\Controllers\ServicesCtrl::generateService(rand(1, 45));
 		$punch_card['service_name'] = $service['name'];
 		$punch_card['service_id'] = $service['id'];
-		$punch_card['service_count'] = array_rand([3, 5, 7, 10, 20]);
+
+		$possible_service_counts = [3, 5, 7, 10, 20];
+		$punch_card['service_count'] = $possible_service_counts[array_rand($possible_service_counts)];
 		$punch_card['sum'] = ($punch_card['service_count'] - 1*rand(0,1)) * $service['price'];
 
 		$punch_card['date'] = (new \DateTime())
 			->modify(rand(0,180) . ' days ago')
 			->format('Y-m-d');
+
+		if (!(rand() % 3)) {
+			$punch_card['uses'] = [];
+			$uses_count = rand(1, $punch_card['service_count'] - 1);
+
+			for ($i=1; $i <= $uses_count; $i++) {
+				$punch_card['uses'] []= [
+					"id" => $i,
+					"date" => (new \DateTime($punch_card['date']))
+						->modify('-' . $i . ' months')
+						->modify('first day of')
+						->format('Y-m-d\Th:i:s\Z')
+				];
+			}
+		}
 
 		if (rand(1, 3) % 3) {
 			$punch_card['expiration'] = (new \DateTime())
@@ -109,5 +125,6 @@ class PunchCardsCtrl extends Controller {
 				->modify('last day of')
 				->format('Y-m-d');
 		}
+		return $punch_card;
 	}
 }
