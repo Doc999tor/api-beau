@@ -47,24 +47,37 @@ class AppointmentsCtrl extends Controller {
 				$response->getBody()->write('worker_id has to be an integer');
 				return $response->withStatus(400);
 			} else {
+				$start = new \DateTime(filter_var($params['start'], FILTER_SANITIZE_STRING));
+				$end = new \DateTime(filter_var($params['end'], FILTER_SANITIZE_STRING));
+
+				$period = new \DatePeriod($start, new \DateInterval('P1D'), $end);
+
 				$appointments = [];
-				$appointments_limit = rand() % 3 ? rand(1, 7) : 0;
-				for ($i=0; $i < $appointments_limit; $i++) {
-					$appointments []= $this->generateAppointment(new \DateTime($params['start']));
+				foreach ($period as $date) {
+					$hours_range = range(10, 19);
+					shuffle($hours_range);
+					$hours = array_slice($hours_range, 0, rand(0, count($hours_range)));
+
+					for ($i=0, $count_hours = count($hours); $i < $count_hours; $i++) {
+						$datetime = (clone $date)->add(new \DateInterval("PT{$hours[$i]}H" . (rand(0,3)*15) . 'M'));
+
+						$appointments []= $this->generateAppointment($datetime);
+					}
 				}
+
 				return $response->withJson($appointments);
 			}
 		}
 	}
 
-	private function generateAppointment(\DateTime $date) {
-		// var_dump($date);
+	private function generateAppointment(\DateTime $start) {
+		// var_dump($start);
 		$services_count = rand(1, 5);
 		$appointment = [
 			"id" => rand(1, 1000),
 			'name' => Utils::generatePhrase('', 1, 3),
-			"start" => $date->format('Y-m-d\TH:i:s\Z'),
-			'end' => (clone $date)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d\TH:i:s\Z'),
+			"start" => $start->format('Y-m-d\TH:i:s\Z'),
+			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d\TH:i:s\Z'),
 			'price' => rand(0,50)*10,
 			'profile_picture' => Utils::generateWord() . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
