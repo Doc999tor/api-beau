@@ -78,6 +78,11 @@ class CustomersList extends Controller {
 		}
 
 		$body->write(time() % 9 ? 'true' : 'false');
-		return $response;
+
+
+	}
+
+	public function getCount (Request $request, Response $response):Response {
+		return $response->withHeader('X-Total-Count', rand(50, 150));
 	}
 }

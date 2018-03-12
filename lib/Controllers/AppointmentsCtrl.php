@@ -57,6 +57,7 @@ class AppointmentsCtrl extends Controller {
 					$hours_range = range(10, 19);
 					shuffle($hours_range);
 					$hours = array_slice($hours_range, 0, rand(0, count($hours_range)));
+					sort($hours);
 
 					for ($i=0, $count_hours = count($hours); $i < $count_hours; $i++) {
 						$datetime = (clone $date)->add(new \DateInterval("PT{$hours[$i]}H" . (rand(0,3)*15) . 'M'));
@@ -64,6 +65,11 @@ class AppointmentsCtrl extends Controller {
 						$appointments []= $this->generateAppointment($datetime);
 					}
 				}
+
+				usort($appointments, function ($a, $b) {
+					return new DateTime($a['start']) < new DateTime($b['start']);
+				});
+
 
 				return $response->withJson($appointments);
 			}
