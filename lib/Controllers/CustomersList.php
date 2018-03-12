@@ -78,8 +78,7 @@ class CustomersList extends Controller {
 		}
 
 		$body->write(time() % 9 ? 'true' : 'false');
-
-
+		return $response;
 	}
 
 	public function getCount (Request $request, Response $response):Response {
