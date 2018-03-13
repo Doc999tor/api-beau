@@ -67,9 +67,8 @@ class AppointmentsCtrl extends Controller {
 				}
 
 				usort($appointments, function ($a, $b) {
-					return new DateTime($a['start']) < new DateTime($b['start']);
+					return new \DateTime($a['start']) < new \DateTime($b['start']);
 				});
-
 
 				return $response->withJson($appointments);
 			}
