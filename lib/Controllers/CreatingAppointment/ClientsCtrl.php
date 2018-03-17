@@ -10,6 +10,18 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class ClientsCtrl extends Controller {
 	private $addressHandler;
 
+	public function index (Request $request, Response $response):Response {
+		$path = 'creating-appointment';
+		$static_prefix = str_repeat('../', substr_count($request->getUri()->getPath(), '/'));
+		$base_path = $request->getUri()->getBasePath();
+
+		return $this->view->render($response, $path . '.html', [
+			'base_path' => $base_path,
+			'prefix' => $static_prefix,
+			"path" => $path,
+		]);
+	}
+
 	public function getClients (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 		if (!isset($params['limit'])) {

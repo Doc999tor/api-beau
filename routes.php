@@ -19,6 +19,7 @@ $app->group('/appointments', function () use ($app) {
 ### Creating Appointment
 $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\ClientsCtrl:';
+	$app->get('/', $prefix . 'index');
 	$app->get('/clients', $prefix . 'getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 });

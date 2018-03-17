@@ -15,7 +15,7 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 	->add(new \Lib\Middlewares\Error503Middleware())
 	->add(new \Tuupola\Middleware\Cors([
 		"origin" => ["*"],
-		"methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+		"methods" => ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
 		"headers.allow" => ['X-Requested-With'],
 		"headers.expose" => ['Retry-After', 'X-Total-Count'],
 		"credentials" => true,
