@@ -26,7 +26,7 @@ class ClientsCtrl extends Controller {
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		$is_body_correct = $this->checkBodyCorrectness($body);
+		$is_body_correct = $this->checkClientData($body);
 		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(204);
 		} else {

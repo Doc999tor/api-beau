@@ -9,15 +9,11 @@ var _config = {
     },
     {
       path: '/date-selection',
-      urlQuery: ['date', 'start']
+      urlQuery: ['start']
     },
     {
       path: '/choosing-worker',
       urlQuery: ['worker_id']
-    },
-    {
-      path: '/selecting-reminders',
-      urlQuery: ['date', 'start', 'client_id', 'procedures', 'worker_id']
     }, {
       path: '/summary',
       urlQuery: ['end', 'worker_id']
@@ -59,9 +55,9 @@ var _config = {
     routing: {
       '/choosing-client': 'Customer choice',
       '/selecting-procedure': 'Choice of procedure',
-      '/choosing-worker': 'Worker choice',
       '/date-selection': 'Date Selection',
-      '/selecting-reminders': 'Select reminders'
+      '/choosing-worker': 'Worker choice',
+      '/summary': 'Summary'
     },
     global: {
       describe_the_break: 'describe the break',
