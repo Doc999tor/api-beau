@@ -94,7 +94,7 @@ class ClientsCtrl extends Controller {
 		return $clients;
 	}
 	protected function generateClient($q = '', $id = 0, $is_full = false) {
-		$id = rand(0, 30000);
+		$id = rand(0, 150);
 		$client = [
 			'id' => $id,
 			"profile_image" => "/{$id}.jpg",
