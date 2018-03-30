@@ -8,10 +8,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
 	public function get (Request $request, Response $response):Response {
-		if ($request->getHeader('X-Requested-With') !== 'XMLHttpRequest') {
-			return $response->withStatus(401);
-		}
-
 		$punch_cards = [];
 
 		for ($i=0, $punch_cards_count = rand(1,3); $i < $punch_cards_count; $i++) {
