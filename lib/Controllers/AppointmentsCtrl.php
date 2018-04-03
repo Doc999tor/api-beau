@@ -75,6 +75,29 @@ class AppointmentsCtrl extends Controller {
 		}
 	}
 
+	public function edit (Request $request, Response $response, array $args):Response {
+		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		$body = $request->getParsedBody();
+		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']));
+
+		if (isset($body['start']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) {
+			$response_body = $response->getBody();
+			$response_body->write('start has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+			return $response->withStatus(400);
+		}
+		if (!isset($body['start']) && (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) {
+			$response_body = $response->getBody();
+			$response_body->write('end has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+			return $response->withStatus(400);
+		}
+
+		return $response->withStatus(204);
+	}
+	public function delete (Request $request, Response $response, array $args):Response {
+		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		return $response->withStatus(204);
+	}
+
 	private function generateAppointment(\DateTime $start) {
 		// var_dump($start);
 		$services_count = rand(1, 5);

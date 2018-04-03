@@ -209,15 +209,15 @@ var _config = {
   urls: {
     base: 'https://api.bewebmaster.co.il',
     profile_image_path: '/image',
-    baseImg: 'https://api.bewebmaster.co.il/public/creating-appointment/img/',
+    baseImg: 'https://api.bewebmaster.co.il/image/',
     adress: 'https://maps.googleapis.com/maps/api/geocode/json',
     timeoutLoading: 1000,
     defaulftDebounceTime: 300,
     unloadingBegins: 10,
-    groups: './public/creating-appointment/media/groups/',
-    schedule: './public/creating-appointment/media/clients/',
-    clients: './public/creating-appointment/media/clients/',
-    static: './public/creating-appointment/media/',
+    groups: './media/groups/',
+    schedule: './media/clients/',
+    clients: './media/clients/',
+    static: './media/',
     proceduresBi: 'catalog/services/bi',
     procedures: 'catalog/services',
     add_client_link: ''
@@ -225,7 +225,7 @@ var _config = {
   reminders: [
     72000, 144000, 360000
   ],
-  defaultPicture: './public/creating-appointment/media/clients/default_picture.png',
+  defaultPicture: 'public/creating-appointment/media/clients/default_picture.png',
   clients: {
     linkToAll: '/clients',
     clients: [

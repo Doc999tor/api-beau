@@ -14,6 +14,9 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new ReturnID());
 	$app->post('/break', $prefix . 'addBreak')->add(new ReturnID());
 	$app->post('/vacation', $prefix . 'addVacation')->add(new ReturnID());
+
+	$app->patch ('/{appointment_id:\d+}', $prefix . 'edit');
+	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 });
 
 ### Creating Appointment
@@ -28,8 +31,8 @@ $app->group('/creating-appointment', function () use ($app) {
 $app->group('/add-client', function () use ($app) {
 	$prefix = 'AddClientCtrl:';
 	$app->get('/', $prefix . 'index');
-	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 	$app->get('/clients',    $prefix . 'getClients');
+	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 	$app->delete('/clients', $prefix . 'removeUser');
 	$app->post  ('/clients', $prefix . 'addClient')->add(new ReturnID());
 

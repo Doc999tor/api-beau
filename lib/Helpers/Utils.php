@@ -17,7 +17,7 @@ class Utils {
 		return $bytes;
 	}
 
-	public static function generateWord ($word_min_length = 2, $word_max_length = 12) {
+	public static function generateWord (int $word_min_length = 2, int $word_max_length = 12) {
 		if (!mt_rand(0,4)) {return '';}
 		$letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת'];
 		$word_length = mt_rand($word_min_length, $word_max_length);
@@ -28,7 +28,13 @@ class Utils {
 		}
 		return $name;
 	}
-	public static function generatePhrase ($q = '', $phrase_min_word_count = 1, $phrase_max_word_count = 6, $word_min_length = 2, $word_max_length = 10) {
+	public static function generatePhrase (
+		string $q = '',
+		int $phrase_min_word_count = 1,
+		int $phrase_max_word_count = 6,
+		int $word_min_length = 2,
+		int $word_max_length = 10
+	) {
 		$words_count = mt_rand($phrase_min_word_count, $phrase_max_word_count);
 
 		$phrase = [];
@@ -42,7 +48,12 @@ class Utils {
 		return $q . trim(implode(' ', $phrase));
 	}
 
-	public static function rand_with_average ($start = 0, $end = 1000, $average_end = 50, $average_probability = 0.1) {
+	public static function rand_with_average (
+		int $start = 0,
+		int $end = 1000,
+		int $average_end = 50,
+		float $average_probability = 0.1
+	) {
 		return mt_rand(0, 10) / 10 > $average_probability ? floor(mt_rand($start, $average_end)) : floor(mt_rand($start, $end));
 	}
 
