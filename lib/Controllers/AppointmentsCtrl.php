@@ -99,7 +99,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	public function getCalendarSettings(Request $request, Response $response) {
-		$response->withJson([
+		return $response->withJson([
 			'slotDuration' => '00:15:00',
 			'minTime' => str_pad(8 + rand(-1, 1), 2, '0', STR_PAD_LEFT) . ':00',
 			'maxTime' => (22 + rand(-1, 1)) . ':00',
