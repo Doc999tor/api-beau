@@ -17,6 +17,14 @@ $app->group('/appointments', function () use ($app) {
 
 	$app->patch ('/{appointment_id:\d+}', $prefix . 'edit');
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
+
+	$app->get('/settings', $prefix . 'getCalendarSettings');
+});
+
+### Workers
+$app->group('/workers', function () use ($app) {
+	$prefix = 'WorkersCtrl:';
+	$app->get('/{worker_id:\d+}', $prefix . 'getData');
 });
 
 ### Creating Appointment

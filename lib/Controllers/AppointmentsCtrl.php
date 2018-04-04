@@ -98,6 +98,15 @@ class AppointmentsCtrl extends Controller {
 		return $response->withStatus(204);
 	}
 
+	public function getCalendarSettings(Request $request, Response $response) {
+		$response->withJson([
+			'slotDuration' => '00:15:00',
+			'minTime' => str_pad(8 + rand(-1, 1), 2, '0', STR_PAD_LEFT) . ':00',
+			'maxTime' => (22 + rand(-1, 1)) . ':00',
+			'firstDay' => 0,
+		]);
+	}
+
 	private function generateAppointment(\DateTime $start) {
 		// var_dump($start);
 		$services_count = rand(1, 5);

@@ -53,6 +53,11 @@ $container['AppointmentsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\AppointmentsCtrl($container);
 };
 
+# Workers
+$container['WorkersCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\WorkersCtrl($container);
+};
+
 # Reminders
 $container['RemindersCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\RemindersCtrl($container);
