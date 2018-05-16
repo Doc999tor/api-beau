@@ -28,6 +28,6 @@ class WorkersCtrl extends Controller {
 			}
 		}
 
-		return $response->withJson($data, 200, JSON_PRETTY_PRINT);
+		return $response->withJson($data);
 	}
 }
