@@ -40,7 +40,9 @@ class ClientsCtrl extends Controller {
 		$params = $request->getQueryParams();
 		$body = $request->getParsedBody();
 
-		return $response->getBody()->write('response body');
+		$media_manager = new MediaCtrl($this->container);
+
+		return $media_manager->addMedia($request, $response);
 	}
 
 	public function getMap (Request $request, Response $response) {

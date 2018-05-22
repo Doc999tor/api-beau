@@ -75,7 +75,7 @@ $app->group('/customers-details', function () use ($app) {
 
 	$app->group('/clients/{client_id:\d+}', function () use ($app, $prefix, $cl_prefix) {
 		$app->patch('', $cl_prefix . 'setPersonalData');
-		$app->patch('/photo', $cl_prefix . 'setProfileImage');
+		$app->post('/profile_image', $cl_prefix . 'setProfileImage');
 
 		# Dept
 		$app->group('/dept', function () use ($app, $prefix) {
