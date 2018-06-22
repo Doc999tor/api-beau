@@ -104,7 +104,7 @@ $app->group('/customers-details', function () use ($app) {
 
 		# Media
 		$app->group('/media', function () use ($app, $prefix) {
-			$app->post('', 'CustomersDetails\MediaCtrl:addMedia')->add(new ReturnID());
+			$app->post('', 'CustomersDetails\MediaCtrl:addMedia');
 			$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
 			$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
 		});
