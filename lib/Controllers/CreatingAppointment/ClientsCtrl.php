@@ -100,6 +100,7 @@ class ClientsCtrl extends Controller {
 			"profile_image" => "/{$id}.jpg",
 			'name' => Utils::generatePhrase($q, 1, 2),
 			"address" => Utils::getRandomAddress(),
+			"status" => Utils::generatePhrase('', 1, 4),
 		];
 
 		if (mt_rand(0,10) < 9) {

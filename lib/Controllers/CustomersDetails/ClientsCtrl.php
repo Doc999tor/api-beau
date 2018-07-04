@@ -97,7 +97,7 @@ class ClientsCtrl extends Controller {
 		}
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
+			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
@@ -120,7 +120,7 @@ class ClientsCtrl extends Controller {
 		}
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
+			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
@@ -139,7 +139,7 @@ class ClientsCtrl extends Controller {
 
 		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
 		if (isset($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
-		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', date('Y') . '-' . $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like 05-31 <br>';}
+		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like 05-31 <br>';}
 		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like 2000 <br>';}
 		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be male or female <br>';}
 		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
