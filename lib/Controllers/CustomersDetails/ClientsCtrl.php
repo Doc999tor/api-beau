@@ -128,6 +128,16 @@ class ClientsCtrl extends Controller {
 		}
 	}
 
+	public function sendFillingUpLink (Request $request, Response $response) {
+		$params = $request->getQueryParams();
+		if (empty($params['phone'])) {
+			return $response->withStatus(400)->getBody()->write('phone field must exist and not be empty');
+		} else if (!empty($params['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $params['phone'])) {
+			return $response->withStatus(400)->getBody()->write('phone value is incorrect');
+		}
+		return $response->withStatus(204);
+	}
+
 	private function checkClientData ($body) {
 		$possible_keys = ['name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 

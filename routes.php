@@ -193,5 +193,7 @@ $app->group('/filling-up', function () use ($app) {
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
 
+$app->put('/send-filling-up', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
+
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
