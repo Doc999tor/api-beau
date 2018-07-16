@@ -128,12 +128,16 @@ class ClientsCtrl extends Controller {
 		}
 	}
 
-	public function sendFillingUpLink (Request $request, Response $response) {
+	public function sendFillingUpLink (Request $request, Response $response): Response {
 		$params = $request->getQueryParams();
 		if (empty($params['phone'])) {
-			return $response->withStatus(400)->getBody()->write('phone field must exist and not be empty');
+			$body = $response->getBody();
+			$body->write('phone field must exist and not be empty');
+			return $response->withStatus(400);
 		} else if (!empty($params['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $params['phone'])) {
-			return $response->withStatus(400)->getBody()->write('phone value is incorrect');
+			$body = $response->getBody();
+			$body->write('phone value is incorrect');
+			return $response->withStatus(400);
 		}
 		return $response->withStatus(204);
 	}
