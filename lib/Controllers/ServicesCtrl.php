@@ -57,6 +57,13 @@ class ServicesCtrl extends Controller {
 			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
+	public static function generateServiceCalendar ($id) {
+		$service = ['id' => $id];
+		if (!rand(0, 4)) {
+			$service['count'] = rand(2,4);
+		}
+		return $service;
+	}
 
 	public function add (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();

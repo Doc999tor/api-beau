@@ -94,7 +94,7 @@ class AppointmentsCtrl extends Controller {
 		return $response->withStatus(204);
 	}
 	public function delete (Request $request, Response $response, array $args):Response {
-		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		// $appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		return $response->withStatus(204);
 	}
 
@@ -108,7 +108,6 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function generateAppointment(\DateTime $start) {
-		// var_dump($start);
 		$services_count = rand(1, 5);
 		$appointment = [
 			"id" => rand(1, 1000),
@@ -121,12 +120,17 @@ class AppointmentsCtrl extends Controller {
 				return rand(0, 9);
 			}, array_fill(0, 8, 0))),
 			"client_id" => rand(1, 120),
+			'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('Y-m-d'), // new date between 15-50 years ago
 			"services" => array_map(function ($v) {
-				return ServicesCtrl::generateService(rand(1, 50));
-			}, array_fill(0, $services_count, null))
+				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
+			}, array_fill(0, $services_count, null)),
+			'price' => rand(0, 14) * 30,
+			'is_reminders_set' => (bool)rand(0,1),
 		];
+		$duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
+		$appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
 		if (rand(0,1)) {
-			$appointment['location'] = Utils::getRandomAddress();
+			$appointment['address'] = Utils::getRandomAddress();
 		}
 		if (rand(0,1)) {
 			$appointment['note'] = Utils::generatePhrase('', 0, 15);
@@ -189,7 +193,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'price', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -198,10 +202,14 @@ class AppointmentsCtrl extends Controller {
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
 		$services = json_decode($body['services']);
-		if (gettype($services) !== 'array' || count(array_filter($services, 'is_int')) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of integers <br>'; }
+		if (gettype($services) !== 'array' || count(array_filter($services, function ($s) {
+			return is_int($s->id) && (empty($s->count) || (!empty($s->count) && is_int($s->count)));
+		})) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of {id: int, count: int} <br>'; }
 		if (!isset($body['duration']) || !ctype_digit($body['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
 		if (!in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
+
+		if (!isset($body['price']) || !is_numeric($body['price'])) {$is_correct = false; $msg .= ' price has to be an integer <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
