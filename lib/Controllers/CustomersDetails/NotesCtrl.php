@@ -44,13 +44,12 @@ class NotesCtrl extends Controller {
 	public static function checkCorrectnessBody(array $body):string {
 		$error_msg = '';
 
-		if (isset($body['text']) && mb_strlen($body['text']) < 3) {
+		if (!isset($body['text'])) {
+			$error_msg .= 'text param has to be, it can be empty string <br>';
+		} else if (mb_strlen($body['text']) < 3) {
 			$error_msg .= 'text has to be bigger than 2 chars <br>';
 		}
-		if (isset($body['reminder']) && !in_array($body['reminder'], ['false', 'true'])) {
-			$error_msg .= 'reminder has to be a true or false <br>';
-		}
-		if (isset($body['reminder_date']) && !\DateTime::createFromFormat('Y-m-d\Th:i:s.u\Z', $body['reminder_date'])) {
+		if (isset($body['reminder_date']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['reminder_date'])) {
 			$error_msg .= 'reminder_date has to be UTC format, like  2017-12-18T02:09:54.486Z<br>';
 		}
 

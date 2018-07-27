@@ -94,7 +94,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->post('', $note_prefix . ':addNote')->add(new ReturnID());
 
 			$app->group('/{note_id:\d+}', function () use ($app, $note_prefix) {
-				$app->patch ('', $note_prefix . ':updateNote');
+				$app->put ('', $note_prefix . ':updateNote');
 				$app->delete('', $note_prefix . ':deleteNote');
 			});
 		});
