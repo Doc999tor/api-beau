@@ -49,6 +49,9 @@ class NotesCtrl extends Controller {
 		} else if (mb_strlen($body['text']) < 3) {
 			$error_msg .= 'text has to be bigger than 2 chars <br>';
 		}
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) {
+			$error_msg .= 'added has to be UTC format, like  2017-12-18T02:09:54.486Z<br>';
+		}
 		if (isset($body['reminder_date']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['reminder_date'])) {
 			$error_msg .= 'reminder_date has to be UTC format, like  2017-12-18T02:09:54.486Z<br>';
 		}

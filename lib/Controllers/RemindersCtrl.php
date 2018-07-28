@@ -11,6 +11,7 @@ class RemindersCtrl extends Controller {
 
 	public function add (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
+		$body['is_done'] = 'false';
 
 		list($is_correct, $msg) = $this->checkCorrectness($body);
 		if (!$is_correct) {
@@ -68,7 +69,8 @@ class RemindersCtrl extends Controller {
 		if (!mb_strlen($body['text'])) { $msg .= '<br> text has to be one letter at least'; $is_correct = false; }
 		if (!in_array($body['is_done'], ['true', 'false'])) { $msg .= '<br> is_done has to be true or false'; $is_correct = false; }
 		if (isset($body['client_id']) && !ctype_digit($body['client_id'])) { $msg .= '<br> client_id has to be integer'; $is_correct = false; }
-		if (!\DateTime::createFromFormat('Y-m-d H:i', $body['reminder_date'])) { $msg .= '<br> reminder_date has to be in Y-m-d H:i format, 1970-01-01 06:00 for example'; $is_correct = false; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $msg .= 'added has to be UTC format, like  2017-12-18T02:09:54.486Z<br>'; }
+		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['reminder_date'])) { $msg .= '<br> reminder_date has to be in UTC format, 2018-07-28T15:30:40.5057Z (new Date().toJSON()) for example'; $is_correct = false; }
 
 		return [$is_correct, $msg];
 	}
