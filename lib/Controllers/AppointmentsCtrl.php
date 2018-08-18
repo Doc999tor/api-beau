@@ -104,6 +104,7 @@ class AppointmentsCtrl extends Controller {
 			'minTime' => str_pad(8 + rand(-1, 1), 2, '0', STR_PAD_LEFT) . ':00',
 			'maxTime' => (22 + rand(-1, 1)) . ':00',
 			'firstDay' => 0,
+			'eventOverlap' => true,
 		]);
 	}
 

@@ -21,6 +21,7 @@ class NotesCtrl extends Controller {
 	}
 	public function updateNote (Request $request, Response $response, array $args) {
 		$body = $request->getParsedBody();
+		$body['added'] = '2018-07-28T15:30:40.5057Z';
 
 		$error_msg = self::checkCorrectnessBody($body);
 		if ($error_msg) {
