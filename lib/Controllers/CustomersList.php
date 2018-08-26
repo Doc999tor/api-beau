@@ -36,7 +36,7 @@ class CustomersList extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_correct = true; $msg = '';
-		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		// if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(204);
