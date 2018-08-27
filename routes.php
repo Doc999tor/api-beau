@@ -41,7 +41,6 @@ $app->group('/add-client', function () use ($app) {
 	$app->get('/', $prefix . 'index');
 	$app->get('/clients',    $prefix . 'getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
-	$app->delete('/clients', $prefix . 'removeUser');
 	$app->post  ('/clients', $prefix . 'addClient')->add(new ReturnID());
 
 	$app->get('/media', $prefix . 'getMedia');
@@ -75,6 +74,7 @@ $app->group('/customers-details', function () use ($app) {
 
 	$app->group('/clients/{client_id:\d+}', function () use ($app, $prefix, $cl_prefix) {
 		$app->patch('', $cl_prefix . 'setPersonalData');
+		$app->delete('', $cl_prefix . 'removeUser');
 		$app->post('/profile_image', $cl_prefix . 'setProfileImage');
 
 		# Dept

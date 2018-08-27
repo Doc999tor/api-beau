@@ -23,6 +23,14 @@ class ClientsCtrl extends Controller {
 		]);
 	}
 
+	public function removeUser (Request $request, Response $response) {
+		if ($request->getBody()->getSize()) {
+			$response->getBody()->write('body should be empty');
+			return $response->withStatus(400);
+		}
+		return $response->withStatus(204);
+	}
+
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
