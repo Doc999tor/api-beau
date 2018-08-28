@@ -80,15 +80,20 @@ class AppointmentsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']));
 
-		if (isset($body['start']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) {
-			$response_body = $response->getBody();
-			$response_body->write('start has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
-			return $response->withStatus(400);
-		}
-		if (!isset($body['start']) && (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) {
-			$response_body = $response->getBody();
-			$response_body->write('end has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
-			return $response->withStatus(400);
+		$response_body = $response->getBody();
+		if (isset($body['start'])) {
+			if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) {
+				$response_body->write('start has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+				return $response->withStatus(400);
+			}
+		} else {
+			if (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end'])) {
+				$response_body->write('end has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+				return $response->withStatus(400);
+			} else {
+				$response_body->write('body cannot be empty');
+				return $response->withStatus(400);
+			}
 		}
 
 		return $response->withStatus(204);
