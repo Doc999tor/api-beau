@@ -13,7 +13,7 @@ class MediaCtrl extends Controller {
 		if ($is_body_correct['is_correct']) {
 			$uploaded_file = $request->getUploadedFiles()['file'];
 			$uploaded_file_name = $uploaded_file->getClientFilename();
-			["extension" => $ext] = pathinfo($uploaded_file_name);
+			$ext = pathinfo($uploaded_file_name)['extension'];
 
 			return $response->withJson(["id" => rand(1, 150), "name" => bin2hex(random_bytes(4)) . ".{$ext}"])->withStatus(201);
 		} else {
