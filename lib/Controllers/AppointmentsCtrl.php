@@ -35,12 +35,12 @@ class AppointmentsCtrl extends Controller {
 		# regular appointments api
 		if (
 			(
-				!isset($params['start']) || (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['start']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $params['start']))
+				!isset($params['start']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $params['start']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $params['start']))
 			) || (
-				!isset($params['end']) || (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $params['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $params['end']))
+				!isset($params['end']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $params['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $params['end']))
 			)
 		) {
-			$response->getBody()->write('start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+			$response->getBody()->write('start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
 			return $response->withStatus(400);
 		} else {
 			if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {
@@ -78,17 +78,17 @@ class AppointmentsCtrl extends Controller {
 	public function edit (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = $request->getParsedBody();
-		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']));
+		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']));
 
 		$response_body = $response->getBody();
 		if (isset($body['start'])) {
-			if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) {
-				$response_body->write('start has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+			if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) {
+				$response_body->write('start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
 				return $response->withStatus(400);
 			}
 		} else {
-			if (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end'])) {
-				$response_body->write('end has to exist and to be UTC format, like 2017-12-18T02:09:54.486Z');
+			if (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end'])) {
+				$response_body->write('end has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
 				return $response->withStatus(400);
 			} else {
 				$response_body->write('body cannot be empty');
@@ -118,8 +118,8 @@ class AppointmentsCtrl extends Controller {
 		$appointment = [
 			"id" => rand(1, 1000),
 			'name' => Utils::generatePhrase('', 1, 3),
-			"start" => $start->format('Y-m-d\TH:i:s\Z'),
-			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d\TH:i:s\Z'),
+			"start" => $start->format('Y-m-d H:i:s'),
+			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d H:i:s'),
 			'price' => rand(0,50)*10,
 			'profile_picture' => Utils::generateWord() . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
@@ -203,7 +203,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) { $is_correct = false; $msg .= ' start has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
@@ -219,7 +219,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
@@ -228,12 +228,12 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
@@ -242,11 +242,11 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= ' added has to be UTC format, like 2017-12-18T02:09:54.486Z <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

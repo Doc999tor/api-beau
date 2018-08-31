@@ -44,8 +44,8 @@ class MediaCtrl extends Controller {
 			$is_correct = false; $msg .= $file_name . " is not sent or sent not under \"$file_name\" field<br>";
 		} else if ((int)$request->getHeaderLine('Content-Length') > \Lib\Helpers\Utils::returnBytes(ini_get('post_max_size'))) {
 			$is_correct = false; $msg .= 'file is too big, it should be under ' . ini_get(" post_max_size") . "<br>";
-		} else if (!isset($body['date']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['date'])) {
-			$is_correct = false; $msg .= 'date has to be UTC format, like  2017-12-18T02:09:54.486Z<br>';
+		} else if (!isset($body['date']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) {
+			$is_correct = false; $msg .= 'date has to be YYYY-MM-DD hh:mm:ss format, like  2017-12-18 02:09:54<br>';
 		}
 
 		$permitted_types = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf', 'application/ogg', 'audio/aac', 'audio/ac3', 'audio/amr', 'audio/mp4', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];

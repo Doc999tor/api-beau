@@ -36,7 +36,7 @@ class CustomersList extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_correct = true; $msg = '';
-		// if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		// if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) { $is_correct = false; $msg .= "date has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(204);
@@ -62,7 +62,7 @@ class CustomersList extends Controller {
 			"profile_image" => "/{$id}.jpg",
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
-			"last_appointment" => date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . 'T' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00') . ':00Z', # 3 months back and 1 forth
+			"last_appointment" => date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'), # 3 months back and 1 forth
 		];
 		return $client;
 	}

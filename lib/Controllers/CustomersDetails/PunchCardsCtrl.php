@@ -48,7 +48,7 @@ class PunchCardsCtrl extends Controller {
 		$time = filter_var($body['date'], FILTER_SANITIZE_STRING);
 
 		$is_correct = true; $msg = '';
-		if (!\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $time)) { $is_correct = false; $msg .= " date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		if (!\DateTime::createFromFormat('Y-m-d H:i:s', $time)) { $is_correct = false; $msg .= " date has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(201);
@@ -82,7 +82,7 @@ class PunchCardsCtrl extends Controller {
 		if (isset($body['service_id']) && !ctype_digit($body['service_id'])) { $is_correct = false; $msg .= 'service_id has to be an integer' . "<br>"; }
 		if (isset($body['uses']) && !ctype_digit($body['uses'])) { $is_correct = false; $msg .= 'uses have to be an integer' . "<br>"; }
 		if (isset($body['sum']) && !ctype_digit($body['sum'])) { $is_correct = false; $msg .= 'sum has to be an integer' . "<br>"; }
-		if (isset($body['date']) && !\DateTime::createFromFormat('Y-m-d\Th:i:s.u\Z', $body['date'])) { $is_correct = false; $msg .= "date has to be UTC format, like 2017-12-18T02:09:54.486Z<br>"; }
+		if (isset($body['date']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) { $is_correct = false; $msg .= "date has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if (isset($body['expiration']) && !\DateTime::createFromFormat('Y-m-d', $body['expiration'])) { $is_correct = false; $msg .= 'expiration has to be Y-m-d format, like 1970-01-01' . "<br>"; }
 
@@ -114,7 +114,7 @@ class PunchCardsCtrl extends Controller {
 					"date" => (new \DateTime($punch_card['date']))
 						->modify('-' . $i . ' months')
 						->modify('first day of')
-						->format('Y-m-d\Th:i:s\Z')
+						->format('Y-m-d H:i:s')
 				];
 			}
 		}

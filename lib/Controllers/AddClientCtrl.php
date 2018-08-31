@@ -123,12 +123,12 @@ class AddClientCtrl extends Controller {
 				}
 				if (isset($note->reminder)) {
 					if ($note->reminder === false) { return true; }
-					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $note->date); }
+					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d H:i:s', $note->date); }
 				} else {
 					return false;
 				}
 				return true;
-			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note.date has to be UTC<br>"; }
+			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note.date has to be YYYY-MM-DD hh:mm:ss format<br>"; }
 		}
 
 		if (isset($body['social'])) {
@@ -148,7 +148,7 @@ class AddClientCtrl extends Controller {
 			}
 		}
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $body['added'])) { $is_correct = false; $msg .= 'added has to be UTC format, like 2017-12-18T02:09:54.486Z<br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

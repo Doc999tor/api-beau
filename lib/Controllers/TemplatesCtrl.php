@@ -53,6 +53,8 @@ class TemplatesCtrl extends Controller {
 		if (!mb_strlen($body['name'])) {
 			$is_correct = false; $msg .= 'name can\'t be empty';
 		}
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
+
 
 		if ($is_correct) {
 			return $response->withStatus(201);
