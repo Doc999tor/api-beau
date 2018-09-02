@@ -97,7 +97,7 @@ class ClientsCtrl extends Controller {
 		$id = rand(0, 150);
 		$client = [
 			'id' => $id,
-			"profile_image" => "/{$id}.jpg",
+			"profile_image" => "{$id}.jpg",
 			'name' => Utils::generatePhrase($q, 1, 2),
 			"address" => Utils::getRandomAddress(),
 			"status" => Utils::generatePhrase('', 1, 4),

@@ -54,6 +54,8 @@ class AppointmentsCtrl extends Controller {
 
 				$appointments = [];
 				foreach ($period as $date) {
+					if (!rand(0,5)) { continue; } # randomly no events
+
 					$hours_range = range(10, 19);
 					shuffle($hours_range);
 					$hours = array_slice($hours_range, 0, rand(0, count($hours_range)));
@@ -126,20 +128,29 @@ class AppointmentsCtrl extends Controller {
 				return rand(0, 9);
 			}, array_fill(0, 8, 0))),
 			"client_id" => rand(1, 120),
-			'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('Y-m-d'), // new date between 15-50 years ago
+			'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
 			'price' => rand(0, 14) * 30,
 			'is_reminders_set' => (bool)rand(0,1),
 		];
-		$duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
-		$appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
+		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
+		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
 		if (rand(0,1)) {
 			$appointment['address'] = Utils::getRandomAddress();
 		}
 		if (rand(0,1)) {
 			$appointment['note'] = Utils::generatePhrase('', 0, 15);
+		}
+		if (!rand(0,10)) {
+			$appointment['is_new'] = true;
+		}
+		if (!rand(0,6)) {
+			$appointment['durationEditable'] = true;
+		}
+		if (!rand(0,7)) {
+			$appointment['has_debt'] = true;
 		}
 
 		return $appointment;
