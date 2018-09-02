@@ -144,7 +144,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['note'] = Utils::generatePhrase('', 0, 15);
 		}
 		if (!rand(0,10)) {
-			$appointment['is_new'] = true;
+			$appointment['is_new_client'] = true;
 		}
 		if (!rand(0,6)) {
 			$appointment['durationEditable'] = true;
