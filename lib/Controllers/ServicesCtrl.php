@@ -58,7 +58,7 @@ class ServicesCtrl extends Controller {
 		];
 	}
 	public static function generateServiceCalendar ($id) {
-		$service = ['id' => $id];
+		$service = ['id' => $id, "name" => \Lib\Helpers\Utils::generatePhrase('', 1, 6)];
 		if (!rand(0, 4)) {
 			$service['count'] = rand(2,4);
 		}
