@@ -77,14 +77,14 @@ $app->group('/customers-details', function () use ($app) {
 		$app->delete('', $cl_prefix . 'removeUser');
 		$app->post('/profile_image', $cl_prefix . 'setProfileImage');
 
-		# Dept
-		$app->group('/dept', function () use ($app, $prefix) {
-			$dept_prefix = $prefix . 'DeptCtrl';
-			$app->post('', $dept_prefix . ':addDept')->add(new ReturnID());
+		# Debt
+		$app->group('/debt', function () use ($app, $prefix) {
+			$debt_prefix = $prefix . 'DebtCtrl';
+			$app->post('', $debt_prefix . ':addDebt')->add(new ReturnID());
 
-			$app->group('/{dept_id:\d+}', function () use ($app, $dept_prefix) {
-				$app->put   ('', $dept_prefix . ':updateDept');
-				$app->delete('', $dept_prefix . ':deleteDept');
+			$app->group('/{debt_id:\d+}', function () use ($app, $debt_prefix) {
+				$app->put   ('', $debt_prefix . ':updateDebt');
+				$app->delete('', $debt_prefix . ':deleteDebt');
 			});
 		});
 

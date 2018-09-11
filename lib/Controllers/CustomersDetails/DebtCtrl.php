@@ -6,8 +6,8 @@ use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-class DeptCtrl extends Controller {
-	public function addDept (Request $request, Response $response) {
+class DebtCtrl extends Controller {
+	public function addDebt (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
@@ -19,7 +19,7 @@ class DeptCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
-	public function updateDept (Request $request, Response $response, array $args) {
+	public function updateDebt (Request $request, Response $response, array $args) {
 		$body = $request->getParsedBody();
 
 		if ($this->checkCorrectness($body)) {
@@ -30,7 +30,7 @@ class DeptCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
-	public function deleteDept (Request $request, Response $response, array $args) {
+	public function deleteDebt (Request $request, Response $response, array $args) {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
 			$body->write('body has to be empty');

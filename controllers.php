@@ -18,8 +18,8 @@ $container['GroupsCtrl'] = function () use ($container) {
 $container['CustomersDetails\ClientsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\ClientsCtrl($container);
 };
-$container['CustomersDetails\DeptCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\CustomersDetails\DeptCtrl($container);
+$container['CustomersDetails\DebtCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\CustomersDetails\DebtCtrl($container);
 };
 $container['CustomersDetails\PunchCardsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\CustomersDetails\PunchCardsCtrl($container);
