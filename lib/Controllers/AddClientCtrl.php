@@ -73,10 +73,10 @@ class AddClientCtrl extends Controller {
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
 
-		if (isset($body['approved_marketing']) && $body['approved_marketing'] === 'true' && !isset($files['signature'])) {
-			$is_body_correct['is_correct'] = false;
-			$is_body_correct['msg'] .= 'if the user permits getting ads, he has to sign' . "<br>";
-		}
+		// if (isset($body['approved_marketing']) && $body['approved_marketing'] === 'true' && !isset($files['signature'])) {
+		// 	$is_body_correct['is_correct'] = false;
+		// 	$is_body_correct['msg'] .= 'if the user permits getting ads, he has to sign' . "<br>";
+		// }
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			return $response->withStatus(201);
@@ -87,7 +87,7 @@ class AddClientCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'filling_up', 'sex', 'approved_marketing', 'depts', 'notes', 'social', 'source', 'recommended_by', 'added'];
+		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'birthyear', 'filling_up', 'gender', 'approved_marketing', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
 
 		$is_correct = true;
 		$msg = '';
@@ -102,18 +102,19 @@ class AddClientCtrl extends Controller {
 		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', $body['email'])) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 
-		if (isset($body['birthdate']) && !\DateTime::createFromFormat('Y-m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be Y-m-d format, like 1970-01-01' . "<br>"; }
+		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }
+		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= 'birthyear has to be YYYY format, like 1970' . "<br>"; }
 
 		if (isset($body['filling_up']) && !in_array($body['filling_up'], ['true', 'false'])) { $is_correct = false; $msg .= 'filling_up can be true or false' . "<br>"; }
 		if (isset($body['sex']) && !in_array($body['sex'], ['male', 'female'])) { $is_correct = false; $msg .= 'sex can be male or female' . "<br>"; }
 
 		if (isset($body['approved_marketing']) && $body['approved_marketing'] !== 'true') { $is_correct = false; $msg .= 'approved_marketing can be true or not to exist' . "<br>"; }
 
-		if (isset($body['depts'])) {
-			$depts = json_decode($body['depts']);
-			if (!is_array($depts) || count(array_filter($depts, function ($dept) {
+		if (isset($body['debts'])) {
+			$debts = json_decode($body['debts']);
+			if (!is_array($debts) || count(array_filter($debts, function ($dept) {
 				return isset($dept->sum) && is_int($dept->sum) && isset($dept->desc) && is_string($dept->desc);
-			})) !== count($depts)) { $is_correct = false; $msg .= 'depts are malformed' . "<br>"; }
+			})) !== count($debts)) { $is_correct = false; $msg .= 'debts are malformed' . "<br>"; }
 		}
 		if (isset($body['notes'])) {
 			$notes = json_decode($body['notes']);
@@ -128,7 +129,7 @@ class AddClientCtrl extends Controller {
 					return false;
 				}
 				return true;
-			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note.date has to be YYYY-MM-DD hh:mm:ss format<br>"; }
+			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note. date has to be YYYY-MM-DD hh:mm:ss format<br>"; }
 		}
 
 		if (isset($body['social'])) {
