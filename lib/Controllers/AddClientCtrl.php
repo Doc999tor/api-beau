@@ -122,10 +122,7 @@ class AddClientCtrl extends Controller {
 				if (!(isset($note->text) && is_string($note->text))) {
 					return false;
 				}
-				if (isset($note->reminder)) {
-					if ($note->reminder === false) { return true; }
-					else { return $note->reminder === true && isset($note->date) && \DateTime::createFromFormat('Y-m-d H:i:s', $note->date); }
-				} else {
+				if (isset($note->reminder_date) && !\DateTime::createFromFormat('Y-m-d H:i:s', $note->reminder_date)) {
 					return false;
 				}
 				return true;
