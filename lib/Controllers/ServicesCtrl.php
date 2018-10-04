@@ -21,6 +21,7 @@ class ServicesCtrl extends Controller {
 		for ($i=0; $i < $limit; $i++) {
 			$services []= self::generateService(mt_rand(0, 150), $q);
 		}
+		$services[0]['id'] = 1;
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
 		return $response->withJson($services);

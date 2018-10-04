@@ -13,6 +13,7 @@ class PunchCardsCtrl extends Controller {
 		for ($i=0, $punch_cards_count = rand(1,3); $i < $punch_cards_count; $i++) {
 			$punch_cards []= $this->generatePunchCard();
 		}
+		$punch_cards[0]['id'] = 1;
 
 		return $response->withJson($punch_cards);
 	}

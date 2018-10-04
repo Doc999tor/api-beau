@@ -126,7 +126,7 @@ class AddClientCtrl extends Controller {
 					return false;
 				}
 				return true;
-			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note. date has to be YYYY-MM-DD hh:mm:ss format<br>"; }
+			})) !== count($notes)) { $is_correct = false; $msg .= "notes are malformed, check the note. reminder_date has to be YYYY-MM-DD hh:mm:ss format<br>"; }
 		}
 
 		if (isset($body['social'])) {

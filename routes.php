@@ -128,7 +128,7 @@ $app->group('/customers-details', function () use ($app) {
 			$prefix = 'CustomersDetails\TimelineCtrl:';
 			$app->get('/appointments', $prefix . 'getAppoinments');
 			$app->get('/gallery', $prefix . 'getGallery');
-			$app->get('/depts', $prefix . 'getDepts');
+			$app->get('/debts', $prefix . 'getDepts');
 			$app->get('/notes', $prefix . 'getNotes');
 			$app->get('/sms', $prefix . 'getSms');
 			$app->get('/punch_cards', $prefix . 'getPunchCards');
@@ -144,6 +144,8 @@ $app->group('/customers-details', function () use ($app) {
 			$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}/use/{use_id:\d+}', $prefix . 'unuse');
 		});
+		# Colors beautech
+		$app->get('/colors_beautech', $prefix . 'ColorsCtrl:getColorsBeautechOld');
 	});
 });
 
