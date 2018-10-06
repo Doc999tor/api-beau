@@ -105,7 +105,7 @@ class PunchCardsCtrl extends Controller {
 			->modify(rand(0,180) . ' days ago')
 			->format('Y-m-d');
 
-		if (!(rand() % 3)) {
+		if (rand() % 4) {
 			$punch_card['uses'] = [];
 			$uses_count = rand(1, $punch_card['service_count'] - 1);
 
