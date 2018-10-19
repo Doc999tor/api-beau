@@ -19,7 +19,7 @@ class ServicesCtrl extends Controller {
 
 		$services = [];
 		for ($i=0; $i < $limit; $i++) {
-			$services []= self::generateService(mt_rand(0, 150), $q);
+			$services []= self::generateService(mt_rand(2, 150), $q);
 		}
 		$services[0]['id'] = 1;
 

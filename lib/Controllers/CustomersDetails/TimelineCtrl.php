@@ -11,27 +11,27 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class TimelineCtrl extends Controller {
 	public function getAppoinments (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 	public function getGallery (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('depts', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('depts', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('notes', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('notes', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 	public function getSms (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 	public function getPunchCards (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('punch_cards', $params['start'], $params['end']));
+		return $response->withJson($this->timelineGenericMethod('punch_cards', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
 	}
 
 	private function generateAppointments(\DateTime $date) {
@@ -41,12 +41,16 @@ class TimelineCtrl extends Controller {
 		$added_date = clone $date;
 		$added_date->sub(new \DateInterval('P' . rand(3, 10) . 'D'));
 
+		$end = (clone $date)->add(new \DateInterval('PT' . (rand(1,12)*15) . 'M'));
+
 		$appoinment = [
 			"id" => rand(1, 1000),
-			"date" => $date->format('Y-m-d'),
+			"start" => $date->format('Y-m-d H:i'),
+			"end" => $end->format('Y-m-d H:i'),
 			"added_date" => $added_date->format('Y-m-d'),
 			"worker_id" => rand(1, 5),
 			"worker_name" => Utils::generatePhrase('', 1, 2),
+			"worker_profile_image" => (rand(1,2)%2 ? 1 : Utils::generatePhrase('', 1, 2)) . '.jpg',
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateService(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
@@ -58,7 +62,7 @@ class TimelineCtrl extends Controller {
 			$appoinment['deleted_date'] = $deleted_date->format('Y-m-d');
 		}
 		if (!(rand(1, 3) % 3)) { $appoinment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
-		if (!(rand(1, 3) % 3)) { $appoinment['address'] = Utils::getRandomAddress(); }
+		if (!(rand(1, 3) % 3)) { $appoinment['location'] = Utils::getRandomAddress(); }
 		return $appoinment;
 	}
 	private function generateGallery(\DateTime $date): array {
@@ -162,11 +166,13 @@ class TimelineCtrl extends Controller {
 		$start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
 		$end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
 
-		$period = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); // DatePeriod returns collection of dates excludes the end date
+		$period = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
 
-		$dates = array_values(array_filter(iterator_to_array($period), function () {
+		$dates = array_map(function ($date) {
+			return $date->add(new \DateInterval('PT' . ((rand(0,18)+18)*30) . 'M')); # adds some random times between 10:00-18:00
+		}, array_values(array_filter(iterator_to_array($period), function () {
 			return rand(1,2) % 2;
-		}));
+		})));
 
 		$data = array_map(function (\DateTime $date) use ($name) {
 			return $this->{'generate' . ucfirst($name)}($date);
