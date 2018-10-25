@@ -33,20 +33,13 @@ class AppointmentsCtrl extends Controller {
 		}
 
 		# regular appointments api
-		if (
-			(
-				!isset($params['start']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $params['start']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $params['start']))
-			) || (
-				!isset($params['end']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $params['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $params['end']))
-			)
-		) {
-			$response->getBody()->write('start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
+		if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {
+			$response->getBody()->write('worker_id has to be an integer');
 			return $response->withStatus(400);
 		} else {
-			if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {
-				$response->getBody()->write('worker_id has to be an integer');
-				return $response->withStatus(400);
-			} else {
+			try {
+				if (empty($params['start']) || empty($params['end'])) { throw new \Exception(); }
+
 				$start = new \DateTime(filter_var($params['start'], FILTER_SANITIZE_STRING));
 				$end = new \DateTime(filter_var($params['end'], FILTER_SANITIZE_STRING));
 
@@ -73,6 +66,10 @@ class AppointmentsCtrl extends Controller {
 				});
 
 				return $response->withJson($appointments);
+
+			} catch (\Exception $e) {
+				$response->getBody()->write('start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
+				return $response->withStatus(400);
 			}
 		}
 	}
