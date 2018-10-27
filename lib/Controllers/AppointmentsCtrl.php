@@ -117,8 +117,8 @@ class AppointmentsCtrl extends Controller {
 		$appointment = [
 			"id" => rand(1, 1000),
 			'name' => Utils::generatePhrase('', 1, 3),
-			"start" => $start->format('Y-m-d H:i:s'),
-			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d H:i:s'),
+			"start" => $start->format('Y-m-d H:i'),
+			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d H:i'),
 			'price' => rand(0,50)*10,
 			'profile_picture' => Utils::generateWord() . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
@@ -129,7 +129,6 @@ class AppointmentsCtrl extends Controller {
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
-			'price' => rand(0, 14) * 30,
 			'is_reminders_set' => (bool)rand(0,1),
 		];
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
@@ -148,6 +147,20 @@ class AppointmentsCtrl extends Controller {
 		}
 		if (!rand(0,7)) {
 			$appointment['has_debt'] = true;
+		}
+
+		if (!rand(0,4)) {
+			$appointment['off_time'] = rand(0,1) ? 'break' : 'meeting';
+			unset($appointment['client_id']);
+			unset($appointment['name']);
+			unset($appointment['phone']);
+			unset($appointment['birthdate']);
+			unset($appointment['services']);
+			unset($appointment['price']);
+			unset($appointment['profile_picture']);
+			unset($appointment['is_new_client']);
+			unset($appointment['durationEditable']);
+			unset($appointment['has_debt']);
 		}
 
 		return $appointment;
