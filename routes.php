@@ -195,7 +195,10 @@ $app->group('/filling-up', function () use ($app) {
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
 
-$app->put('/send-filling-up', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
+$app->group('/send-filling-up', function () use ($app) {
+	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
+	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
+});
 
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }

@@ -20,13 +20,24 @@ class CustomersList extends Controller {
 
 	public function getClients (Request $request, Response $response) {
 		$params = $request->getQueryParams();
-		if (!isset($params['limit'])) {
-			return $response->withStatus(400);
+		if (!empty($params['phone'])) {
+			$number = $params['phone'];
+			if (!preg_match('/^[\d()+\-*\/]+$/', $number)) { return $response->withStatus(400)->getBody()->write('phone has to be a correct phone number, got ' . $number); }
+			$clients = [];
+			for ($i=0, $limit = rand(0, 3); $i < $limit; $i++) {
+				$clients []= $this->generateClient();
+				$clients[$i]['phone'] = $number;
+			}
+			return $response->withJson($clients);
+		} else {
+			if (!isset($params['limit'])) {
+				return $response->withStatus(400);
+			}
+			if (!isset($params['offset'])) {
+				$params['offset'] = 0;
+			}
+			$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 		}
-		if (!isset($params['offset'])) {
-			$params['offset'] = 0;
-		}
-		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
 		return $response->withJson(self::generateClients($params['limit'], $q));
 	}
@@ -59,7 +70,7 @@ class CustomersList extends Controller {
 		$id = rand(0, 300);
 		$client = [
 			'id' => $id,
-			"profile_image" => "/{$id}.jpg",
+			"profile_image" => "{$id}.jpg",
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
 			"last_appointment" => date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'), # 3 months back and 1 forth

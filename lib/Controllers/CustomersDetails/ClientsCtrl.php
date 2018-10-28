@@ -138,16 +138,21 @@ class ClientsCtrl extends Controller {
 
 	public function sendFillingUpLink (Request $request, Response $response): Response {
 		$params = $request->getQueryParams();
-		if (empty($params['phone'])) {
+		if (empty($params['client_id']) || !ctype_digit($params['client_id'])) {
 			$body = $response->getBody();
-			$body->write('phone field must exist and not be empty');
-			return $response->withStatus(400);
-		} else if (!empty($params['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $params['phone'])) {
-			$body = $response->getBody();
-			$body->write('phone value is incorrect');
+			$body->write('client_id must exist and be an integer');
 			return $response->withStatus(400);
 		}
 		return $response->withStatus(204);
+	}
+	public function createClientSendFillingUpLink (Request $request, Response $response): Response {
+		$params = $request->getQueryParams();
+		if (empty($params['phone']) || !preg_match('/^[\d()+\-*\/]+$/', $params['phone'])) {
+			$body = $response->getBody();
+			$body->write('phone must exist and be a correct phone number');
+			return $response->withStatus(400);
+		}
+		return $response->withStatus(201);
 	}
 
 	private function checkClientData ($body) {
