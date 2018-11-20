@@ -119,7 +119,7 @@ class AppointmentsCtrl extends Controller {
 			'name' => Utils::generatePhrase('', 1, 3),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d H:i'),
-			'price' => rand(0,50)*10,
+			'total_price' => rand(0,50)*10,
 			'profile_picture' => Utils::generateWord() . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
 				return rand(0, 9);
@@ -156,7 +156,7 @@ class AppointmentsCtrl extends Controller {
 			unset($appointment['phone']);
 			unset($appointment['birthdate']);
 			unset($appointment['services']);
-			unset($appointment['price']);
+			unset($appointment['total_price']);
 			unset($appointment['profile_picture']);
 			unset($appointment['is_new_client']);
 			unset($appointment['durationEditable']);

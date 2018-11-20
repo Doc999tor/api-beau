@@ -146,13 +146,24 @@ class ClientsCtrl extends Controller {
 		return $response->withStatus(204);
 	}
 	public function createClientSendFillingUpLink (Request $request, Response $response): Response {
-		$params = $request->getQueryParams();
-		if (empty($params['phone']) || !preg_match('/^[\d()+\-*\/]+$/', $params['phone'])) {
+		$body = $request->getParsedBody();
+
+		$is_body_correct = ['is_correct' => true, 'msg' => ''];
+		if (empty($body['phone']) || !preg_match('/^[\d()+\-*\/]+$/', $body['phone'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] = 'phone must exist and be a correct phone number <br>';
+		} else if (empty($body['added']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['added']) && !\DateTime::createFromFormat('Y-m-d H:i', $body['added']))) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] = 'added is incorrect, it has to be yyyy-mm-dd hh:mm:ss format, like 2018-10-10 13:49:27 <br>';
+		}
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(201);
+		} else {
 			$body = $response->getBody();
-			$body->write('phone must exist and be a correct phone number');
+			$body->write("<br>" . $is_body_correct['msg']);
 			return $response->withStatus(400);
 		}
-		return $response->withStatus(201);
 	}
 
 	private function checkClientData ($body) {
