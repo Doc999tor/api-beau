@@ -114,11 +114,12 @@ class AppointmentsCtrl extends Controller {
 
 	private function generateAppointment(\DateTime $start) {
 		$services_count = rand(1, 5);
+		$duration = rand(1, 8) * 30;
 		$appointment = [
 			"id" => rand(1, 1000),
 			'name' => Utils::generatePhrase('', 1, 3),
 			"start" => $start->format('Y-m-d H:i'),
-			'end' => (clone $start)->add(new \DateInterval('PT' . rand(0, 3) .'H' . rand(0,1)*30 . 'M'))->format('Y-m-d H:i'),
+			'end' => (clone $start)->add(new \DateInterval('PT' . ((int)$duration/60) .'H' . ($duration%30) . 'M'))->format('Y-m-d H:i'),
 			'total_price' => rand(0,50)*10,
 			'profile_picture' => Utils::generateWord() . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
