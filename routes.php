@@ -60,6 +60,7 @@ $app->group('/customers-list', function () use ($app) {
 ### Groups
 $app->group('/groups', function () use ($app) {
 	$prefix = 'GroupsCtrl:';
+	$app->get('', $prefix . 'getGroups');
 	$app->get('/{group_id:\d+}/clients', $prefix . 'getGroupClients');
 });
 
