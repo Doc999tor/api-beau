@@ -178,6 +178,6 @@ class TimelineCtrl extends Controller {
 			return $this->{'generate' . ucfirst($name)}($date);
 		}, $dates);
 
-		return ["name" => $name, "data" => $data, "is_end" => !(rand(1, 5) % 5)];
+		return $data;
 	}
 }
