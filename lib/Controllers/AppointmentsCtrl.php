@@ -133,6 +133,7 @@ class AppointmentsCtrl extends Controller {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
 			'is_reminders_set' => (bool)rand(0,1),
+			'off_time' => null,
 		];
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
 		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
