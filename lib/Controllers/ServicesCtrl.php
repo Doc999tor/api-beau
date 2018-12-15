@@ -59,11 +59,12 @@ class ServicesCtrl extends Controller {
 		];
 	}
 	public static function generateServiceCalendar ($id) {
-		$service = ['id' => $id, "name" => \Lib\Helpers\Utils::generatePhrase('', 1, 6)];
-		if (!rand(0, 4)) {
-			$service['count'] = rand(2,4);
-		}
-		return $service;
+		return [
+			"id" => $id,  // AvodaID
+			"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 6), // Name
+			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
+			'service_count' => rand(1, 3),
+		];
 	}
 
 	public function add (Request $request, Response $response):Response {
