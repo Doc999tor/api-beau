@@ -118,16 +118,16 @@ class AppointmentsCtrl extends Controller {
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
 		$appointment = [
-			"id" => rand(1, 1000),
+			"id" => (string) rand(1, 1000),
 			'name' => Utils::generatePhrase('', 1, 3),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
-			'total_price' => rand(0,50)*10,
+			'total_price' => (string) rand(0,50)*10,
 			'profile_picture' => $client_id . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
 				return rand(0, 9);
 			}, array_fill(0, 8, 0))),
-			"client_id" => $client_id,
+			"client_id" => (string) $client_id,
 			'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
