@@ -15,6 +15,10 @@ class MediaCtrl extends Controller {
 			$uploaded_file_name = $uploaded_file->getClientFilename();
 			$ext = pathinfo($uploaded_file_name)['extension'];
 
+			$extension = pathinfo($uploaded_file->getClientFilename(), PATHINFO_EXTENSION);
+			$filename = preg_replace('/^php/', '', basename($uploaded_file->file, '.tmp'));
+			$uploaded_file->moveTo('image' . DIRECTORY_SEPARATOR . "{$uploaded_file_name}-{$filename}.{$extension}");
+
 			return $response->withJson(["id" => rand(1, 150), "name" => bin2hex(random_bytes(4)) . ".{$ext}"])->withStatus(201);
 		} else {
 			$body = $response->getBody();
@@ -43,7 +47,7 @@ class MediaCtrl extends Controller {
 		if (!isset($files[$file_name])) {
 			$is_correct = false; $msg .= $file_name . " is not sent or sent not under \"$file_name\" field<br>";
 		} else if ((int)$request->getHeaderLine('Content-Length') > \Lib\Helpers\Utils::returnBytes(ini_get('post_max_size'))) {
-			$is_correct = false; $msg .= 'file is too big, it should be under ' . ini_get(" post_max_size") . "<br>";
+			$is_correct = false; $msg .= 'file is too big, it should be under ' . ini_get("post_max_size") . "<br>";
 		} else if (!isset($body['date']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) {
 			$is_correct = false; $msg .= 'date has to be YYYY-MM-DD hh:mm:ss format, like  2017-12-18 02:09:54<br>';
 		}

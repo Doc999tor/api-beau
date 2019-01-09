@@ -178,7 +178,7 @@ class TimelineCtrl extends Controller {
 			return $this->{'generate' . ucfirst($name)}($date);
 		}, $dates);
 
-		return ["name" => $name, "data" => $data, "is_end" => !(rand(1, 5) % 5)]; # temporary for Mykola request
-		// return $data;
+		// return ["name" => $name, "data" => $data, "is_end" => !(rand(1, 5) % 5)]; # temporary for Mykola request
+		return $data; # [data => []] is deprecated
 	}
 }
