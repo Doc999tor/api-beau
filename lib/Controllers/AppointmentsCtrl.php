@@ -122,7 +122,7 @@ class AppointmentsCtrl extends Controller {
 			'name' => Utils::generatePhrase('', 1, 3),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
-			'total_price' => (string) rand(0,50)*10,
+			'total_price' => (string) (rand(0,50)*10),
 			'profile_picture' => $client_id . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
 				return rand(0, 9);
@@ -274,6 +274,35 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	public function getRecentAppointments (Request $request, Response $response) {
+		$appointments = [];
+		$today = new \DateTime();
+		$count = rand(6, 10);
+		# future appointments
+		for ($i=0, $c = floor($count/3); $i < $c; $i++) {
+			$diff_days = rand(1,20);
+			$interval = new \DateInterval("P{$diff_days}D");
+			$date = (clone $today)->add($interval)->setTime(rand(10,16), rand(0,1)?0:30, 0);
+			$appointments []= $this->generateAppointment($date);
+		}
+
+		#past appointments
+		for ($i=0, $c = ceil($count/3*2); $i < $c; $i++) {
+			$diff_days = rand(1,60);
+			$interval = new \DateInterval("P{$diff_days}D");
+			$date = (clone $today)->sub($interval)->setTime(rand(10,16), rand(0,1)?0:30, 0);
+			$appointments []= $this->generateAppointment($date);
+		}
+
+		for ($i=0, $c = count($appointments); $i < $c; $i++) {
+			if (!empty($appointments[$i]['off_time'])) {
+				unset($appointments[$i]);
+			}
+		}
+
+		return $response->withJson(array_values($appointments));
 	}
 
 	private function createAppointments () {

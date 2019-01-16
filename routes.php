@@ -9,6 +9,7 @@ use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
 $app->group('/appointments', function () use ($app) {
 	$prefix = 'AppointmentsCtrl:';
 	$app->get('', $prefix . 'getCalendar');
+	$app->get('/recent-appointments', $prefix . 'getRecentAppointments');
 
 	$app->post('', $prefix . 'addAppointment')->add(new ReturnID());
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new ReturnID());
