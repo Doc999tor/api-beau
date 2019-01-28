@@ -224,7 +224,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'price', 'address', 'worker_id', 'added'];
+		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -240,7 +240,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
 
-		if (!isset($body['price']) || !is_numeric($body['price'])) {$is_correct = false; $msg .= ' price has to be an integer <br>'; }
+		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be an integer <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
