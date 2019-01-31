@@ -152,6 +152,9 @@ class AppointmentsCtrl extends Controller {
 		if (!rand(0,7)) {
 			$appointment['has_debt'] = true;
 		}
+		if (!rand(0,3)) {
+			$appointment['status'] = Utils::generatePhrase('', 0, 7);
+		}
 
 		if (!rand(0,4)) {
 			$appointment['off_time'] = rand(0,1) ? 'break' : 'meeting';
