@@ -57,9 +57,8 @@ class RemindersCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$q = $body['q'] ?? '';
 
-		$clients_length = 50;
-		$clients_manager = new \Lib\Controllers\AddClient\ClientsCtrl($this->container);
-		$clients_list = $clients_manager->generateClients(50, $q);
+		$clients_length = rand(0,3) ? rand(5, 50) : 0;
+		$clients_list = \Lib\Controllers\CustomersList::generateClients($clients_length, $q);
 		return $response->withJson($clients_list);
 	}
 
