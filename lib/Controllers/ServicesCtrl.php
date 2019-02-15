@@ -63,7 +63,7 @@ class ServicesCtrl extends Controller {
 			"id" => $id,  // AvodaID
 			"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 6), // Name
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
-			'service_count' => rand(1, 3),
+			'count' => rand(1, 3),
 		];
 	}
 
