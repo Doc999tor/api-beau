@@ -114,21 +114,16 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function generateAppointment(\DateTime $start) {
-		$client_id = rand(1, 120);
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
 		$appointment = [
 			"id" => (string) rand(1, 1000),
-			'name' => Utils::generatePhrase('', 1, 3),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
 			'total_price' => (string) (rand(0,50)*10),
-			'profile_picture' => $client_id . '.jpg',
 			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
 				return rand(0, 9);
 			}, array_fill(0, 8, 0))),
-			"client_id" => (string) $client_id,
-			'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
@@ -137,6 +132,13 @@ class AppointmentsCtrl extends Controller {
 		];
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
 		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
+		if (rand(0,5)) {
+			$client_id = rand(1, 120);
+			$appointment['client_id'] = (string) $client_id;
+			$appointment['name'] = Utils::generatePhrase('', 1, 3);
+			$appointment['profile_picture'] = $client_id . '.jpg';
+			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
+		}
 		if (rand(0,1)) {
 			$appointment['address'] = Utils::getRandomAddress();
 		}
