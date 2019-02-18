@@ -112,6 +112,18 @@ class AppointmentsCtrl extends Controller {
 			'eventOverlap' => true,
 		]);
 	}
+	public function getHolidays (Request $request, Response $response) {
+		$params = $request->getQueryParams();
+		$year = (\DateTime::createFromFormat('Y', @$params['year']))->format('Y');
+		if (!$year || substr($year, 0, 2) !== '20' || strlen($year) !== 4) {
+			$body = $response->getBody();
+			$body->write('year should be a valid YYYY date');
+			return $response->withStatus(400);
+		}
+
+		$holidays = include './holidays.php';
+		return $response->withJson($holidays);
+	}
 
 	private function generateAppointment(\DateTime $start) {
 		$services_count = rand(1, 5);
@@ -328,4 +340,6 @@ class AppointmentsCtrl extends Controller {
 		}
 		return $appointments;
 	}
+
+
 }

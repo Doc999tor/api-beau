@@ -19,6 +19,7 @@ $app->group('/appointments', function () use ($app) {
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 
 	$app->get('/settings', $prefix . 'getCalendarSettings');
+	$app->get('/settings/holidays', $prefix . 'getHolidays');
 });
 
 ### Workers

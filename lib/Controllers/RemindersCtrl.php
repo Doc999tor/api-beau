@@ -69,7 +69,7 @@ class RemindersCtrl extends Controller {
 		if (!in_array($body['is_done'], ['true', 'false'])) { $msg .= '<br> is_done has to be true or false'; $is_correct = false; }
 		if (isset($body['client_id']) && !ctype_digit($body['client_id'])) { $msg .= '<br> client_id has to be integer'; $is_correct = false; }
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like  2017-12-18 02:09:54<br>'; }
-		if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['reminder_date'])) { $msg .= '<br> reminder_date has to be in YYYY-MM-DD hh:mm:ss format, 2018-07-28T15:30:40.5057Z <br>'; $is_correct = false; }
+		if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['reminder_date'])) { $msg .= '<br> reminder_date has to be in YYYY-MM-DD hh:mm:ss format, 2018-07-28 15:30:40 <br>'; $is_correct = false; }
 
 		return [$is_correct, $msg];
 	}
