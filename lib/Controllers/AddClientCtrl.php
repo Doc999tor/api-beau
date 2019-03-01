@@ -87,7 +87,7 @@ class AddClientCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'birthyear', 'filling_up', 'gender', 'approved_marketing', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
+		$correct_body = ['name', 'phone', 'email', 'address', 'birthdate', 'birthyear', 'filling_up', 'gender', 'permit_ads', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
 
 		$is_correct = true;
 		$msg = '';
