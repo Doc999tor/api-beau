@@ -36,6 +36,11 @@ class ClientsCtrl extends Controller {
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
 		return $response->withJson($this->generateClients($params['limit'], $q));
 	}
+	public function getBIClients (Request $request, Response $response):Response {
+		$bi_limit = 6;
+		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
+		return $response->withJson($this->generateClients($bi_limit, ''));
+	}
 
 	public function getClient (Request $request, Response $response, $args):Response {
 		$params = $request->getQueryParams();
@@ -107,11 +112,14 @@ class ClientsCtrl extends Controller {
 			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);
 		}
 		if (mt_rand(0,10) < 9) {
-			$client["last_appointment"] = date("Y-m-d H:i", mt_rand(time() - 3600 * 24 * 30, time())); # 1 month back,
+			$client["last_appointment"] = date(
+				"Y-m-d H:i",
+				rand(time() + (rand(0,1) ? 1 : -1) * 3600 * 24 * 30, time())
+			); # 1 month back,
 		}
-		if (mt_rand(0,10) < 9) {
-			$client["next_appointment"] = date("Y-m-d H:i", mt_rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
-		}
+		// if (mt_rand(0,10) < 9) {
+		// 	$client["next_appointment"] = date("Y-m-d H:i", mt_rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
+		// }
 		if ($is_full) {
 			$client['id'] = $id;
 			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);

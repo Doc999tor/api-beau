@@ -33,6 +33,7 @@ $app->group('/creating-appointment', function () use ($app) {
 	$prefix = 'CreatingAppointment\\ClientsCtrl:';
 	$app->get('/', $prefix . 'index');
 	$app->get('/clients', $prefix . 'getClients');
+	$app->get('/clients/bi', $prefix . 'getBIClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
 });
 
