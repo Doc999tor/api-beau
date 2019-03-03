@@ -70,7 +70,7 @@ class PunchCardsCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['service_id', 'uses', 'sum', 'date'];
+		$correct_body = ['service_id', 'service_count', 'sum', 'added', 'expiration'];
 
 		$is_correct = true;
 		$msg = '';
@@ -81,9 +81,9 @@ class PunchCardsCtrl extends Controller {
 		}
 
 		if (isset($body['service_id']) && !ctype_digit($body['service_id'])) { $is_correct = false; $msg .= 'service_id has to be an integer' . "<br>"; }
-		if (isset($body['uses']) && !ctype_digit($body['uses'])) { $is_correct = false; $msg .= 'uses have to be an integer' . "<br>"; }
+		if (isset($body['service_count']) && !ctype_digit($body['service_count'])) { $is_correct = false; $msg .= 'service_count has to be an integer' . "<br>"; }
 		if (isset($body['sum']) && !ctype_digit($body['sum'])) { $is_correct = false; $msg .= 'sum has to be an integer' . "<br>"; }
-		if (isset($body['date']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) { $is_correct = false; $msg .= "date has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
+		if (isset($body['added']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if (isset($body['expiration']) && !\DateTime::createFromFormat('Y-m-d', $body['expiration'])) { $is_correct = false; $msg .= 'expiration has to be Y-m-d format, like 1970-01-01' . "<br>"; }
 
@@ -98,10 +98,10 @@ class PunchCardsCtrl extends Controller {
 		$punch_card['service_id'] = $service['id'];
 
 		$possible_service_counts = [3, 5, 7, 10, 20];
-		$punch_card['service_count'] = $possible_service_counts[array_rand($possible_service_counts)];
+		$punch_card['service_count'] = $possible_service_counts[array_rand($possible_service_counts)]; // array_rand returns a random key
 		$punch_card['sum'] = ($punch_card['service_count'] - 1*rand(0,1)) * $service['price'];
 
-		$punch_card['date'] = (new \DateTime())
+		$punch_card['added'] = (new \DateTime())
 			->modify(rand(0,180) . ' days ago')
 			->format('Y-m-d');
 
