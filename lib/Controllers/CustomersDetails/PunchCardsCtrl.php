@@ -105,16 +105,17 @@ class PunchCardsCtrl extends Controller {
 			->modify(rand(0,180) . ' days ago')
 			->format('Y-m-d');
 
-		if (rand() % 4) {
+		if (rand(0,1)) {
 			$punch_card['uses'] = [];
-			$uses_count = rand(1, $punch_card['service_count'] - 1);
+			$uses_count = (new \DateTime())->diff(new \DateTime($punch_card['added']))->m;
 
 			for ($i=1; $i <= $uses_count; $i++) {
 				$punch_card['uses'] []= [
 					"id" => $i,
 					"date" => (new \DateTime($punch_card['added']))
-						->modify('-' . $i . ' months')
+						->modify('+' . $i . ' months')
 						->modify('first day of')
+						->add(new \DateInterval('PT' . rand(10,20) . 'H'))
 						->format('Y-m-d H:i:s')
 				];
 			}
