@@ -112,7 +112,7 @@ class PunchCardsCtrl extends Controller {
 			for ($i=1; $i <= $uses_count; $i++) {
 				$punch_card['uses'] []= [
 					"id" => $i,
-					"date" => (new \DateTime($punch_card['date']))
+					"date" => (new \DateTime($punch_card['added']))
 						->modify('-' . $i . ' months')
 						->modify('first day of')
 						->format('Y-m-d H:i:s')
