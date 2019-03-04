@@ -42,6 +42,7 @@ class MediaCtrl extends Controller {
 	public static function checkMedia(Request $request, $file_name) {
 		$body = $request->getParsedBody();
 		$files = $request->getUploadedFiles();
+		var_dump($files);
 
 		$is_correct = true; $msg = '';
 		if (!isset($files[$file_name])) {
@@ -52,9 +53,9 @@ class MediaCtrl extends Controller {
 			$is_correct = false; $msg .= 'date has to be YYYY-MM-DD hh:mm:ss format, like  2017-12-18 02:09:54<br>';
 		}
 
-		$permitted_types = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf', 'application/ogg', 'audio/aac', 'audio/ac3', 'audio/amr', 'audio/mp4', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
+		$permitted_types = ['image/jpeg', 'image/png', 'image/webp', 'image/vnd.adobe.photoshop', 'application/pdf', 'application/ogg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 'text/plain', 'audio/aac', 'audio/amr', 'audio/ac3', 'audio/mp3', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
 
-		if (isset($files[$file_name]) && !in_array($files[$file_name]->getClientMediaType(), $permitted_types)) {
+		if (isset($files[$file_name]) && !in_array(mime_content_type($files[$file_name]->file), $permitted_types)) {
 			 $is_correct = false; $msg .= 'MIME type is not supported';
 		}
 		return ["is_correct" => $is_correct, "msg" => $msg];
