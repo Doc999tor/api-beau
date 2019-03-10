@@ -11,27 +11,27 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class TimelineCtrl extends Controller {
 	public function getAppoinments (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 	public function getGallery (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('depts', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('depts', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('notes', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('notes', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 	public function getSms (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 	public function getPunchCards (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('punch_cards', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT );
+		return $response->withJson($this->timelineGenericMethod('punch_cards', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
 	}
 
 	private function generateAppointments(\DateTime $date) {
@@ -99,45 +99,52 @@ class TimelineCtrl extends Controller {
 		return $dept;
 	}
 	private function generatePunch_cards(\DateTime $date) {
-		$services_count = 10;
+		$service_count = rand(3, 10);
+		$is_punch_created = !(rand(1,5) % 5);
 		$punch_card = [
-			"id" => rand(1, 10),
-			"service_name" => Utils::generatePhrase('', 1, 3),
-			"service_id" => rand(1, 50),
-			"service_count" => $services_count,
+			'id' => rand(1, 10),
+			'date' => $date->format('Y-m-d H:i'),
+			'service_name' => Utils::generatePhrase('', 1, 3),
+			'service_count' => $service_count,
+			'use_id' => $is_punch_created ? null : rand(1, $service_count),
+			'event_type' => $is_punch_created ? 'punch_card_created' : 'punch_card_used',
 		];
-		$date_kind = rand(1, 3);
-		switch ($date_kind) {
-			case 1:
-				// punch_card creation
-				$punch_card['date'] = $date->format('Y-m-d');
-				$punch_card['uses'] = [];
-				break;
-			case 2:
-				// punch_card use
-				$added_interval = rand(3, 10);
-				$added_date = clone $date;
-				$added_date->sub(new \DateInterval("P{$added_interval}D"));
-				$punch_card['date'] = $added_date->format('Y-m-d');
-				$punch_card['uses'] = [
-					["id" => rand(1, 150), "date" => $date->format('Y-m-d H:m'),],
-				];
-				break;
-			case 3:
-				// punch_card creation
-				$added_interval = rand(3, 10);
-				$added_date = clone $date;
-				$added_date->sub(new \DateInterval("P{$added_interval}D"));
-				$punch_card['date'] = $added_date->format('Y-m-d');
-				$use_date = clone $date;
-				$use_date->sub(new \DateInterval('P' . rand(1, $added_interval - 1) . 'DT' . rand(8, 16) . 'H'));
-				$punch_card['uses'] = [
-					["id" => rand(1, 150), "date" => $use_date->format('Y-m-d H:m'),],
-				];
-				$punch_card['expiration'] = $date->format('Y-m-d');
-				break;
-		}
 		return $punch_card;
+
+
+
+		// $date_kind = rand(1, 3);
+		// switch ($date_kind) {
+		// 	case 1:
+		// 		// punch_card creation
+		// 		$punch_card['date'] = $date->format('Y-m-d H:i');
+		// 		$punch_card['uses'] = [];
+		// 		break;
+		// 	case 2:
+		// 		// punch_card use
+		// 		$added_interval = rand(3, 10);
+		// 		$added_date = clone $date;
+		// 		$added_date->sub(new \DateInterval("P{$added_interval}D"));
+		// 		$punch_card['date'] = $added_date->format('Y-m-d H:i');
+		// 		$punch_card['uses'] = [
+		// 			["id" => rand(1, 150), "date" => $date->format('Y-m-d H:i'),],
+		// 		];
+		// 		break;
+		// 	case 3:
+		// 		// punch_card creation
+		// 		$added_interval = rand(3, 10);
+		// 		$added_date = clone $date;
+		// 		$added_date->sub(new \DateInterval("P{$added_interval}D"));
+		// 		$punch_card['date'] = $added_date->format('Y-m-d');
+		// 		$use_date = clone $date;
+		// 		$use_date->sub(new \DateInterval('P' . rand(1, $added_interval - 1) . 'DT' . rand(8, 16) . 'H'));
+		// 		$punch_card['uses'] = [
+		// 			["id" => rand(1, 150), "date" => $use_date->format('Y-m-d H:i'),],
+		// 		];
+		// 		$punch_card['expiration'] = $date->format('Y-m-d');
+		// 		break;
+		// }
+		// return $punch_card;
 	}
 	private function generateSms(\DateTime $date): array {
 		return [
@@ -166,11 +173,11 @@ class TimelineCtrl extends Controller {
 		$start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
 		$end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
 
-		$period = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
+		$dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
 
 		$dates = array_map(function ($date) {
-			return $date->add(new \DateInterval('PT' . ((rand(0,18)+18)*30) . 'M')); # adds some random times between 10:00-18:00
-		}, array_values(array_filter(iterator_to_array($period), function () {
+			return $date->add(new \DateInterval('PT' . ((rand(0,16)+20)*30) . 'M')); # adds some random times between 10:00-18:00
+		}, array_values(array_filter(iterator_to_array($dates_collection), function () {
 			return rand(1,2) % 2;
 		})));
 

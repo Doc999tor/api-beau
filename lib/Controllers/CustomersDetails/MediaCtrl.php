@@ -42,7 +42,6 @@ class MediaCtrl extends Controller {
 	public static function checkMedia(Request $request, $file_name) {
 		$body = $request->getParsedBody();
 		$files = $request->getUploadedFiles();
-		var_dump($files);
 
 		$is_correct = true; $msg = '';
 		if (!isset($files[$file_name])) {
