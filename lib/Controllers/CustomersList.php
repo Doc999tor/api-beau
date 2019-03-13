@@ -66,7 +66,7 @@ class CustomersList extends Controller {
 
 		return $clients;
 	}
-	protected static function generateClient($q = '', $id = 0) {
+	public static function generateClient($q = '', $id = 0) {
 		$id = rand(0, 300);
 		$client = [
 			'id' => $id,

@@ -76,6 +76,7 @@ $app->group('/customers-details', function () use ($app) {
 	$app->get('/clients', $cl_prefix . 'getClients');
 
 	$app->group('/clients/{client_id:\d+}', function () use ($app, $prefix, $cl_prefix) {
+		$app->get('', $cl_prefix . 'getPersonalData');
 		$app->put('', $cl_prefix . 'setPersonalData');
 		$app->delete('', $cl_prefix . 'removeUser');
 		$app->post('/profile_image', $cl_prefix . 'setProfileImage');

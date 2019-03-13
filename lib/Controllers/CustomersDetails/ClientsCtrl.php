@@ -31,6 +31,9 @@ class ClientsCtrl extends Controller {
 		return $response->withStatus(204);
 	}
 
+	public function getPersonalData (Request $request, Response $response) {
+		return $response->withJson(\Lib\Controllers\CustomersList::generateClient());
+	}
 	public function setPersonalData (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
