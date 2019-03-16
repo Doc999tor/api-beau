@@ -184,7 +184,7 @@ class ClientsCtrl extends Controller {
 		if (isset($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
 		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like 05-31 <br>';}
 		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like 2000 <br>';}
-		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be male or female <br>';}
+		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
 		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
 		if (isset($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short <br>';}
 		if (isset($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= ' address is too short <br>';}
