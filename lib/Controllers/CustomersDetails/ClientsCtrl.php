@@ -180,8 +180,8 @@ class ClientsCtrl extends Controller {
 		$diff_keys = array_diff(array_keys($body), $possible_keys); # nonexpected fields exist
 		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode('<br>', $diff_keys) . ' argument' . (count($diff_keys) > 1 ? 's' : '') . ' should not exist<br>'; }
 
-		if (isset($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
-		if (isset($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
+		if (isset($body['phone']) && ($body['phone'] !== 'null' && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone']))) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
+		if (isset($body['email']) && ($body['email'] !== 'null' && strpos($body['email'], '@') === false)) { $is_correct = false; $msg .= ' email is incorrect <br>';}
 		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like 05-31 <br>';}
 		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like 2000 <br>';}
 		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
