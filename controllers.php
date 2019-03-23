@@ -70,3 +70,8 @@ $container['RemindersCtrl'] = function () use ($container) {
 $container['TemplatesCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\TemplatesCtrl($container);
 };
+
+# Auth
+$container['AuthCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\AuthCtrl($container);
+};
