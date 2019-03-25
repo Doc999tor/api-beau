@@ -6,6 +6,7 @@ use \Psr\Http\Message\ResponseInterface		 as Response;
 use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
 
 $app->post('/signup', 'AuthCtrl:signup')->add(new ReturnID());
+$app->get('/countries', 'AuthCtrl:countries')->add(new ReturnID());
 
 ### Appointments
 $app->group('/appointments', function () use ($app) {

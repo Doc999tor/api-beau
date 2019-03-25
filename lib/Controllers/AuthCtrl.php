@@ -19,6 +19,13 @@ class AuthCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function countries (Request $request, Response $response):Response {
+		return $response->withJson([
+			"country" => "IL",
+			"timezone" => "Asia/Jerusalem",
+			"city" => "Tel Aviv"
+		]);
+	}
 	private function checkSignupDataCorrectness (array $body): array {
 		$correct_body = ['email', 'pass', 'permit_ads', 'business_types', 'lang', 'timezone', 'added'];
 		$is_correct = true; $msg = '';
