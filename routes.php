@@ -170,6 +170,11 @@ $app->group('/reminders', function () use ($app) {
 	$app->delete('/{reminder_id:\d+}', $prefix . 'delete');
 });
 
+### Settings
+$app->group('/settings', function () use ($app) {
+	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
+});
+
 ### Catalog
 $app->group('/catalog/services', function () use ($app) {
 	$prefix = 'ServicesCtrl:';

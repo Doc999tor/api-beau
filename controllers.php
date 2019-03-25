@@ -75,3 +75,8 @@ $container['TemplatesCtrl'] = function () use ($container) {
 $container['AuthCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\AuthCtrl($container);
 };
+
+# Settings
+$container['SettingsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\SettingsCtrl($container);
+};
