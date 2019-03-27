@@ -9,8 +9,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class SettingsCtrl extends Controller {
 	public function getMapsAPIKey (Request $request, Response $response) {
 		// $body = $request->getParsedBody();
-		$body = $response->getBody();
-		$body->write('tjNy9K6JfYACeBYJF-cZshcrmGSLTA5dyamB73x');
-		return $response->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+		return $response
+			->withJson(['api_key' => 'tjNy9K6JfYACeBYJF-cZshcrmGSLTA5dyamB73x'])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
 }
