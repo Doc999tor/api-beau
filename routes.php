@@ -14,11 +14,13 @@ $app->group('/appointments', function () use ($app) {
 	$app->get('', $prefix . 'getCalendar');
 
 	$app->post('', $prefix . 'addAppointment')->add(new ReturnID());
+	$app->put ('', $prefix . 'editAppointment');
+
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new ReturnID());
 	$app->post('/break', $prefix . 'addBreak')->add(new ReturnID());
 	$app->post('/vacation', $prefix . 'addVacation')->add(new ReturnID());
 
-	$app->patch ('/{appointment_id:\d+}', $prefix . 'edit');
+	$app->patch ('/{appointment_id:\d+}', $prefix . 'reschedule');
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 
 	$app->get('/settings', $prefix . 'getCalendarSettings');

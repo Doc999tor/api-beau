@@ -75,7 +75,7 @@ class AppointmentsCtrl extends Controller {
 		}
 	}
 
-	public function edit (Request $request, Response $response, array $args):Response {
+	public function reschedule (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = $request->getParsedBody();
 		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']));
@@ -194,6 +194,22 @@ class AppointmentsCtrl extends Controller {
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write($is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+	public function editAppointment (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkAppointmentCorrectness($body);
+		if (
+			$is_body_correct['is_correct']
+			&& (isset($body['appointment_id']) && is_int((int) $body['appointment_id']))
+		) {
+			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
