@@ -45,4 +45,10 @@ class AuthCtrl extends Controller {
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
+
+	public function getBusinessTypes(Request $request, Response $response) {
+		$body = $response->getBody();
+		$body->write('[{"id":1,"name":"Hair Styling","icon":"hair_styling.svg","ordering":1}]');
+		return $response->withHeader('Content-type', 'application/json');
+	}
 }
