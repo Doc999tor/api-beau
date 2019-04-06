@@ -18,8 +18,8 @@ class SettingsCtrl extends Controller {
 			->withJson([
 				'new_clients_amonth' => rand(1,20),
 				'new_clients_this_year' => rand(1,120),
-				'services_amonth' => rand(1,40),
-				'paid_amonth' => rand(1,2000),
+				'growth_services_amonth' => rand(1,40),
+				'growth_paid_amonth' => rand(1,2000),
 			])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
