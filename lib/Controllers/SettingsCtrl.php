@@ -13,4 +13,14 @@ class SettingsCtrl extends Controller {
 			->withJson(['api_key' => 'tjNy9K6JfYACeBYJF-cZshcrmGSLTA5dyamB73x'])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
+	public function getBusinessData (Request $request, Response $response) {
+		return $response
+			->withJson([
+				'new_clients_amonth' => rand(1,20),
+				'new_clients_this_year' => rand(1,120),
+				'services_amonth' => rand(1,40),
+				'paid_amonth' => rand(1,2000),
+			])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+	}
 }

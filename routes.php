@@ -176,6 +176,7 @@ $app->group('/reminders', function () use ($app) {
 ### Settings
 $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
+	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 });
 
 ### Catalog
