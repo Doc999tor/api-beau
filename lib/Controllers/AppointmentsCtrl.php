@@ -205,10 +205,7 @@ class AppointmentsCtrl extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
-		if (
-			$is_body_correct['is_correct']
-			&& (isset($body['appointment_id']) && is_int((int) $body['appointment_id']))
-		) {
+		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
