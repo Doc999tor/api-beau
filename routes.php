@@ -177,6 +177,13 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
+	$app->put('/calendar/calendar_view', 'SettingsCtrl:setCalendarView');
+	$app->put('/calendar/view_starts_on', 'SettingsCtrl:setViewStartsOn');
+	$app->put('/calendar/show_calendar_from', 'SettingsCtrl:setShowCalendarFrom');
+	$app->put('/calendar/show_calendar_to', 'SettingsCtrl:setShowCalendarTo');
+	$app->put('/calendar/slotDuration', 'SettingsCtrl:setSlotDuration');
+	$app->put('/calendar/allow_multiple_events_on_the_same_time_slot', 'SettingsCtrl:setAllowMultipleEventsOnTheSameTimeSlot');
+	$app->put('/calendar/allow_scheduling_outside_of_time_slots', 'SettingsCtrl:setAllowSchedulingOutsideOfTimeSlots');
 });
 
 ### Catalog
