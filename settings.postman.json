@@ -1,0 +1,630 @@
+{
+  "version": 1,
+  "collections": [
+    {
+      "id": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+      "name": "Settings",
+      "description": "",
+      "auth": null,
+      "events": null,
+      "variables": [],
+      "order": [],
+      "folders_order": [],
+      "folders": [],
+      "requests": [
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9001",
+          "name": "setBusinessName",
+          "url": "localhost:3000/settings/business/business_name",
+          "description": null,
+          "data": [
+            {
+              "key": "business_name",
+              "value": "business_name",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9002",
+          "name": "setBusinessPhoneNumber",
+          "url": "localhost:3000/settings/business/business_phone_number",
+          "description": null,
+          "data": [
+            {
+              "key": "business_phone_number",
+              "value": "business_phone_number",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9003",
+          "name": "setBusinessLocation",
+          "url": "localhost:3000/settings/business/business_location",
+          "description": null,
+          "data": [
+            {
+              "key": "business_location",
+              "value": "business_location",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9004",
+          "name": "setIsMeetingAtClientLocation",
+          "url": "localhost:3000/settings/business/is_meeting_at_client_location",
+          "description": null,
+          "data": [
+            {
+              "key": "is_meeting_at_client_location",
+              "value": "2017-12-18 02:09:54",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9005",
+          "name": "setThankYouMessage",
+          "url": "localhost:3000/settings/business/thank_you_message",
+          "description": null,
+          "data": [
+            {
+              "key": "thank_you_message",
+              "value": "thank_you_message",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9006",
+          "name": "setWebsite",
+          "url": "localhost:3000/settings/business/website",
+          "description": null,
+          "data": [
+            {
+              "key": "website",
+              "value": "website",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9007",
+          "name": "setFacebook",
+          "url": "localhost:3000/settings/business/facebook",
+          "description": null,
+          "data": [
+            {
+              "key": "facebook",
+              "value": "facebook",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9008",
+          "name": "setAboutYou",
+          "url": "localhost:3000/settings/business/about_you",
+          "description": null,
+          "data": [
+            {
+              "key": "about_you",
+              "value": "about_you",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9009",
+          "name": "setBillingName",
+          "url": "localhost:3000/settings/business/billing_name",
+          "description": null,
+          "data": [
+            {
+              "key": "billing_name",
+              "value": "billing_name",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9010",
+          "name": "setBillingAddress",
+          "url": "localhost:3000/settings/business/billing_address",
+          "description": null,
+          "data": [
+            {
+              "key": "billing_address",
+              "value": "billing_address",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9011",
+          "name": "setBillingEmail",
+          "url": "localhost:3000/settings/business/billing_email",
+          "description": null,
+          "data": [
+            {
+              "key": "billing_email",
+              "value": "billing_email",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9012",
+          "name": "setAdditionalBillingInfo",
+          "url": "localhost:3000/settings/business/additional_billing_info",
+          "description": null,
+          "data": [
+            {
+              "key": "additional_billing_info",
+              "value": "2017-12-18 02:09:54",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9013",
+          "name": "setLoginEmail",
+          "url": "localhost:3000/settings/user/login_email",
+          "description": null,
+          "data": [
+            {
+              "key": "login_email",
+              "value": "login_email",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9014",
+          "name": "setLoginPassword",
+          "url": "localhost:3000/settings/user/login_password",
+          "description": null,
+          "data": [
+            {
+              "key": "login_password",
+              "value": "login_password",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9015",
+          "name": "setPermitAd",
+          "url": "localhost:3000/settings/user/permit_ads",
+          "description": null,
+          "data": [
+            {
+              "key": "permit_ads",
+              "value": "permit_ads",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "PUT",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        },
+        {
+          "id": "9bbea29e-a257-414d-b144-b76f657a9016",
+          "name": "deleteAccount",
+          "url": "localhost:3000/settings/user",
+          "description": null,
+          "data": [
+            {
+              "key": "user",
+              "value": "user",
+              "description": "",
+              "type": "text",
+              "enabled": true
+            }
+          ],
+          "dataMode": "urlencoded",
+          "headerData": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "Cookie",
+              "value": "ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11"
+            }
+          ],
+          "method": "DELETE",
+          "pathVariableData": [],
+          "queryParams": [],
+          "auth": null,
+          "events": null,
+          "folder": null,
+          "currentHelper": null,
+          "helperAttributes": null,
+          "collectionId": "7a2c1433-bc87-fc25-9653-eaf69245c177",
+          "headers": "Content-Type: application/x-www-form-urlencoded\nCookie: ea6b2efbdd4255a9f1b3bbc6399b58f4=8ED8EF6BE6AE426E9FF61B0A7C317E43E4ABA96952BAA2930A281A5DB184BB11",
+          "pathVariables": {}
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "id": "2e6d3e67-6568-4d2b-b564-baa9277c4db8",
+      "name": "My Workspace - globals",
+      "values": [
+        {
+          "key": "now",
+          "value": "",
+          "enabled": true
+        },
+        {
+          "key": "timestamp",
+          "value": "/2019-04-08 17:26",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "headerPresets": [],
+  "globals": []
+}
