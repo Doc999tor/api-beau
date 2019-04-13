@@ -177,6 +177,7 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
+
 	$app->put('/calendar/calendar_view', 'SettingsCtrl:setCalendarView');
 	$app->put('/calendar/view_starts_on', 'SettingsCtrl:setViewStartsOn');
 	$app->put('/calendar/show_calendar_from', 'SettingsCtrl:setShowCalendarFrom');
@@ -184,6 +185,24 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/calendar/slotDuration', 'SettingsCtrl:setSlotDuration');
 	$app->put('/calendar/allow_multiple_events_on_the_same_time_slot', 'SettingsCtrl:setAllowMultipleEventsOnTheSameTimeSlot');
 	$app->put('/calendar/allow_scheduling_outside_of_time_slots', 'SettingsCtrl:setAllowSchedulingOutsideOfTimeSlots');
+
+	$app->put('/business/business_name', 'SettingsCtrl:setBusinessName');
+	$app->put('/business/business_phone_number', 'SettingsCtrl:setBusinessPhoneNumber');
+	$app->put('/business/business_location', 'SettingsCtrl:setBusinessLocation');
+	$app->put('/business/is_meeting_at_client_location', 'SettingsCtrl:setIsMeetingAtClientLocation');
+	$app->put('/business/thank_you_message', 'SettingsCtrl:setThankYouMessage');
+	$app->put('/business/website', 'SettingsCtrl:setWebsite');
+	$app->put('/business/facebook', 'SettingsCtrl:setFacebook');
+	$app->put('/business/about_you', 'SettingsCtrl:setAboutYou');
+	$app->put('/business/billing_name', 'SettingsCtrl:setBillingName');
+	$app->put('/business/billing_address', 'SettingsCtrl:setBillingAddress');
+	$app->put('/business/billing_email', 'SettingsCtrl:setBillingEmail');
+	$app->put('/business/additional_billing_info', 'SettingsCtrl:setAdditionalBillingInfo');
+
+	$app->put('/user/login_email', 'SettingsCtrl:setLoginEmail');
+	$app->put('/user/login_password', 'SettingsCtrl:setLoginPassword');
+	$app->put('/user/permit_ads', 'SettingsCtrl:setPermitAd');
+	$app->delete('/user', 'SettingsCtrl:deleteAccount');
 });
 
 ### Catalog
