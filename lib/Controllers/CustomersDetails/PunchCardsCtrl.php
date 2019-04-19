@@ -8,11 +8,17 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
 	public function get (Request $request, Response $response):Response {
+
+		$referrer = $request->getHeader('HTTP_REFERER');
+		preg_match('/^.*\/(?<punch_card_id>\d+)$/', $referrer[0], $matches);
+		$punch_card_id = $matches['punch_card_id'] ?? rand(1,10);
+
 		$punch_cards = [];
 
 		for ($i=0, $punch_cards_count = rand(1,3); $i < $punch_cards_count; $i++) {
 			$punch_cards []= $this->generatePunchCard();
 		}
+		$punch_cards[0]['id'] = $punch_card_id;
 		$punch_cards[0]['service_id'] = 1;
 
 		return $response->withJson($punch_cards);
