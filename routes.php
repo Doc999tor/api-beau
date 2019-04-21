@@ -179,31 +179,31 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 
-	$app->put('/calendar/calendar_view', 'SettingsCtrl:setCalendarView');
-	$app->put('/calendar/view_starts_on', 'SettingsCtrl:setViewStartsOn');
-	$app->put('/calendar/show_calendar_from', 'SettingsCtrl:setShowCalendarFrom');
-	$app->put('/calendar/show_calendar_to', 'SettingsCtrl:setShowCalendarTo');
-	$app->put('/calendar/slotDuration', 'SettingsCtrl:setSlotDuration');
-	$app->put('/calendar/allow_multiple_events_on_the_same_time_slot', 'SettingsCtrl:setAllowMultipleEventsOnTheSameTimeSlot');
-	$app->put('/calendar/allow_scheduling_outside_of_time_slots', 'SettingsCtrl:setAllowSchedulingOutsideOfTimeSlots');
+	$app->put('/calendar/calendar_view', 'CalendarSettingsCtrl:setCalendarView');
+	$app->put('/calendar/view_starts_on', 'CalendarSettingsCtrl:setViewStartsOn');
+	$app->put('/calendar/show_calendar_from', 'CalendarSettingsCtrl:setShowCalendarFrom');
+	$app->put('/calendar/show_calendar_to', 'CalendarSettingsCtrl:setShowCalendarTo');
+	$app->put('/calendar/slotDuration', 'CalendarSettingsCtrl:setSlotDuration');
+	$app->put('/calendar/allow_multiple_events_on_the_same_time_slot', 'CalendarSettingsCtrl:setAllowMultipleEventsOnTheSameTimeSlot');
+	$app->put('/calendar/allow_scheduling_outside_of_time_slots', 'CalendarSettingsCtrl:setAllowSchedulingOutsideOfTimeSlots');
 
-	$app->put('/business/business_name', 'SettingsCtrl:setBusinessName');
-	$app->put('/business/business_phone_number', 'SettingsCtrl:setBusinessPhoneNumber');
-	$app->put('/business/business_location', 'SettingsCtrl:setBusinessLocation');
-	$app->put('/business/is_meeting_at_client_location', 'SettingsCtrl:setIsMeetingAtClientLocation');
-	$app->put('/business/thank_you_message', 'SettingsCtrl:setThankYouMessage');
-	$app->put('/business/website', 'SettingsCtrl:setWebsite');
-	$app->put('/business/facebook', 'SettingsCtrl:setFacebook');
-	$app->put('/business/about_you', 'SettingsCtrl:setAboutYou');
-	$app->put('/business/billing_name', 'SettingsCtrl:setBillingName');
-	$app->put('/business/billing_address', 'SettingsCtrl:setBillingAddress');
-	$app->put('/business/billing_email', 'SettingsCtrl:setBillingEmail');
-	$app->put('/business/additional_billing_info', 'SettingsCtrl:setAdditionalBillingInfo');
+	$app->put('/business/business_name', 'BusinessSettingsCtrl:setBusinessName');
+	$app->put('/business/business_phone_number', 'BusinessSettingsCtrl:setBusinessPhoneNumber');
+	$app->put('/business/business_location', 'BusinessSettingsCtrl:setBusinessLocation');
+	$app->put('/business/is_meeting_at_client_location', 'BusinessSettingsCtrl:setIsMeetingAtClientLocation');
+	$app->put('/business/thank_you_message', 'BusinessSettingsCtrl:setThankYouMessage');
+	$app->put('/business/website', 'BusinessSettingsCtrl:setWebsite');
+	$app->put('/business/facebook', 'BusinessSettingsCtrl:setFacebook');
+	$app->put('/business/about_you', 'BusinessSettingsCtrl:setAboutYou');
+	$app->put('/business/billing_name', 'BusinessSettingsCtrl:setBillingName');
+	$app->put('/business/billing_address', 'BusinessSettingsCtrl:setBillingAddress');
+	$app->put('/business/billing_email', 'BusinessSettingsCtrl:setBillingEmail');
+	$app->put('/business/additional_billing_info', 'BusinessSettingsCtrl:setAdditionalBillingInfo');
 
-	$app->put('/user/login_email', 'SettingsCtrl:setLoginEmail');
-	$app->put('/user/login_password', 'SettingsCtrl:setLoginPassword');
-	$app->put('/user/permit_ads', 'SettingsCtrl:setPermitAd');
-	$app->delete('/user', 'SettingsCtrl:deleteAccount');
+	$app->put('/user/login_email', 'BusinessSettingsCtrl:setLoginEmail');
+	$app->put('/user/login_password', 'BusinessSettingsCtrl:setLoginPassword');
+	$app->put('/user/permit_ads', 'BusinessSettingsCtrl:setPermitAd');
+	$app->delete('/user', 'BusinessSettingsCtrl:deleteAccount');
 });
 
 ### Catalog

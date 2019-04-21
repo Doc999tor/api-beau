@@ -1,5 +1,5 @@
 <?php
-
+// https://api.bewebmaster.co.il/appointments?service_id=%2C%2C
 namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -9,7 +9,8 @@ class ServicesCtrl extends Controller {
 	public function getAll (Request $request, Response $response) {
 		$DEFAULT_LIMIT = 20;
 
-		$params = $request->getQueryParams();
+		$params = [];
+		// $params = $request->getQueryParams();
 
 		$rand = mt_rand(0, 10);
 		$limit = $rand > 3 ? 12 : $DEFAULT_LIMIT;

@@ -78,5 +78,11 @@ $container['AuthCtrl'] = function () use ($container) {
 
 # Settings
 $container['SettingsCtrl'] = function () use ($container) {
-	return new \Lib\Controllers\SettingsCtrl($container);
+	return new \Lib\Controllers\Settings\SettingsCtrl($container);
+};
+$container['CalendarSettingsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\Settings\CalendarSettingsCtrl($container);
+};
+$container['BusinessSettingsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\Settings\BusinessSettingsCtrl($container);
 };
