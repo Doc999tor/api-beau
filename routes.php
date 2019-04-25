@@ -204,6 +204,10 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/user/login_password', 'BusinessSettingsCtrl:setLoginPassword');
 	$app->put('/user/permit_ads', 'BusinessSettingsCtrl:setPermitAd');
 	$app->delete('/user', 'BusinessSettingsCtrl:deleteAccount');
+
+	$app->put('/application/application_lang', 'ApplicationSettingsCtrl:setApplicationLang');
+	$app->put('/application/application_currency', 'ApplicationSettingsCtrl:setApplicationCurrency');
+	$app->put('/application/application_timezone', 'ApplicationSettingsCtrl:setApplicationTimezone');
 });
 
 ### Catalog

@@ -86,3 +86,6 @@ $container['CalendarSettingsCtrl'] = function () use ($container) {
 $container['BusinessSettingsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\Settings\BusinessSettingsCtrl($container);
 };
+$container['ApplicationSettingsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\Settings\ApplicationSettingsCtrl($container);
+};
