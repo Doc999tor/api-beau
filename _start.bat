@@ -1,1 +1,1 @@
-start cmd /k "git pull origin master && npm i && npm start"
+git pull origin master && php -S localhost:3000
