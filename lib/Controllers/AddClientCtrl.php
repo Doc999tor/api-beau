@@ -27,7 +27,6 @@ class AddClientCtrl extends Controller {
 			if (rand(1,3)%3 === 0) {
 				$clients = $this->generateClients(50, '');
 				foreach ($clients as &$client) {
-					unset($client['last_appointment']);
 					$client['phone'] = $params['phone'] . substr($client['phone'], strlen($params['phone']));
 				}
 			} else { $clients = []; }
