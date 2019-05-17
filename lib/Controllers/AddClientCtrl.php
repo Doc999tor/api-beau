@@ -19,6 +19,21 @@ class AddClientCtrl extends Controller {
 	public function getClients (Request $request, Response $response) {
 		$params = $request->getQueryParams();
 
+		if (!empty($params['phone'])) { # searching by phone
+			if (!ctype_digit($params['phone'])) {
+				$body = $response->getBody(); $body->write('phone query parameter has to be integer');
+				return $response->withStatus(400);
+			}
+			if (rand(1,3)%3 === 0) {
+				$clients = $this->generateClients(50, '');
+				foreach ($clients as &$client) {
+					unset($client['last_appointment']);
+					$client['phone'] = $params['phone'] . substr($client['phone'], strlen($params['phone']));
+				}
+			} else { $clients = []; }
+			return $response->withJson($clients);
+		}
+
 		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 
 		return $response->withJson($this->generateClients(50, $q));
@@ -39,26 +54,14 @@ class AddClientCtrl extends Controller {
 
 		// Reducing $limit as length of $q rises
 		switch (mb_strlen($q)) {
-			case 0: $limit = mt_rand(0, $limit);	break;
-			case 3: $limit = (time()%10 > 4) ? round(mt_rand(0, $limit)) : 0; break;
-			case 4: $limit = (time()%10 > 5) ? round(mt_rand(0, $limit)) : 0; break;
-			case 5: $limit = (time()%10 > 6) ? round(mt_rand(0, $limit)) : 0; break;
+			case 0: $limit = rand(0, $limit); break;
+			case 3: $limit = (time()%10 > 4) ? round(rand(0, $limit)) : 0; break;
+			case 4: $limit = (time()%10 > 5) ? round(rand(0, $limit)) : 0; break;
+			case 5: $limit = (time()%10 > 6) ? round(rand(0, $limit)) : 0; break;
 			default: $limit = 0;
 		}
 
-		for ($i=0; $i < $limit; $i++) {
-			$clients []= $this->generateClient($q);
-		}
-
-		return $clients;
-	}
-	protected function generateClient(string $q = '', int $id = 0, bool $is_full = false) {
-		$id = mt_rand(0, 30000);
-		return [
-			'id' => $id,
-			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
-			"profile_pic" => $id . '.jpg',
-		];
+		return CustomersList::generateClients($limit, $q);
 	}
 
 	public function addClient (Request $request, Response $response):Response {

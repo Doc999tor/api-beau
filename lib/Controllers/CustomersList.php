@@ -72,7 +72,7 @@ class CustomersList extends Controller {
 			'id' => $id,
 			"profile_image" => "{$id}.jpg",
 			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
-			'phone' => '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999),
+			'phone' => '0' . rand(1000000, 999999999),
 		];
 		if (rand(0,5)) {
 			$client["last_appointment"] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
