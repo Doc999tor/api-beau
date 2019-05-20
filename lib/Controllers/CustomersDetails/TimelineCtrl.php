@@ -52,7 +52,9 @@ class TimelineCtrl extends Controller {
 			"worker_name" => Utils::generatePhrase('', 1, 2),
 			"worker_profile_image" => (rand(1,2)%2 ? 1 : Utils::generatePhrase('', 1, 2)) . '.jpg',
 			"services" => array_map(function ($v) {
-				return ServicesCtrl::generateService(rand(1, 50));
+				$appoinment = ServicesCtrl::generateService(rand(1, 50));
+				$appoinment['count'] = rand(1,3)>1 ? 1 : rand(1,40);
+				return $appoinment;
 			}, array_fill(0, $services_count, null)),
 		];
 		if ($is_deleted) {
