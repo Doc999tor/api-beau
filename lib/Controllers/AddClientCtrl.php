@@ -75,7 +75,7 @@ class AddClientCtrl extends Controller {
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
 
-		// if (isset($body['approved_marketing']) && $body['approved_marketing'] === 'true' && !isset($files['signature'])) {
+		// if (isset($body['permit_ads']) && $body['permit_ads'] === 'true' && !isset($files['signature'])) {
 		// 	$is_body_correct['is_correct'] = false;
 		// 	$is_body_correct['msg'] .= 'if the user permits getting ads, he has to sign' . "<br>";
 		// }
@@ -110,7 +110,7 @@ class AddClientCtrl extends Controller {
 		if (isset($body['filling_up']) && !in_array($body['filling_up'], ['true', 'false'])) { $is_correct = false; $msg .= 'filling_up can be true or false' . "<br>"; }
 		if (isset($body['sex']) && !in_array($body['sex'], ['male', 'female'])) { $is_correct = false; $msg .= 'sex can be male or female' . "<br>"; }
 
-		if (isset($body['approved_marketing']) && $body['approved_marketing'] !== 'true') { $is_correct = false; $msg .= 'approved_marketing can be true or not to exist' . "<br>"; }
+		if (isset($body['permit_ads']) && $body['permit_ads'] !== 'true') { $is_correct = false; $msg .= 'permit_ads can be true or not to exist' . "<br>"; }
 
 		if (isset($body['debts'])) {
 			$debts = json_decode($body['debts']);
