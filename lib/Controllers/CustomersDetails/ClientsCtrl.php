@@ -180,20 +180,24 @@ class ClientsCtrl extends Controller {
 		$diff_keys = array_diff(array_keys($body), $possible_keys); # nonexpected fields exist
 		if (!empty($diff_keys)) { $is_correct = false; $msg .= implode('<br>', $diff_keys) . ' argument' . (count($diff_keys) > 1 ? 's' : '') . ' should not exist<br>'; }
 
-		if (isset($body['phone']) && ($body['phone'] !== 'null' && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone']))) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
-		if (isset($body['email']) && ($body['email'] !== 'null' && strpos($body['email'], '@') === false)) { $is_correct = false; $msg .= ' email is incorrect <br>';}
-		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like 05-31 <br>';}
-		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like 2000 <br>';}
-		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
-		if (isset($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
-		if (isset($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short <br>';}
-		if (isset($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= ' address is too short <br>';}
+		foreach ($body as &$val) {
+			if ($val === 'null') { $val = null; }
+		}
 
-		if (isset($body['source'])) {
+		if (!empty($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
+		if (!empty($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
+		if (!empty($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be ' . (new \DateTime())->format('m-d') . ' format, like 05-31 or null <br>';}
+		if (!empty($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be ' . (new \DateTime())->format('YYYY') . ' format, like 2000 or null <br>';}
+		if (!empty($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
+		if (!empty($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
+		if (!empty($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short <br>';}
+		if (!empty($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= ' address is too short <br>';}
+
+		if (!empty($body['source'])) {
 			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
 			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [ <br>' . implode(',', $source_options) . ']';}
 		}
-		if (isset($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value is incorrect <br>';}
+		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value is incorrect <br>';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
