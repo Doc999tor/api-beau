@@ -120,7 +120,7 @@ $app->group('/customers-details', function () use ($app) {
 		$app->group('/media', function () use ($app, $prefix) {
 			$app->post('', 'CustomersDetails\MediaCtrl:addMedia');
 			$app->patch ('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:editMediaNote');
-			$app->delete('/{media_id:\d+}', 'CustomersDetails\MediaCtrl:removeMedia');
+			$app->delete('/{media_id:(?:\d+)(?:,\d+)*}', 'CustomersDetails\MediaCtrl:removeMedia');
 		});
 
 		# Social
