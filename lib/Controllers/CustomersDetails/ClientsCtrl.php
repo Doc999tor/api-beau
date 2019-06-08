@@ -154,7 +154,7 @@ class ClientsCtrl extends Controller {
 		$body = $request->getParsedBody();
 
 		$is_body_correct = ['is_correct' => true, 'msg' => ''];
-		if (empty($body['phone']) || !preg_match('/^[\d()+\-*\/]+$/', $body['phone'])) {
+		if (empty($body['phone']) || !$this->isClientPhoneValid($body['phone'])) {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] = 'phone must exist and be a correct phone number <br>';
 		} else if (empty($body['added']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['added']) && !\DateTime::createFromFormat('Y-m-d H:i', $body['added']))) {
@@ -184,10 +184,20 @@ class ClientsCtrl extends Controller {
 			if ($val === 'null') { $val = null; }
 		}
 
-		if (!empty($body['phone']) && !preg_match('/^((?![a-zA-Z]).)*$/', $body['phone'])) { $is_correct = false; $msg .= ' phone value is incorrect <br>';}
+		if (!empty($body['phone'])) {
+			$phone = json_decode($body['phone'], true);
+			if (
+				is_null($phone) ||
+				( is_array($phone) && count($phone) !== count(array_filter($phone, [$this, 'isClientPhoneValid'])) )
+				||
+				( !is_array($phone) && !$this->isClientPhoneValid($phone) )
+			)
+			{ $is_correct = false; $msg .= ' phone value is incorrect <br>';}
+		}
+
 		if (!empty($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
-		if (!empty($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be ' . (new \DateTime())->format('m-d') . ' format, like 05-31 or null <br>';}
-		if (!empty($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be ' . (new \DateTime())->format('YYYY') . ' format, like 2000 or null <br>';}
+		if (!empty($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= ' birthdate is incorrect, it has to be m-d format, like ' . (new \DateTime())->format('m-d') . ' or null <br>';}
+		if (!empty($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like ' . (new \DateTime())->format('YYYY') . ' or null <br>';}
 		if (!empty($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
 		if (!empty($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
 		if (!empty($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short <br>';}
@@ -210,5 +220,8 @@ class ClientsCtrl extends Controller {
 			$msg = 'c has to be an alphanumeric';
 		}
 		return $msg;
+	}
+	private function isClientPhoneValid(/*string */$phone_string): bool {
+		return (bool) preg_match('/^((?![a-zA-Z]).)*$/', $phone_string);
 	}
 }
