@@ -193,7 +193,8 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
+			$status = rand(1,2) < 3 ? 201 : 422;
+			return $response->withStatus($status);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
