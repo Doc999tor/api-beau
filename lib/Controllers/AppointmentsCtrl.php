@@ -61,6 +61,12 @@ class AppointmentsCtrl extends Controller {
 					}
 				}
 
+				if (count($appointments)) {
+					$middle_element = round(count($appointments) / 2);
+					$appointments[$middle_element]['client_id'] = 1;
+					$appointments[$middle_element]['profile_picture'] = 'banner (1600x800).jpg';
+				}
+
 				usort($appointments, function ($a, $b) {
 					return new \DateTime($a['start']) < new \DateTime($b['start']);
 				});
