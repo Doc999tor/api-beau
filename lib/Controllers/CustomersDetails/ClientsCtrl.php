@@ -34,6 +34,7 @@ class ClientsCtrl extends Controller {
 	public function getPersonalData (Request $request, Response $response, array $args) {
 		$generated_client = \Lib\Controllers\CustomersList::generateClient();
 		$generated_client['id'] = $args['client_id'];
+		$generated_client['phone'] = [$generated_client['phone']];
 		return $response->withJson($generated_client);
 	}
 	public function setPersonalData (Request $request, Response $response) {

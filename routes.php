@@ -4,6 +4,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface		 as Response;
 
 use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
+use \Lib\Middlewares\RandomReturn422		 as Return422;
 
 $app->post('/signup', 'AuthCtrl:signup')->add(new ReturnID());
 $app->get('/countries', 'AuthCtrl:countries');
@@ -153,7 +154,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->get('', $prefix . 'get');
 			$app->get('/{punch_card_id:\d+}', $prefix . 'getOne');
 			$app->post('', $prefix . 'add')->add(new ReturnID());
-			$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard');
+			$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard')->add(new Return422());
 
 			$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}/use/{use_id:\d+}', $prefix . 'unuse');
@@ -218,7 +219,7 @@ $app->group('/catalog/services', function () use ($app) {
 	$app->get    ('/bi', $prefix . 'getBI');
 	$app->get    ('/{service_id:\d+}', $prefix . 'getService');
 	$app->put    ('/{service_id:\d+}', $prefix . 'update');
-	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete');
+	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete')->add(new Return422());
 	$app->post   ('', $prefix . 'add')->add(new ReturnID());
 
 	$app->post   ('/categories', $prefix . 'addCategory')->add(new ReturnID());
