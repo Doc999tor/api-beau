@@ -100,7 +100,7 @@ class AddClientCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if (isset($body['phone'])) {
+		if (isset($body['phone']) && $body['phone'] !== 'null') {
 			$phone_arr = json_decode($body['phone']);
 			if (is_null($phone_arr) || !count($phone_arr) || !preg_match('/^[0-9-+*#]+$/', $phone_arr[0])) {
 				 $is_correct = false; $msg .= "phone number doesn't match the pattern - ['/^[0-9-+*#]+$/']<br>";
