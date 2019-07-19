@@ -110,12 +110,16 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	public function getCalendarSettings(Request $request, Response $response) {
+		$week_types = ['daily', 'weekly', 'monthly', 'agenda'];
+		$slot_duration_options = [5,10,15,20,30,60];
 		return $response->withJson([
-			'slotDuration' => '00:15:00',
+			'calendarAllowSchedulingOutsideOfTimeSlots' => (bool) rand(0,1),
+			'calendarDefaultView' => $week_types[array_rand($week_types)],
+			'slotDuration' => '00:' . $slot_duration_options[array_rand($slot_duration_options)] . ':00',
 			'minTime' => str_pad(8 + rand(-1, 1), 2, '0', STR_PAD_LEFT) . ':00',
 			'maxTime' => (22 + rand(-1, 1)) . ':00',
-			'firstDay' => 0,
-			'eventOverlap' => true,
+			'calendarViewStartsOn' => rand(0,1),
+			'eventOverlap' => (bool) rand(0,1),
 		]);
 	}
 	public function getHolidays (Request $request, Response $response) {
