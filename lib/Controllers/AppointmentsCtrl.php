@@ -269,7 +269,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
+		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
 		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
@@ -285,7 +285,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
