@@ -9,7 +9,7 @@ class Error503Middleware {
 		$route = $request->getAttribute('route');
 
 		if ($route && $route->getMethods()[0] === 'OPTIONS' || time() % 10) {
-		return $next($request, $response);
+			return $next($request, $response);
 		} else {
 			return $response
 			->withHeader('Retry-After', 120)
