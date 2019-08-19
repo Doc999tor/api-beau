@@ -12,6 +12,8 @@ class AuthCtrl extends Controller {
 
 		$is_body_correct = $this->checkSignupDataCorrectness($body);
 		if ($is_body_correct['is_correct']) {
+			$body = $response->getBody();
+			$body->write("/{$body[lang]}/calendar");
 			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
