@@ -8,12 +8,12 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class AuthCtrl extends Controller {
 	public function signup (Request $request, Response $response):Response {
-		$body = $request->getParsedBody();
+		$req_body = $request->getParsedBody();
 
-		$is_body_correct = $this->checkSignupDataCorrectness($body);
+		$is_body_correct = $this->checkSignupDataCorrectness($req_body);
 		if ($is_body_correct['is_correct']) {
 			$body = $response->getBody();
-			$body->write("/{$body[lang]}/calendar");
+			$body->write("/{$req_body['lang']}/calendar");
 			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
