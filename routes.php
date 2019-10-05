@@ -235,6 +235,10 @@ $app->group('/templates', function () use ($app) {
 	$app->post('',    $prefix . 'add')->add(new ReturnID());
 });
 
+$app->get('/error_page', function (Request $request, Response $response) {
+	return $response->getBody()->write('<h1>Error Page</h1>');
+});
+
 $app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });
