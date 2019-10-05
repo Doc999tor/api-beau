@@ -4,6 +4,7 @@ namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Lib\Helpers\Utils;
 
 class CustomersList extends Controller {
 	public function index (Request $request, Response $response):Response {
@@ -66,17 +67,25 @@ class CustomersList extends Controller {
 
 		return $clients;
 	}
-	public static function generateClient($q = '', $id = 0) {
-		$id = rand(0, 300);
+	public static function generateClient($q = '', $id = null) {
+		$id = $id ?? rand(0, 300);
 		$client = [
 			'id' => $id,
 			"profile_image" => "{$id}.jpg",
-			'name' => \Lib\Helpers\Utils::generatePhrase($q, 1, 2),
+			'name' => Utils::generatePhrase($q, 1, 2),
 			'phone' => '0' . rand(1000000, 999999999),
+			"status" => Utils::generatePhrase('', 1, 4),
 		];
+		if (rand(0,2)) {
+			$client['address'] = Utils::getRandomAddress();
+		}
 		if (rand(0,5)) {
 			$client["last_appointment"] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
 		}
+		if (rand(0,10) < 9) {
+			$client["next_appointment"] = date("Y-m-d H:i", rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
+		}
+
 		return $client;
 	}
 

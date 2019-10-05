@@ -144,6 +144,6 @@ class BusinessSettingsCtrl extends Controller {
 	}
 	public function deleteAccount (Request $request, Response $response) {
 		$body = $request->getParsedBody();
-		return $response->withStatus(204);
+		return $response->withStatus(401);
 	}
 }

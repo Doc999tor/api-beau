@@ -1,11 +1,11 @@
 <?php
-
 namespace Lib\Controllers\CreatingAppointment;
 
-use \Lib\Helpers\Utils as Utils;
-use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Lib\Controllers\Controller;
+use Lib\Controllers\CustomersList;
+use \Lib\Helpers\Utils;
 
 class ClientsCtrl extends Controller {
 	private $addressHandler;
@@ -99,30 +99,11 @@ class ClientsCtrl extends Controller {
 		return $clients;
 	}
 	protected function generateClient($q = '', $id = 0, $is_full = false) {
-		$id = rand(0, 150);
-		$client = [
-			'id' => $id,
-			"profile_image" => "{$id}.jpg",
-			'name' => Utils::generatePhrase($q, 1, 2),
-			"address" => Utils::getRandomAddress(),
-			"status" => Utils::generatePhrase('', 1, 4),
-		];
+		$client = CustomersList::generateClient($q, $id);
 
-		if (mt_rand(0,10) < 9) {
-			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);
-		}
-		if (mt_rand(0,10) < 9) {
-			$client["last_appointment"] = date(
-				"Y-m-d H:i",
-				rand(time() + (rand(0,1) ? 1 : -1) * 3600 * 24 * 30, time())
-			); # 1 month back,
-		}
-		// if (mt_rand(0,10) < 9) {
-		// 	$client["next_appointment"] = date("Y-m-d H:i", mt_rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
-		// }
 		if ($is_full) {
 			$client['id'] = $id;
-			$client['phone'] = '0' . mt_rand(2, 99) . '-' . mt_rand(1000000, 9999999);
+			$client['phone'] = '0' . rand(2, 99) . '-' . rand(1000000, 9999999);
 		}
 		return $client;
 	}

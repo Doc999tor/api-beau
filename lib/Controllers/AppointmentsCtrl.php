@@ -1,5 +1,4 @@
 <?php
-
 namespace Lib\Controllers;
 
 use \Lib\Controllers\Controller as Controller;
@@ -162,8 +161,9 @@ class AppointmentsCtrl extends Controller {
 			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
 		}
 		if (rand(0,1)) {
-			$appointment['address'] = Utils::getRandomAddress();
+			// $appointment['address'] = Utils::getRandomAddress();
 		}
+		var_dump($appointment);
 		if (rand(0,1)) {
 			$appointment['note'] = Utils::generatePhrase('', 0, 15);
 		}
