@@ -163,7 +163,6 @@ class AppointmentsCtrl extends Controller {
 		if (rand(0,1)) {
 			// $appointment['address'] = Utils::getRandomAddress();
 		}
-		var_dump($appointment);
 		if (rand(0,1)) {
 			$appointment['note'] = Utils::generatePhrase('', 0, 15);
 		}
