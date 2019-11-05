@@ -24,8 +24,8 @@ class AddClientCtrl extends Controller {
 				$body = $response->getBody(); $body->write('phone query parameter has to be integer');
 				return $response->withStatus(400);
 			}
-			if (rand(1,3)%3 === 0) {
-				$clients = $this->generateClients(50, '');
+			if (rand(1,3) % 3 === 0) {
+				$clients = $this->generateClients(10);
 				foreach ($clients as &$client) {
 					$client['phone'] = $params['phone'] . substr($client['phone'], strlen($params['phone']));
 				}

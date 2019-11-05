@@ -92,7 +92,7 @@ class ClientsCtrl extends Controller {
 
 		// $clients['all'] = [];
 		for ($i=0; $i < $limit; $i++) {
-			$clients []= $this->generateClient($q);
+			$clients []= $this->generateClient($q, $i+1);
 			// $clients['all'] []= $this->generateClient($q);
 		}
 
