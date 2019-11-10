@@ -44,7 +44,7 @@ class ServicesCtrl extends Controller {
 		return $response->withJson(self::generateService(filter_var($args['service_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
-	public static function generateService($id, $q = '', $is_one_category) {
+	public static function generateService($id, $q = '', $is_one_category = false) {
 		$possible_categories = $is_one_category ? ['sole category'] : ['', 'Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
 		$category_id = array_rand($possible_categories);
 
