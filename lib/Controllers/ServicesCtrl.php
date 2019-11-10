@@ -12,14 +12,16 @@ class ServicesCtrl extends Controller {
 		// $q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 		$offset = 0; $q = '';
 
+		$is_one_category = rand(0,1);
+		$is_above_category_limit = rand(0,1);
 		$LIMIT_CATEGORIES = 50;
 		$LIMIT_NO_CATEGORIES = 10;
 
-		$limit = rand(0, 10) > 5 ? $LIMIT_NO_CATEGORIES : $LIMIT_CATEGORIES;
+		$limit = $is_above_category_limit ? $LIMIT_NO_CATEGORIES : $LIMIT_CATEGORIES;
 
 		$services = [];
 		for ($i=0; $i < $limit; $i++) {
-			$services []= self::generateService(mt_rand(2, 150), $q);
+			$services []= self::generateService(mt_rand(2, 150), $q, $is_one_category);
 		}
 		$services[0]['id'] = 1;
 
@@ -42,8 +44,7 @@ class ServicesCtrl extends Controller {
 		return $response->withJson(self::generateService(filter_var($args['service_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
-	public static function generateService($id, $q = '') {
-		$is_one_category = rand(0,1);
+	public static function generateService($id, $q = '', $is_one_category) {
 		$possible_categories = $is_one_category ? ['sole category'] : ['', 'Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
 		$category_id = array_rand($possible_categories);
 
