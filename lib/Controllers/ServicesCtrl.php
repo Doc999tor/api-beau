@@ -7,16 +7,15 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class ServicesCtrl extends Controller {
 	public function getAll (Request $request, Response $response) {
-		$DEFAULT_LIMIT = 20;
-
-		$params = [];
 		// $params = $request->getQueryParams();
+		// $offset = isset($params['offset']) ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
+		// $q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
+		$offset = 0; $q = '';
 
-		$rand = mt_rand(0, 10);
-		$limit = $rand > 3 ? 12 : $DEFAULT_LIMIT;
+		$LIMIT_CATEGORIES = 50;
+		$LIMIT_NO_CATEGORIES = 10;
 
-		$offset = isset($params['offset']) ? filter_var($params['offset'], FILTER_SANITIZE_NUMBER_INT) : 0;
-		$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
+		$limit = rand(0, 10) > 5 ? $LIMIT_NO_CATEGORIES : $LIMIT_CATEGORIES;
 
 		$services = [];
 		for ($i=0; $i < $limit; $i++) {
@@ -44,8 +43,10 @@ class ServicesCtrl extends Controller {
 	}
 
 	public static function generateService($id, $q = '') {
-		$possible_categories = ['', 'עיצוב שיער', 'קוסמטיקה', 'טיפולי פנים', 'טיפולי גוף', 'מניקור פדיקור'];
-		$category_id = mt_rand(1, 5);
+		$is_one_category = rand(0,1);
+		$possible_categories = $is_one_category ? ['sole category'] : ['', 'Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
+		$category_id = array_rand($possible_categories);
+
 		return [
 			"id" => $id,  // AvodaID
 			"name" => \Lib\Helpers\Utils::generatePhrase($q, 1, 6), // Name
@@ -53,7 +54,7 @@ class ServicesCtrl extends Controller {
 			"price" => 50 * \Lib\Helpers\Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
-				"id" => $category_id, // smallint, SpecializationID
+				"id" => $category_id + 1, // smallint, SpecializationID. id is 1-based
 				"name" => $possible_categories[$category_id] // Name
 			],
 			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
