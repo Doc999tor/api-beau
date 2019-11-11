@@ -6,7 +6,7 @@ use \Psr\Http\Message\ResponseInterface		 as Response;
 use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
 use \Lib\Middlewares\RandomReturn422		 as Return422;
 
-$app->map   (['HEAD'], '/signup', 'AuthCtrl:checkSighup');
+$app->post('/check-credentials', 'AuthCtrl:checkSighup');
 $app->post('/signup', 'AuthCtrl:signup');
 $app->get('/countries', 'AuthCtrl:countries');
 $app->get('/business_types', 'AuthCtrl:getBusinessTypes');
