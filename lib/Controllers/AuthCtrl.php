@@ -9,11 +9,12 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class AuthCtrl extends Controller {
 	public function checkSighup (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
-		['is_correct' => $is_correct, 'msg' => $msg, 'error_code' => $error_code, ] = $this->validateBasicCreds($body);
+		['is_correct' => $is_correct, 'msg' => $msg, 'error_code' => $error_code, ] = $this->validateBasicCreds($req_body);
 
-		if ($is_correct['is_correct']) {
-			$error_code = $this->checkExistingCreds($email, $pass);
+		if ($is_correct) {
+			$error_code = $this->checkExistingCreds($req_body['email'], $req_body['pass']);
 		} else {
+			$error_code = 400;
 			$body = $response->getBody();
 			$body->write($msg);
 		}
@@ -24,7 +25,6 @@ class AuthCtrl extends Controller {
 		$req_body = $request->getParsedBody();
 
 		$is_body_correct = $this->checkSignupDataCorrectness($req_body);
-		var_dump($is_body_correct);
 		if ($is_body_correct['is_correct']) {
 			$body = $response->getBody();
 			$body->write("/{$req_body['lang']}/calendar");
