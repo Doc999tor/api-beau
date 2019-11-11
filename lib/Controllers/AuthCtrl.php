@@ -7,14 +7,28 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class AuthCtrl extends Controller {
+	public function checkSighup (Request $request, Response $response):Response {
+		$req_body = $request->getParsedBody();
+		['is_correct' => $is_correct, 'msg' => $msg, 'error_code' => $error_code, ] = $this->validateBasicCreds($body);
+
+		if ($is_correct['is_correct']) {
+			$error_code = $this->checkExistingCreds($email, $pass);
+		} else {
+			$body = $response->getBody();
+			$body->write($msg);
+		}
+		return $response->withStatus($error_code);
+	}
+
 	public function signup (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
 
 		$is_body_correct = $this->checkSignupDataCorrectness($req_body);
+		var_dump($is_body_correct);
 		if ($is_body_correct['is_correct']) {
 			$body = $response->getBody();
 			$body->write("/{$req_body['lang']}/calendar");
-			return $response->withStatus(201);
+			return $response->withStatus($is_body_correct['error_code'] === 404 ? 201 : $is_body_correct['error_code']);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
@@ -28,12 +42,15 @@ class AuthCtrl extends Controller {
 			"city" => "Tel Aviv"
 		]);
 	}
-	private function checkSignupDataCorrectness (array $body): array {
+	private function checkSignupDataCorrectness (?array $body): array {
 		$correct_body = ['email', 'pass', 'permit_ads', 'business_types', 'lang', 'timezone', 'added'];
-		$is_correct = true; $msg = '';
+		[ 'is_correct' => $is_correct, 'msg' => $msg, 'error_code' => $error_code, ] = $this->validateBasicCreds($body);
 
-		if (empty($body['email']) || strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email value is incorrect <br>'; }
-		if (empty($body['pass'])) { $is_correct = false; $msg .= ' pass value is incorrect <br>'; }
+		# checking existing email and pass
+		if ($is_correct) {
+			$error_code = $this->checkExistingCreds($body['email'], $body['pass']);
+		}
+
 		if (empty($body['lang']) || strlen($body['lang']) !== 2) { $is_correct = false; $msg .= ' lang value is incorrect <br>'; }
 		if (empty($body['timezone']) || strpos($body['timezone'], '/') === false) { $is_correct = false; $msg .= ' timezone value is incorrect <br>'; }
 
@@ -41,11 +58,29 @@ class AuthCtrl extends Controller {
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
 
 		$types = isset($body['business_types']) ? json_decode($body['business_types']) : null;
-		if (!is_array($types) || count(array_filter($types, function ($type) {
-			return is_int($type);
-		})) !== count($types)) { $is_correct = false; $msg .= 'business_types are malformed' . "<br>"; }
+		if (!is_array($types) || count(array_filter($types, 'is_int')) !== count($types)) { $is_correct = false; $msg .= 'business_types are malformed' . "<br>"; }
 
-		return ["is_correct" => $is_correct, "msg" => $msg];
+		return ['is_correct' => $is_correct, 'error_code' => $error_code, 'msg' => $msg];
+	}
+
+	private function validateBasicCreds($body): array {
+		$is_correct = true; $msg = ''; $error_code = $is_correct ? 200 : 400;
+		if (empty($body['email']) || strpos($body['email'], '@') === false) { $is_correct = false; $msg .= " email {$body['email']} value is incorrect <br>"; }
+		if (empty($body['pass'])) { $is_correct = false; $msg .= " pass {$body['pass']} value is incorrect <br>"; }
+		return [ "is_correct" => $is_correct, "msg" => $msg, 'error_code' => $error_code, ];
+	}
+
+	private function checkExistingCreds(string $email, string $pass): int {
+		if ($email === 'exists@mail.com' || !rand(0,5)) {
+			if ($pass === 'existing_pass' || !rand(0,3)) {
+				$error_code = 302; # found
+			} else {
+				$error_code = 409; # email exists, pass doesn't
+			}
+		} else {
+			$error_code = 404; # uknown email
+		}
+		return $error_code;
 	}
 
 	public function getBusinessTypes(Request $request, Response $response) {
