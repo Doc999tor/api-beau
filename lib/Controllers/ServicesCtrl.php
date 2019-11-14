@@ -75,7 +75,7 @@ class ServicesCtrl extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) {
+		if (!isset($body['added']) || empty(new \DateTime($body['added']))) {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] .= ' added has exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>';
 		}
@@ -123,7 +123,8 @@ class ServicesCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 		if (empty($name)) { $is_correct = false; $msg .= "name cannot be empty<br>"; }
-		if (!\DateTime::createFromFormat('Y-m-d H:i:s', $added)) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
+		// if (!\DateTime::createFromFormat('Y-m-d H:i:s', $added)) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
+		if (empty(new \DateTime($added))) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(201);
