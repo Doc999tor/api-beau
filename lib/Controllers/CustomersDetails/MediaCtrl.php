@@ -43,7 +43,7 @@ class MediaCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$files = $request->getUploadedFiles();
 
-		$is_correct = true; $status = 200; $msg = '';
+		$is_correct = true; $http_status = 200; $msg = '';
 		if (!isset($files[$file_name])) {
 			$is_correct = false; $http_status = 400; $msg .= $file_name . " is not sent or sent not under \"$file_name\" field<br>";
 		} else if ((int)$request->getHeaderLine('Content-Length') > \Lib\Helpers\Utils::returnBytes(ini_get('post_max_size'))) {
