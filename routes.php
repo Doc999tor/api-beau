@@ -255,6 +255,11 @@ $app->group('/send-filling-up', function () use ($app) {
 	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
 	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
 });
+$app->group('/shadeecat', function () use ($app) {
+	$app->get('/via', function ($req, $res) {
+		return $res->withHeader('Content-Type', 'application/json')->write(file_get_contents('public/via.json'));
+	});
+});
 
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
