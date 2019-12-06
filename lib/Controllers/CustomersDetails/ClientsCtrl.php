@@ -173,7 +173,7 @@ class ClientsCtrl extends Controller {
 	}
 
 	private function checkClientData ($body) {
-		$possible_keys = ['name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
+		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 
 		$is_correct = true;
 		$msg = '';
