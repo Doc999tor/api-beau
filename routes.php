@@ -255,6 +255,9 @@ $app->group('/send-filling-up', function () use ($app) {
 	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
 	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
 });
+$app->group('/home', function () use ($app) {
+	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
+});
 $app->group('/shadeecat/', function () use ($app) {
 	$hn = 'Content-Type'; $hv = 'application/json';
 	$sh = 'public/shadeecat/'; $j = '.json';
