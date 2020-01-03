@@ -5,7 +5,7 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_1.jpg"
+		"main_pic": "driver_1.jpg" 
 	},
 	{
 		"id": 2,
@@ -13,7 +13,7 @@
 		"rank": "citizen",
 		"phone": "123 123 1236",
 		"email": "asddfg2@asfsdf.com",
-		"main_pic": "driver_2.jpg"
+		"main_pic": "driver_2.jpg" 
 	},
 	{
 		"id": 3,
@@ -21,7 +21,7 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg3@asfsdf.com",
-		"main_pic": "driver_4.jpg"
+		"main_pic": "driver_4.jpg" 
 	},
 	{
 		"id": 4,
@@ -29,7 +29,7 @@
 		"rank": "citizen",
 		"phone": "123 123 1236",
 		"email": "asddfg4@asfsdf.com",
-		"main_pic": "driver_6.jpg"
+		"main_pic": "driver_6.jpg" 
 	},
 	{
 		"id": 5,
@@ -37,7 +37,7 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg5@asfsdf.com",
-		"main_pic": "driver_8.jpg"
+		"main_pic": "driver_8.jpg" 
 	},
 	{
 		"id": 6,
@@ -45,7 +45,7 @@
 		"rank": "citizen",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_10.jpg"
+		"main_pic": "driver_10.jpg" 
 	},
 	{
 		"id": 7,
@@ -53,7 +53,7 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_3.jpg"
+		"main_pic": "driver_3.jpg" 
 	},
 	{
 		"id": 8,
@@ -61,7 +61,7 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_5.jpg"
+		"main_pic": "driver_5.jpg" 
 	},
 	{
 		"id": 9,
@@ -69,7 +69,7 @@
 		"rank": "citizen",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_7.jpg"
+		"main_pic": "driver_7.jpg" 
 	},
 	{
 		"id": 10,
@@ -77,6 +77,6 @@
 		"rank": "professional",
 		"phone": "123 123 1236",
 		"email": "asddfg@asfsdf.com",
-		"main_pic": "driver_9.jpg"
+		"main_pic": "driver_9.jpg" 
 	}
 ]

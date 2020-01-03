@@ -255,10 +255,15 @@ $app->group('/send-filling-up', function () use ($app) {
 	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
 	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
 });
-$app->group('/shadeecat', function () use ($app) {
-	$app->get('/via', function ($req, $res) {
-		return $res->withHeader('Content-Type', 'application/json')->write(file_get_contents('public/via.json'));
-	});
+$app->group('/shadeecat/', function () use ($app) {
+	$hn = 'Content-Type'; $hv = 'application/json';
+	$sh = 'public/shadeecat/'; $j = '.json';
+	$app->get('cv/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}cv/data{$j}")); });
+	$app->get('dt/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data{$j}")); });
+	$app->get('dt/data-pics', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data-pics{$j}")); });
+	$app->get('ms/mockStocks', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}ms/mockStocks{$j}")); });
+	$app->get('se/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}se/data{$j}")); });
+	$app->get('via/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}via/data{$j}")); });
 });
 
 $app->options('/{routes:.+}', 'cors');

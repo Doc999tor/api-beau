@@ -1,0 +1,59 @@
+{
+	"data_pics": [
+		{
+			"id": 1,
+			"pic": "analyze-account.png",
+			"text": "Register with DupliTrade"
+
+		},
+		{
+			"id": 2,
+			"pic": "brokerage-account.png",
+			"text": "Open a brokerage account and link it to DupliTrade"
+		},
+		{
+			"id": 3,
+			"pic": "register-step.png",
+			"text": "Select strategy providers to follow and adjust exposure"
+		},
+		{
+			"id": 4,
+			"pic": "strategy-providers.png",
+			"text": "Track and analyze your trading account in real time"
+		}
+	], 
+	"partners": [
+		{
+			"pic": "avatrade.png",
+			"alt": "avatrade"
+		},
+		{
+			"pic": "axitrader.png",
+			"alt": "axitrader"
+		},
+		{
+			"pic": "equiti.png",
+			"alt": "equiti"
+		},
+		{
+			"pic": "fxdd.png",
+			"alt": "fxdd"
+		},
+		{
+			"pic": "fxPro.png",
+			"alt": "fxPro"
+		},
+		{
+			"pic": "markets.png",
+			"alt": "markets"
+		},
+		{
+			"pic": "mex.png",
+			"alt": "mex" 
+		},
+		{
+			"pic": "pepperStone.png",
+			"alt": "pepperStone"
+		}
+	] 
+}

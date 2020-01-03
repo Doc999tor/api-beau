@@ -1,0 +1,202 @@
+[
+	{ 
+		"id": "ETH",
+		"name": "Ethereum", 
+		"value": 26.777
+	},
+	{ 
+		"id": "LTC",
+		"name": "Litecoin", 
+		"value": 17.232
+	},
+	{ 
+		"id": "BTC",
+		"name": "Bitcoin", 
+		"value": 22.749
+	},
+	{ 
+		"id": "XLM",
+		"name": "Stellar", 
+		"value": 15.335
+	},
+	{ 
+		"id": "XRP",
+		"name": "XRP", 
+		"value": 21.754
+	},
+	{ 
+		"id": "ETC",
+		"name": "Ethereum Classic", 
+		"value": 10.134
+	},
+	{ 
+		"id": "ADK",
+		"name": "Aidos Kuneen", 
+		"value": 152
+	},
+	{ 
+		"id": "DOGEL",
+		"name": "Dogecoin", 
+		"value": 9.195
+	},
+	{ 
+		"id": "IGNIS",
+		"name": "Ignis", 
+		"value": 16.590
+	},
+	{ 
+		"id": "ARDR",
+		"name": "Ardor", 
+		"value": 21.096
+	},
+	{ 
+		"id": "TRX",
+		"name": "TRON", 
+		"value": 5.478
+	},
+	{ 
+		"id": "HEDG",
+		"name": "HedgeTrade", 
+		"value": 5.482
+	},
+	{ 
+		"id": "ZEL",
+		"name": "ZelCash", 
+		"value": 15.639
+	},
+	{ 
+		"id": "NXT",
+		"name": "Nxt", 
+		"value": 4.920
+	},
+	{ 
+		"id": "XSG",
+		"name": "SnowGem", 
+		"value": 5.577
+	},
+	{ 
+		"id": "BNY",
+		"name": "Bancacy", 
+		"value": 4.200
+	},
+	{ 
+		"id": "RTH",
+		"name": "Rotharium", 
+		"value": 1.876
+	},
+	{ 
+		"id": "R",
+		"name": "Revain", 
+		"value": 1.277
+	},
+	{ 
+		"id": "SNTVT",
+		"name": "Sentivate", 
+		"value": 12.976
+	},
+	{ 
+		"id": "TOC",
+		"name": "TouchCon", 
+		"value": 4.798
+	},
+	{ 
+		"id": "DYN",
+		"name": "Dynamic", 
+		"value": 11.324
+	},
+	{ 
+		"id": "MPG",
+		"name": "Max Property Group", 
+		"value": 143
+	},
+	{ 
+		"id": "DAPS",
+		"name": "DAPS Coin", 
+		"value": 10.540
+	},
+	{ 
+		"id": "BBR",
+		"name": "Boolberry", 
+		"value": 4.431
+	},
+	{ 
+		"id": "NBX",
+		"name": "Netbox Coin", 
+		"value": 6.270
+	},
+	{ 
+		"id": "VITAE",
+		"name": "Vitae", 
+		"value": 17.419
+	},
+	{ 
+		"id": "ETHO",
+		"name": "Ether-1", 
+		"value": 3.216
+	},
+	{ 
+		"id": "ILC",
+		"name": "ILCoin", 
+		"value": 4.440
+	},
+	{ 
+		"id": "DAB",
+		"name": "DABANKING", 
+		"value": 14.853
+	},
+	{ 
+		"id": "HALO",
+		"name": "Halo Platform", 
+		"value": 5.307
+	},
+	{ 
+		"id": "VRAB",
+		"name": "Verasity", 
+		"value": 1.378
+	},
+	{ 
+		"id": "BCEO",
+		"name": "bitCEO", 
+		"value": 2.626
+	},
+	{ 
+		"id": "ZNN",
+		"name": "Zenon", 
+		"value": 12.439
+	},
+	{ 
+		"id": "BBK",
+		"name": "Bitblocks", 
+		"value": 6.232
+	},
+	{ 
+		"id": "CUT",
+		"name": "CUTcoin", 
+		"value": 2.957
+	},
+	{ 
+		"id": "BTCZ",
+		"name": "BitcoinZ", 
+		"value": 8.152
+	},
+	{ 
+		"id": "BITC",
+		"name": "BitCash", 
+		"value": 222
+	},
+	{ 
+		"id": "VEST",
+		"name": "VestChain", 
+		"value": 4.730
+	},
+	{ 
+		"id": "EUM",
+		"name": "Elitium", 
+		"value": 1.165
+	},
+	{ 
+		"id": "BITS",
+		"name": "Bitcoinus", 
+		"value": 3.764
+	}
+]

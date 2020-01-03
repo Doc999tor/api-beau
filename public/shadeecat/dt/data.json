@@ -1,0 +1,101 @@
+[
+	{
+		"id": 1,
+		"strategy": "Legacy",
+		"net_pl": 571.72,
+		"net_profit": "$58.408.17",
+		"trades": 20477,
+		"win": 47.72,
+		"profit_factor": 1.2,
+		"weeks": 453,
+		"followers": 898
+	},
+	{
+		"id": 2,
+		"strategy": "Ruby",
+		"net_pl": 879.63,
+		"net_profit": "$7.247.36",
+		"trades": 3020,
+		"win": 45.24,
+		"profit_factor": 1.88,
+		"weeks": 54,
+		"followers": 152
+	},
+	{
+		"id": 3,
+		"strategy": "Apollo",
+		"net_pl": 407.83,
+		"net_profit": "$10.195.83",
+		"trades": 109,
+		"win": 52.15,
+		"profit_factor": 0.17,
+		"weeks": 150,
+		"followers": 69
+	},
+	{
+		"id": 4,
+		"strategy": "Radiant",
+		"net_pl": 219.28,
+		"net_profit": "€21.921.15",
+		"trades": 200,
+		"win": 67.82,
+		"profit_factor": 1.85,
+		"weeks": 45,
+		"followers": 96
+	},
+	{
+		"id": 5,
+		"strategy": "Emerald",
+		"net_pl": 114.89,
+		"net_profit": "€10.118.1",
+		"trades": 24330,
+		"win": 72.13,
+		"profit_factor": 1.85,
+		"weeks": 36,
+		"followers": 822
+	},
+	{
+		"id": 6,
+		"strategy": "Pearl",
+		"net_pl": 165.16,
+		"net_profit": "$14.122.15",
+		"trades": 15922,
+		"win": 12.1,
+		"profit_factor": 0.17,
+		"weeks": 143,
+		"followers": 921
+	},
+	{
+		"id": 7,
+		"strategy": "Crystal",
+		"net_pl": 214.50,
+		"net_profit": "SGD201.567.19",
+		"trades": 178,
+		"win": 80.92,
+		"profit_factor": 1.14,
+		"weeks": 185,
+		"followers": 168
+	},
+	{
+		"id": 8,
+		"strategy": "Sdynamo",
+		"net_pl": -4.18,
+		"net_profit": "-$1.087.12",
+		"trades": 2004,
+		"win": 76.19,
+		"profit_factor": 0.97,
+		"weeks": 175,
+		"followers": 91
+	},
+	{
+		"id": 9,
+		"strategy": "Equi",
+		"net_pl": -8.51,
+		"net_profit": "-$251.16",
+		"trades": 7007,
+		"win": 67.18,
+		"profit_factor": 1.43,
+		"weeks": 35,
+		"followers": 117
+	}
+]

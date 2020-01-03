@@ -1,0 +1,34 @@
+[
+	{
+		"id": 1,
+		"name": "Product-1",
+		"description": "Description for product 1",
+		"imageUrl": "cat-1.jpg",
+		"price": 100,
+		"creationDate": "2019-11-07 11:00:00"
+	},
+	{
+		"id": 2,
+		"name": "Product-2",
+		"description": "Description for product 2",
+		"imageUrl": "cat-2.jpg",
+		"price": 200,
+		"creationDate": "2019-11-07 12:00:00'"
+	},
+	{
+		"id": 3,
+		"name": "Product-3",
+		"description": "Description for product 3",
+		"imageUrl": "cat-3.jpg",
+		"price": 300,
+		"creationDate": "2019-11-07 13:00:00'"
+	},
+	{
+		"id": 4,
+		"name": "Product-4",
+		"description": "Description for product 4",
+		"imageUrl": "cat-4.jpg",
+		"price": 400,
+		"creationDate":"2019-11-07 14:00:00"
+	}
+]
