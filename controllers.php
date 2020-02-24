@@ -89,6 +89,9 @@ $container['BusinessSettingsCtrl'] = function () use ($container) {
 $container['ApplicationSettingsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\Settings\ApplicationSettingsCtrl($container);
 };
+$container['SmsSettingsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\Settings\SmsSettingsCtrl($container);
+};
 $container['HomeController'] = function () use ($container) {
 	return new \Lib\Controllers\HomeController($container);
 };

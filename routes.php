@@ -210,6 +210,13 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/application/application_lang', 'ApplicationSettingsCtrl:setApplicationLang');
 	$app->put('/application/application_currency', 'ApplicationSettingsCtrl:setApplicationCurrency');
 	$app->put('/application/application_timezone', 'ApplicationSettingsCtrl:setApplicationTimezone');
+
+	$app->post('/sms/fill-credits', 'SmsSettings:fillCredits'); // credits_requested_count=100
+	$app->put('/sms/new_event', 'SmsSettings:shouldSend');
+	$app->put('/sms/reschedule_event', 'SmsSettings:shouldSend');
+	$app->put('/sms/delete_event', 'SmsSettings:shouldSend');
+	$app->put('/sms/eventReminders', 'SmsSettings:remindersBeforeEvent'); // should_send=true&mins_before=30
+	$app->put('/sms/greetings_before_birthdays', 'SmsSettings:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
 });
 
 ### Catalog
