@@ -21,7 +21,7 @@ class SmsSettingsCtrl extends Controller {
 
 	public function shouldSend (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
-		if ($this->getListPredicate('should_send', $body['should_send'], ['true', 'false'])) {
+		if ($this->getListPredicate('should_send', $body, ['true', 'false'])) {
 			return $response->withStatus(204);
 		} else {
 			$response->getBody()->write($this->getListErrorMessage('should_send', ['true', 'false']));
