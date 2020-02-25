@@ -12,7 +12,7 @@ class SmsSettingsCtrl extends Controller {
 	public function fillCredits (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
 		if (isset($body['credits_requested_count']) && ctype_digit($body['credits_requested_count'])) {
-			return $response->withStatus(204);
+			return $response->withStatus(201);
 		} else {
 			$response->getBody()->write('credits_requested_count has to exist and to be integer');
 			return $response->withStatus(400);
