@@ -46,7 +46,7 @@ class SmsSettingsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		if (
 			$this->getListPredicate('should_send', $body, ['true', 'false'])
-			&& $this->getListPredicate('days_before', $body, [0, 1, 7])
+			&& $this->getListPredicate('days_before', $body, ['0', '1', '7'])
 			&& (!empty($body['time_for_sending']) && \DateTime::createFromFormat('H:i', $body['time_for_sending']))
 		) {
 			return $response->withStatus(204);
