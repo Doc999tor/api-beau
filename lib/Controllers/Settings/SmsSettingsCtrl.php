@@ -11,7 +11,7 @@ class SmsSettingsCtrl extends Controller {
 
 	public function fillCredits (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
-		if (!empty($body['credits_requested_count']) && ctype_digit($body['credits_requested_count'])) {
+		if (isset($body['credits_requested_count']) && ctype_digit($body['credits_requested_count'])) {
 			return $response->withStatus(204);
 		} else {
 			$response->getBody()->write('credits_requested_count has to exist and to be integer');
@@ -33,7 +33,7 @@ class SmsSettingsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		if (
 			$this->getListPredicate('should_send', $body, ['true', 'false'])
-			&& $this->getListPredicate('days_before', $body, [0, 1, 7])
+			&& $this->getListPredicate('days_before', $body, ['0', '1', '7'])
 		) {
 			return $response->withStatus(204);
 		} else {
@@ -57,7 +57,7 @@ class SmsSettingsCtrl extends Controller {
 	}
 
 	private function getListPredicate ($paramName, $body, $list) {
-		return !empty($body[$paramName]) && in_array($body[$paramName], $list);
+		return isset($body[$paramName]) && in_array($body[$paramName], $list);
 	}
 	private function getListErrorMessage ($paramName, $list) {
 		return $paramName . ' supposed to be: ' . implode(' | ', $list);
