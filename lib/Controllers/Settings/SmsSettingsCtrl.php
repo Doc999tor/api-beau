@@ -33,11 +33,11 @@ class SmsSettingsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		if (
 			$this->getListPredicate('should_send', $body, ['true', 'false'])
-			&& $this->getListPredicate('days_before', $body, ['0', '1', '7'])
+			&& $this->getListPredicate('mins_before', $body, ['30', '60', ' 1440', '2880'])
 		) {
 			return $response->withStatus(204);
 		} else {
-			$response->getBody()->write($this->getListErrorMessage('should_send', ['true', 'false']) . '<br> and <br>' . $this->getListErrorMessage('days_before', [0, 1, 7]));
+			$response->getBody()->write($this->getListErrorMessage('should_send', ['true', 'false']) . '<br> and <br>' . $this->getListErrorMessage('mins_before', ['30', '60', ' 1440', '2880']));
 			return $response->withStatus(400);
 		}
 	}

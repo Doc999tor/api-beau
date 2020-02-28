@@ -215,7 +215,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/sms/new_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reschedule_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/delete_event', 'SmsSettingsCtrl:shouldSend');
-	$app->put('/sms/eventReminders', 'SmsSettingsCtrl:eventReminders'); // should_send=true&mins_before=30
+	$app->put('/sms/reminders_before_event', 'SmsSettingsCtrl:eventReminders'); // should_send=true&mins_before=30
 	$app->put('/sms/greetings_before_birthdays', 'SmsSettingsCtrl:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
 });
 
