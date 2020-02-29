@@ -9,6 +9,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class SmsSettingsCtrl extends Controller {
 
+	public function getCredits (Request $request, Response $response): Response {
+		return $response->withJson([ "sms_credits" => rand(0, 5) ]);
+	}
 	public function fillCredits (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
 		if (isset($body['credits_requested_count']) && ctype_digit($body['credits_requested_count'])) {

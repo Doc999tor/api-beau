@@ -211,6 +211,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/application/application_currency', 'ApplicationSettingsCtrl:setApplicationCurrency');
 	$app->put('/application/application_timezone', 'ApplicationSettingsCtrl:setApplicationTimezone');
 
+	$app->get('/sms/credits', 'SmsSettingsCtrl:getCredits'); // credits_requested_count=100
 	$app->post('/sms/fill-credits', 'SmsSettingsCtrl:fillCredits'); // credits_requested_count=100
 	$app->put('/sms/new_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reschedule_event', 'SmsSettingsCtrl:shouldSend');
