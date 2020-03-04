@@ -105,6 +105,9 @@ class ClientsCtrl extends Controller {
 			$client['id'] = $id;
 			$client['phone'] = '0' . rand(2, 99) . '-' . rand(1000000, 9999999);
 		}
+		if (!rand(0,2)) {
+			unset($client['phone']);
+		}
 		return $client;
 	}
 }
