@@ -187,13 +187,11 @@ class ClientsCtrl extends Controller {
 
 		if (!empty($body['phone'])) {
 			$phone = json_decode($body['phone'], true);
-			if (
-				is_null($phone) ||
-				( is_array($phone) && count($phone) !== count(array_filter($phone, [$this, 'isClientPhoneValid'])) )
-				||
-				( !is_array($phone) && !$this->isClientPhoneValid($phone) )
-			)
-			{ $is_correct = false; $msg .= ' phone value is incorrect <br>';}
+			if (is_null($phone)) { $phone = [ $body['phone'] ]; }
+
+			if (count($phone) !== count(array_filter($phone, [$this, 'isClientPhoneValid']))) {
+				 $is_correct = false; $msg .= ' phone value is incorrect <br>';
+			}
 		}
 
 		if (!empty($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
