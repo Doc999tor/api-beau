@@ -187,7 +187,7 @@ class ClientsCtrl extends Controller {
 
 		if (!empty($body['phone'])) {
 			$phone = json_decode($body['phone'], true);
-			if (is_null($phone)) { $phone = [ $body['phone'] ]; }
+			if (is_null($phone) || !is_array($phone)) { $phone = [ (string) $body['phone'] ]; }
 
 			if (count($phone) !== count(array_filter($phone, [$this, 'isClientPhoneValid']))) {
 				 $is_correct = false; $msg .= ' phone value is incorrect <br>';
