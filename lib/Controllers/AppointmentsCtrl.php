@@ -202,8 +202,17 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			$status = rand(1,2) < 3 ? 201 : 422;
-			return $response->withStatus($status);
+			$status = rand(0,5) ? 201 : 422;
+			if ($status === 201) {
+				$appointment_id = rand(1, 10000);
+				$is_reminders_set = (bool) rand(0,2);
+				$is_notifications_set = (bool) rand(0,2);
+				return $response->withStatus($status)->withJson([
+					'appointment_id' => $appointment_id,
+					'is_reminders_set' => $is_reminders_set,
+					'is_notifications_set' => $is_notifications_set,
+				]);
+			} else { return $response->withStatus($status); }
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);

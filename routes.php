@@ -16,7 +16,7 @@ $app->group('/appointments', function () use ($app) {
 	$prefix = 'AppointmentsCtrl:';
 	$app->get('', $prefix . 'getCalendar');
 
-	$app->post('', $prefix . 'addAppointment')->add(new ReturnID());
+	$app->post('', $prefix . 'addAppointment'); // custom returned object
 
 	$app->post('/meeting', $prefix . 'addMeeting')->add(new ReturnID());
 	$app->post('/break', $prefix . 'addBreak')->add(new ReturnID());
