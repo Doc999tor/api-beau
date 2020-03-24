@@ -86,26 +86,29 @@ class AppointmentsCtrl extends Controller {
 		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']));
 
 		$response_body = $response->getBody();
-		if (isset($body['start'])) {
+		if (isset($body['start'])) { # reschedule
 			if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) {
 				$response_body->write('start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
 				return $response->withStatus(400);
+			} else {
+				return $response->withJson($this->createCalendarResponseObj());
 			}
-		} else {
-			if (isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end'])) {
+		} else if (isset($body['end'])) { # change duration
+			if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['end'])) {
 				$response_body->write('end has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
 				return $response->withStatus(400);
 			} else {
-				$response_body->write('body cannot be empty');
-				return $response->withStatus(400);
+				return $response->withStatus(204);
 			}
+		} else {
+			$response_body->write('body cannot be empty');
+			return $response->withStatus(400);
 		}
-
-		return $response->withStatus(204);
 	}
+
 	public function delete (Request $request, Response $response, array $args):Response {
 		// $appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-		return $response->withStatus(204);
+		return $response->withJson($this->createCalendarResponseObj());
 	}
 
 	public function getCalendarSettings(Request $request, Response $response) {
@@ -204,14 +207,9 @@ class AppointmentsCtrl extends Controller {
 		if ($is_body_correct['is_correct']) {
 			$status = rand(0,5) ? 201 : 422;
 			if ($status === 201) {
-				$appointment_id = rand(1, 10000);
-				$is_reminders_set = (bool) rand(0,2);
-				$is_notifications_set = (bool) rand(0,2);
-				return $response->withStatus($status)->withJson([
-					'appointment_id' => $appointment_id,
-					'is_reminders_set' => $is_reminders_set,
-					'is_notifications_set' => $is_notifications_set,
-				]);
+				$response_obj = $this->createCalendarResponseObj();
+				$response_obj['appointment_id'] = rand(1, 10000);
+				return $response->withStatus($status)->withJson($response_obj);
 			} else { return $response->withStatus($status); }
 		} else {
 			$body = $response->getBody();
@@ -374,5 +372,12 @@ class AppointmentsCtrl extends Controller {
 		return $appointments;
 	}
 
-
+	private function createCalendarResponseObj() {
+		$is_reminders_set = (bool) rand(0,2);
+		$is_notifications_set = (bool) rand(0,2);
+		return [
+			'is_reminders_set' => $is_reminders_set,
+			'is_notifications_set' => $is_notifications_set,
+		];
+	}
 }
