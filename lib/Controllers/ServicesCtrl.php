@@ -13,17 +13,23 @@ class ServicesCtrl extends Controller {
 		$offset = 0; $q = '';
 
 		$is_one_category = rand(0,1);
-		$is_above_category_limit = rand(0,1);
 		$LIMIT_CATEGORIES = 50;
 		$LIMIT_NO_CATEGORIES = 10;
+		$NO_SERVICES = 0;
 
-		$limit = $is_above_category_limit ? $LIMIT_NO_CATEGORIES : $LIMIT_CATEGORIES;
+		$limit = 0;
+		switch (rand(1,3)) {
+			case 1: $limit = $NO_SERVICES; break;
+			case 2: $limit = $LIMIT_NO_CATEGORIES; break;
+			default: $limit = $LIMIT_CATEGORIES; break;
+		}
 
 		$services = [];
 		for ($i=0; $i < $limit; $i++) {
 			$services []= self::generateService(mt_rand(2, 150), $q, $is_one_category);
 		}
-		$services[0]['id'] = 1;
+
+		if ($limit > 0) { $services[0]['id'] = 1; }
 
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
 		return $response->withJson($services);
