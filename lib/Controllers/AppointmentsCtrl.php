@@ -373,11 +373,24 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function createCalendarResponseObj() {
-		$is_reminders_set = (bool) rand(0,2);
-		$is_notifications_set = (bool) rand(0,2);
-		return [
-			'is_reminders_set' => $is_reminders_set,
-			'is_notifications_set' => $is_notifications_set,
+		$response = [
+			"is_notification_send" => true, // показываем или нет вторую строку в зеленом тосте
+			"is_sms_failed" => false, // показываем или нет красный тост
 		];
+
+		if (!rand(0,2)) { // false
+			$response['is_notification_send'] = false;
+			if (rand(0,2)) {
+				$response['is_sms_failed'] = true;
+				$possible_error_reason = ['no_sms', 'no_phone', 'phone_not_valid', 'sending_failure'];
+				$response['error_reason'] = $possible_error_reason[rand(0, count($possible_error_reason)-1)]; // no_sms | no_phone | phone_not_valid | sending_failure
+			}
+		} else {
+			if (!rand(0,2)) {
+				$response['is_warning'] = true; // показываем или нет желтый тост
+				$response["warning_reason"] = 'no_sms'; // no_sms - пока только один вариант
+			}
+		}
+		return $response;
 	}
 }
