@@ -223,7 +223,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
+			return $response->withJson($this->createCalendarResponseObj());
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
