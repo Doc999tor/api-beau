@@ -43,7 +43,7 @@ class AuthCtrl extends Controller {
 		]);
 	}
 	private function checkSignupDataCorrectness (?array $body): array {
-		$correct_body = ['email', 'pass', 'permit_ads', 'business_types', 'lang', 'timezone', 'added'];
+		$correct_body = ['email', 'pass', 'phone', 'permit_ads', 'business_types', 'lang', 'timezone', 'added'];
 		[ 'is_correct' => $is_correct, 'msg' => $msg, 'error_code' => $error_code, ] = $this->validateBasicCreds($body);
 
 		# checking existing email and pass
