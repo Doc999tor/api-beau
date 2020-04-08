@@ -374,12 +374,12 @@ class AppointmentsCtrl extends Controller {
 
 	private function createCalendarResponseObj() {
 		$response = [
-			"is_notification_send" => true, // показываем или нет вторую строку в зеленом тосте
+			"is_notification_sent" => true, // показываем или нет вторую строку в зеленом тосте
 			"is_sms_failed" => false, // показываем или нет красный тост
 		];
 
 		if (!rand(0,2)) { // false
-			$response['is_notification_send'] = false;
+			$response['is_notification_sent'] = false;
 			if (rand(0,2)) {
 				$response['is_sms_failed'] = true;
 				$possible_error_reason = ['no_sms', 'no_phone', 'phone_not_valid', 'sending_failure'];
