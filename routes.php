@@ -213,7 +213,7 @@ $app->group('/settings', function () use ($app) {
 
 	$app->get('/sms/credits', 'SmsSettingsCtrl:getCredits'); // credits_requested_count=100
 	$app->post('/sms/fill-credits', 'SmsSettingsCtrl:fillCredits'); // credits_requested_count=100
-	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // credits_requested_count=100
+	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
 	$app->put('/sms/new_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reschedule_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/delete_event', 'SmsSettingsCtrl:shouldSend');
