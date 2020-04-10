@@ -23,7 +23,7 @@ class SmsSettingsCtrl extends Controller {
 	}
 
 	public function sendManualEdit (Request $request, Response $response, array $args): Response {
-		$setting_canonical_name = filter_var($args['setting_canonical_name'], FILTER_SANITIZE_NUMBER_INT);
+		$setting_canonical_name = filter_var($args['setting_canonical_name'], FILTER_SANITIZE_STRING);
 
 		$body = $request->getParsedBody();
 		if (isset($body['text']) && mb_strlen($body['text']) > 3) {
