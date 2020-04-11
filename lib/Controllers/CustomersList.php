@@ -106,4 +106,16 @@ class CustomersList extends Controller {
 	public function getCount (Request $request, Response $response):Response {
 		return $response->withHeader('X-Total-Count', rand(50, 150));
 	}
+
+	public function importBulkClients(Request $request, Response $response) {
+		$body = $request->getParsedBody();
+
+		if (is_array($body)) {
+			return $response->withStatus(202);
+		} else {
+			$body = $response->getBody();
+			$body->write('body is incorrect: ' . json_encode($body));
+			return $response->withStatus(400);
+		}
+	}
 }
