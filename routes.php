@@ -254,6 +254,9 @@ $app->get('/error_page', function (Request $request, Response $response) {
 $app->any('/503', function (Request $request, Response $response):Response {
 	return $response->withHeader('Retry-After', 120)->withStatus(503);
 });
+$app->any('/502', function (Request $request, Response $response):Response {
+	return $response->withStatus(502);
+});
 
 $app->group('/filling-up', function () use ($app) {
 	$prefix = 'CustomersDetails\\ClientsCtrl';

@@ -12,7 +12,7 @@ $config['determineRouteBeforeAppMiddleware'] = true;
 $app = new \Slim\App(["settings" => $config]);
 
 $app->add(new \Lib\Middlewares\HeadersMiddleware())
-	->add(new \Lib\Middlewares\Error503Middleware())
+	->add(new \Lib\Middlewares\ErrorMiddleware())
 	->add(new \Tuupola\Middleware\Cors([
 		"origin" => ["*"],
 		"methods" => ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
