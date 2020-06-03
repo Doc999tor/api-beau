@@ -270,6 +270,7 @@ $app->group('/send-filling-up', function () use ($app) {
 	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
 });
 $app->group('/home', function () use ($app) {
+	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
 	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
 });
 $app->group('/shadeecat/', function () use ($app) {
