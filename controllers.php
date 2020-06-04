@@ -95,3 +95,6 @@ $container['SmsSettingsCtrl'] = function () use ($container) {
 $container['HomeController'] = function () use ($container) {
 	return new \Lib\Controllers\HomeController($container);
 };
+$container['MetricsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\MetricsCtrl($container);
+};

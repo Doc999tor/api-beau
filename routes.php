@@ -258,6 +258,12 @@ $app->any('/502', function (Request $request, Response $response):Response {
 	return $response->withStatus(502);
 });
 
+$app->group('/metrics', function () use ($app) {
+	$prefix = 'MetricsCtrl:';
+	$app->post  ('/installation_popup_calendar', $prefix . 'getCalendarInstallationAgreement');
+});
+
+
 $app->group('/filling-up', function () use ($app) {
 	$prefix = 'CustomersDetails\\ClientsCtrl';
 	$app->patch('', $prefix . ':setPersonalDataFromClient');
