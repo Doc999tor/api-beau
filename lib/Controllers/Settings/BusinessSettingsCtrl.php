@@ -139,7 +139,7 @@ class BusinessSettingsCtrl extends Controller {
 		if (isset($body['permit_ads']) && in_array($body['permit_ads'], ['true', 'false'])) {
 			return $response->withStatus(204);
 		} else {
-			return $response->withStatus(400)->getBody()->write('permit_ads value is incorrect <br>');
+			return $response->withStatus(400)->getBody()->write('permit_ads value can be true or false only <br>');
 		}
 	}
 	public function deleteAccount (Request $request, Response $response) {
