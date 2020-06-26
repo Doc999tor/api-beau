@@ -263,7 +263,6 @@ $app->group('/metrics', function () use ($app) {
 	$app->post  ('/installation_popup_calendar', $prefix . 'getCalendarInstallationAgreement');
 });
 
-
 $app->group('/filling-up', function () use ($app) {
 	$prefix = 'CustomersDetails\\ClientsCtrl';
 	$app->patch('', $prefix . ':setPersonalDataFromClient');
