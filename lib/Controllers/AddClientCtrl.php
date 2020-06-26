@@ -115,7 +115,7 @@ class AddClientCtrl extends Controller {
 		if (isset($body['filling_up']) && !in_array($body['filling_up'], ['true', 'false'])) { $is_correct = false; $msg .= 'filling_up can be true or false' . "<br>"; }
 		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= 'gender can be male or female' . "<br>"; }
 
-		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true of false only <br>';}
+		if (empty($body['permit_ads']) || !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
 
 		if (isset($body['debts'])) {
 			$debts = json_decode($body['debts']);
