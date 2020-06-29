@@ -43,7 +43,7 @@ class DebtCtrl extends Controller {
 	private function checkCorrectness(array $body):bool {
 		return isset($body['sum'])
 			&& is_numeric($body['sum'])
-			&& $body['sum'] > 0
+			&& $body['sum'] > -1
 			&& isset($body['desc']);
 	}
 }
