@@ -47,8 +47,8 @@ class NotesCtrl extends Controller {
 
 		if (!isset($body['text'])) {
 			$error_msg .= 'text param has to be, it can be empty string <br>';
-		} else if (mb_strlen($body['text']) < 3) {
-			$error_msg .= 'text has to be bigger than 2 chars <br>';
+		} else if (mb_strlen($body['text']) > 0) {
+			$error_msg .= 'text cannot be empty<br>';
 		}
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) {
 			$error_msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like  2017-12-18 02:09:54<br>';
