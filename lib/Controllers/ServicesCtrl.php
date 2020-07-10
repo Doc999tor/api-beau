@@ -41,6 +41,7 @@ class ServicesCtrl extends Controller {
 		$services = [];
 		for ($i=0; $i < $BI_LIMIT; $i++) {
 			$services []= self::generateService(mt_rand(0, 150));
+			$services[$i] = $i;
 		}
 
 		return $response->withJson($services);
