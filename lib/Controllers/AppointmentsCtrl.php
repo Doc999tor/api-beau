@@ -140,14 +140,14 @@ class AppointmentsCtrl extends Controller {
 	private function generateAppointment(\DateTime $start) {
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
+		$phone = rand(1000000, 999999999);
 		$appointment = [
 			"id" => (string) rand(1, 1000),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
 			'total_price' => (string) (rand(0,50)*10),
-			'phone' => '0' . rand(1,9) . '-' . implode(array_map(function ($v) {
-				return rand(0, 9);
-			}, array_fill(0, 8, 0))),
+			'phone' => '0' . $phone,
+			'phone_canonical' => '+38' . $phone,
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),

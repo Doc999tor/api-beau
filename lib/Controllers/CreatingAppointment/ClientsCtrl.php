@@ -39,7 +39,11 @@ class ClientsCtrl extends Controller {
 	public function getBIClients (Request $request, Response $response):Response {
 		$bi_limit = 6;
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
-		return $response->withJson($this->generateClients($bi_limit, ''));
+		$clients = $this->generateClients($bi_limit, '');
+		for ($i=0; $i < count($clients); $i++) {
+			$clients[$i]['id'] = $i;
+		}
+		return $response->withJson($clients);
 	}
 
 	public function getClient (Request $request, Response $response, $args):Response {
