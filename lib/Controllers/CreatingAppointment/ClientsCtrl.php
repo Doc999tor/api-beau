@@ -40,7 +40,7 @@ class ClientsCtrl extends Controller {
 		$bi_limit = 6;
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
 		$clients = $this->generateClients($bi_limit, '');
-		for ($i=0; $i < $clients; $i++) {
+		for ($i=0; $i < count($clients); $i++) {
 			$clients[$i]['id'] = $i;
 		}
 		return $response->withJson($clients);
