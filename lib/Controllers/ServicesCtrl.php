@@ -41,7 +41,7 @@ class ServicesCtrl extends Controller {
 		$services = [];
 		for ($i=0; $i < $BI_LIMIT; $i++) {
 			$services []= self::generateService(mt_rand(0, 150));
-			$services[$i] = $i;
+			$services[$i]['id'] = $i;
 		}
 
 		return $response->withJson($services);
@@ -52,7 +52,7 @@ class ServicesCtrl extends Controller {
 	}
 
 	public static function generateService($id, $q = '', $is_one_category = false) {
-		$possible_categories = $is_one_category ? ['sole category'] : ['', 'Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
+		$possible_categories = $is_one_category ? ['sole category'] : ['Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
 		$category_id = array_rand($possible_categories);
 
 		return [
