@@ -18,9 +18,9 @@ $app->group('/appointments', function () use ($app) {
 
 	$app->post('', $prefix . 'addAppointment'); // custom returned object
 
-	$app->post('/meeting', $prefix . 'addMeeting')->add(new ReturnID());
-	$app->post('/break', $prefix . 'addBreak')->add(new ReturnID());
-	$app->post('/vacation', $prefix . 'addVacation')->add(new ReturnID());
+	$app->post('/meeting', $prefix . 'addMeeting');
+	$app->post('/break', $prefix . 'addBreak');
+	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
 	$app->patch ('/{appointment_id:\d+}', $prefix . 'reschedule');
@@ -252,7 +252,7 @@ $app->get('/error_page', function (Request $request, Response $response) {
 });
 
 $app->any('/503', function (Request $request, Response $response):Response {
-	return $response->withHeader('Retry-After', 120)->withStatus(503);
+	return $response->withHeader('Retry-After', 2)->withStatus(503);
 });
 $app->any('/502', function (Request $request, Response $response):Response {
 	return $response->withStatus(502);

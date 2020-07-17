@@ -14,7 +14,7 @@ class ErrorMiddleware {
 			$is_503 = rand(0,1);
 			if ($is_503) {
 				return $response
-					->withHeader('Retry-After', 120)
+					->withHeader('Retry-After', 2)
 					->withStatus(503);
 			} else {
 				return $response->withStatus(502);
