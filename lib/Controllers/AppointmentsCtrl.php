@@ -236,7 +236,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkMeetingCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
+			return $response->withStatus(201)->withJson([ "appointment_id" => rand(0, 150), "is_notification_sent" => false, ]);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
@@ -249,7 +249,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkBreakCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
+			return $response->withStatus(201)->withJson([ "appointment_id" => rand(0, 150), "is_notification_sent" => false, ]);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
@@ -262,7 +262,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkBreakCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
+			return $response->withStatus(201)->withJson([ "appointment_id" => rand(0, 150), "is_notification_sent" => false, ]);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
