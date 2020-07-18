@@ -26,7 +26,7 @@ class AuthCtrl extends Controller {
 				case 404: $error_code = 201; break; # 404 means it's a unrecognised email
 				case 409:
 				case 302: $error_code = 422; break;
-				default: $is_body_correct['error_code'];
+				default: $error_code = $is_body_correct['error_code'];
 			}
 
 			return $response->withStatus($error_code);
