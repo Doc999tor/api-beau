@@ -120,4 +120,5 @@ class CustomersList extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function skipImportBulkClients(Request $request, Response $response) { return $response->withStatus(204); }
 }
