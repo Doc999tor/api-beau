@@ -101,12 +101,12 @@ class AddClientCtrl extends Controller {
 		}
 
 		if (isset($body['phone']) && $body['phone'] !== 'null') {
-			$phone_arr = json_decode($body['phone']);
+			$phone_arr = json_decode(urldecode($body['phone']));
 			if (is_null($phone_arr) || !count($phone_arr) || !preg_match('/^[0-9-+*#]+$/', $phone_arr[0])) {
 				 $is_correct = false; $msg .= "phone number doesn't match the pattern - ['/^[0-9-+*#]+$/']<br>";
 			}
 		}
-		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', $body['email'])) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
+		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 
 		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }
