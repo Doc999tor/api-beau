@@ -67,7 +67,7 @@ class AuthCtrl extends Controller {
 	private function validateBasicCreds($body): array {
 		$is_correct = true; $msg = ''; $error_code = $is_correct ? 200 : 400;
 		if (empty($body['email']) || strpos($body['email'], '@') === false) { $is_correct = false; $msg .= " email {$body['email']} value is incorrect <br>"; }
-		if (empty($body['pass'])) { $is_correct = false; $msg .= " pass {$body['pass']} value is incorrect <br>"; }
+		if (empty($body['pass']) || mb_strlen(trim($body['pass'])) <= 3) { $is_correct = false; $msg .= " pass {$body['pass']} value is incorrect or less than 4 chars<br>"; }
 		return [ "is_correct" => $is_correct, "msg" => $msg, 'error_code' => $error_code, ];
 	}
 
