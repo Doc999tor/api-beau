@@ -258,6 +258,9 @@ $app->any('/503', function (Request $request, Response $response):Response {
 $app->any('/502', function (Request $request, Response $response):Response {
 	return $response->withStatus(502);
 });
+$app->any('/500', function (Request $request, Response $response):Response {
+	return $response->withStatus(500);
+});
 
 $app->group('/metrics', function () use ($app) {
 	$prefix = 'MetricsCtrl:';
