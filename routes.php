@@ -15,6 +15,8 @@ $app->get('/business_types', 'AuthCtrl:getBusinessTypes');
 $app->group('/appointments', function () use ($app) {
 	$prefix = 'AppointmentsCtrl:';
 	$app->get('', $prefix . 'getCalendar');
+	// http://localhost:3000/appointments/available_slots?date=2020-01-01&worker_id=1&duration=120
+	$app->get('/available_slots', $prefix . 'getAvailableSlots');
 
 	$app->post('', $prefix . 'addAppointment'); // custom returned object
 

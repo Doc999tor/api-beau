@@ -79,6 +79,25 @@ class AppointmentsCtrl extends Controller {
 			}
 		}
 	}
+	public function getAvailableSlots (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		$is_params_correct = $this->checkAvailableSlotsParams($params);
+		if (!$is_params_correct['is_correct']) {
+			$body = $response->getBody();
+			$body->write($is_params_correct['msg']);
+			return $response->withStatus(400);
+		}
+
+		$start_time = (new \DateTime())->setTime(10, 0);
+		$max_avaiable_slots = 8 * 4 + 1; # 10:00-18:00 including
+		$slots_order_nums = rand(0,3) ? array_rand(range(1, $max_avaiable_slots), rand(8, 15)) : [];
+		sort($slots_order_nums);
+		$slots_start_times = array_map(function (int $offset) use ($start_time) {
+			return ['time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 15 . 'M'))->format('H:i')];
+		}, $slots_order_nums);
+		return $response->withJson($slots_start_times);
+	}
 
 	public function reschedule (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
@@ -320,6 +339,20 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function checkAvailableSlotsParams(array $params) {
+		$correct_body = ['date', 'worker_id', 'duration'];
+
+		$is_correct = true; $msg = '';
+
+		if ((!isset($params['date']) || !\DateTime::createFromFormat('Y-m-d', $params['date']))) { $is_correct = false; $msg .= 'date has to exist and to be YYYY-MM-DD format, like 2020-01-01 <br>'; }
+
+		if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
+
+		if (!isset($params['duration']) || !ctype_digit($params['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
