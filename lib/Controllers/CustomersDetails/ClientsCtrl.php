@@ -67,14 +67,6 @@ class ClientsCtrl extends Controller {
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
 	}
 
-	public function sendLinkFillUpPersonalData (Request $request, Response $response) :Response {
-		if ($request->getBody()->getSize()) {
-			$response->getBody()->write('body should be empty');
-			return $response->withStatus(400);
-		}
-		return $response->withStatus(204);
-	}
-
 	public function setPersonalDataFromClient (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
 
@@ -143,33 +135,7 @@ class ClientsCtrl extends Controller {
 	}
 
 	public function sendFillingUpLink (Request $request, Response $response): Response {
-		$params = $request->getQueryParams();
-		if (empty($params['client_id']) || !ctype_digit($params['client_id'])) {
-			$body = $response->getBody();
-			$body->write('client_id must exist and be an integer');
-			return $response->withStatus(400);
-		}
-		return $response->withStatus(204);
-	}
-	public function createClientSendFillingUpLink (Request $request, Response $response): Response {
-		$body = $request->getParsedBody();
-
-		$is_body_correct = ['is_correct' => true, 'msg' => ''];
-		if (empty($body['phone']) || !$this->isClientPhoneValid($body['phone'])) {
-			$is_body_correct['is_correct'] = false;
-			$is_body_correct['msg'] = 'phone must exist and be a correct phone number <br>';
-		} else if (empty($body['added']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['added']) && !\DateTime::createFromFormat('Y-m-d H:i', $body['added']))) {
-			$is_body_correct['is_correct'] = false;
-			$is_body_correct['msg'] = 'added is incorrect, it has to be yyyy-mm-dd hh:mm:ss format, like 2018-10-10 13:49:27 <br>';
-		}
-
-		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
-		} else {
-			$body = $response->getBody();
-			$body->write("<br>" . $is_body_correct['msg']);
-			return $response->withStatus(400);
-		}
+		return $response->withStatus(rand(0,3) ? 204 : 409);
 	}
 
 	private function checkClientData ($body) {
@@ -206,7 +172,7 @@ class ClientsCtrl extends Controller {
 			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
 			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [ <br>' . implode(',', $source_options) . ']';}
 		}
-		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
+		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], [/*'true', */'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

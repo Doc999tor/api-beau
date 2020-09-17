@@ -141,7 +141,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 		});
 
-		$app->post('/filling-up', $cl_prefix . 'sendLinkFillUpPersonalData');
+		$app->post('/send-filling-up', $cl_prefix . 'sendFillingUpLink');
 
 		# Timeline
 		$app->group('/timeline', function () use ($app, $prefix) {
@@ -224,6 +224,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/sms/delete_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reminders_before_event', 'SmsSettingsCtrl:eventReminders'); // should_send=true&mins_before=30
 	$app->put('/sms/greetings_before_birthdays', 'SmsSettingsCtrl:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
+	$app->put('/sms/automatic_filling_up_sending', 'SmsSettingsCtrl:automaticFillingUpSending'); // should_send=true&days_before=1&time_for_sending=16:30
 });
 
 ### Catalog
@@ -276,10 +277,6 @@ $app->group('/filling-up', function () use ($app) {
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
 
-$app->group('/send-filling-up', function () use ($app) {
-	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
-	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
-});
 $app->group('/home', function () use ($app) {
 	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
 	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
