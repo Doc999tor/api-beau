@@ -71,8 +71,18 @@ class SmsSettingsCtrl extends Controller {
 		}
 	}
 
+	public function automaticFillingUpSending (Request $request, Response $response): Response {
+		$body = $request->getParsedBody();
+		if ($this->getListPredicate('should_send', $body, ['true', 'false'])) {
+			return $response->withStatus(204);
+		} else {
+			$response->getBody()->write($this->getListErrorMessage('should_send', ['true', 'false']));
+			return $response->withStatus(400);
+		}
+	}
+
 	private function getListPredicate ($paramName, $body, $list) {
-		return isset($body[$paramName]) && in_array($body[$paramName], $list);
+		return !empty($body[$paramName]) && in_array($body[$paramName], $list);
 	}
 	private function getListErrorMessage ($paramName, $list) {
 		return $paramName . ' supposed to be: ' . implode(' | ', $list);
