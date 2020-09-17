@@ -281,16 +281,16 @@ $app->group('/home', function () use ($app) {
 	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
 	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
 });
-$app->group('/shadeecat/', function () use ($app) {
-	$hn = 'Content-Type'; $hv = 'application/json';
-	$sh = 'public/shadeecat/'; $j = '.json';
-	$app->get('cv/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}cv/data{$j}")); });
-	$app->get('dt/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data{$j}")); });
-	$app->get('dt/data-pics', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data-pics{$j}")); });
-	$app->get('ms/mockStocks', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}ms/mockStocks{$j}")); });
-	$app->get('se/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}se/data{$j}")); });
-	$app->get('via/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}via/data{$j}")); });
-});
+// $app->group('/shadeecat/', function () use ($app) {
+// 	$hn = 'Content-Type'; $hv = 'application/json';
+// 	$sh = 'public/shadeecat/'; $j = '.json';
+// 	$app->get('cv/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}cv/data{$j}")); });
+// 	$app->get('dt/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data{$j}")); });
+// 	$app->get('dt/data-pics', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data-pics{$j}")); });
+// 	$app->get('ms/mockStocks', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}ms/mockStocks{$j}")); });
+// 	$app->get('se/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}se/data{$j}")); });
+// 	$app->get('via/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}via/data{$j}")); });
+// });
 
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
