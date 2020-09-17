@@ -141,7 +141,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 		});
 
-		$app->post('/filling-up', $cl_prefix . 'sendLinkFillUpPersonalData');
+		$app->put('/send-filling-up', $cl_prefix . 'sendFillingUpLink');
 
 		# Timeline
 		$app->group('/timeline', function () use ($app, $prefix) {
@@ -218,12 +218,13 @@ $app->group('/settings', function () use ($app) {
 
 	$app->get('/sms/credits', 'SmsSettingsCtrl:getCredits'); // credits_requested_count=100
 	$app->post('/sms/fill-credits', 'SmsSettingsCtrl:fillCredits'); // credits_requested_count=100
-	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
+	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays|automatic_filling_up_sending}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
 	$app->put('/sms/new_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reschedule_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/delete_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reminders_before_event', 'SmsSettingsCtrl:eventReminders'); // should_send=true&mins_before=30
 	$app->put('/sms/greetings_before_birthdays', 'SmsSettingsCtrl:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
+	$app->put('/sms/automatic_filling_up_sending', 'SmsSettingsCtrl:automaticFillingUpSending'); // should_send=true&days_before=1&time_for_sending=16:30
 });
 
 ### Catalog
@@ -276,24 +277,20 @@ $app->group('/filling-up', function () use ($app) {
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
 
-$app->group('/send-filling-up', function () use ($app) {
-	$app->post('', 'CustomersDetails\\ClientsCtrl:createClientSendFillingUpLink')->add(new ReturnID());
-	$app->put ('', 'CustomersDetails\\ClientsCtrl:sendFillingUpLink');
-});
 $app->group('/home', function () use ($app) {
 	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
 	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
 });
-$app->group('/shadeecat/', function () use ($app) {
-	$hn = 'Content-Type'; $hv = 'application/json';
-	$sh = 'public/shadeecat/'; $j = '.json';
-	$app->get('cv/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}cv/data{$j}")); });
-	$app->get('dt/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data{$j}")); });
-	$app->get('dt/data-pics', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data-pics{$j}")); });
-	$app->get('ms/mockStocks', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}ms/mockStocks{$j}")); });
-	$app->get('se/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}se/data{$j}")); });
-	$app->get('via/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}via/data{$j}")); });
-});
+// $app->group('/shadeecat/', function () use ($app) {
+// 	$hn = 'Content-Type'; $hv = 'application/json';
+// 	$sh = 'public/shadeecat/'; $j = '.json';
+// 	$app->get('cv/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}cv/data{$j}")); });
+// 	$app->get('dt/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data{$j}")); });
+// 	$app->get('dt/data-pics', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}dt/data-pics{$j}")); });
+// 	$app->get('ms/mockStocks', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}ms/mockStocks{$j}")); });
+// 	$app->get('se/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}se/data{$j}")); });
+// 	$app->get('via/data', function ($_, $r) use ($sh, $j, $hn, $hv) { return $r->withHeader($hn, $hv)->write(file_get_contents("{$sh}via/data{$j}")); });
+// });
 
 $app->options('/{routes:.+}', 'cors');
 function cors (Request $request, Response $response) { return $response; }
