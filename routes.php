@@ -141,7 +141,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->delete('', $prefix . 'SignatureCtrl:deleteSignature');
 		});
 
-		$app->post('/send-filling-up', $cl_prefix . 'sendFillingUpLink');
+		$app->put('/send-filling-up', $cl_prefix . 'sendFillingUpLink');
 
 		# Timeline
 		$app->group('/timeline', function () use ($app, $prefix) {
