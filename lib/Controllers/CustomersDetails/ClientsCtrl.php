@@ -172,7 +172,7 @@ class ClientsCtrl extends Controller {
 			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
 			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [ <br>' . implode(',', $source_options) . ']';}
 		}
-		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], [/*'true', */'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
+		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], [/*'true', */'false'])) { $is_correct = false; $msg .= ' permit_ads value can be false only <br>';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
