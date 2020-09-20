@@ -64,10 +64,19 @@ class BusinessSettingsCtrl extends Controller {
 	public function setFacebook (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
-		if (isset($body['facebook']) && preg_match('/^https?:\/\/.{2,}$/', $body['facebook'])) {
+		if (isset($body['facebook']) && preg_match('/^https:\/\/.{2,}$/', $body['facebook'])) {
 			return $response->withStatus(204);
 		} else {
 			return $response->withStatus(400)->getBody()->write('facebook has to exist and not to be malformed');
+		}
+	}
+	public function setInstagram (Request $request, Response $response) {
+		$body = $request->getParsedBody();
+
+		if (isset($body['instagram']) && preg_match('/^https:\/\/.{2,}$/', $body['instagram'])) {
+			return $response->withStatus(204);
+		} else {
+			return $response->withStatus(400)->getBody()->write('instagram has to exist and not to be malformed');
 		}
 	}
 	public function setAboutYou (Request $request, Response $response) {
