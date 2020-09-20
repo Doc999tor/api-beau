@@ -201,6 +201,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/business/thank_you_message', 'BusinessSettingsCtrl:setThankYouMessage');
 	$app->put('/business/website', 'BusinessSettingsCtrl:setWebsite');
 	$app->put('/business/facebook', 'BusinessSettingsCtrl:setFacebook');
+	$app->put('/business/instagram', 'BusinessSettingsCtrl:setInstagram');
 	$app->put('/business/about_you', 'BusinessSettingsCtrl:setAboutYou');
 	$app->put('/business/billing_name', 'BusinessSettingsCtrl:setBillingName');
 	$app->put('/business/billing_address', 'BusinessSettingsCtrl:setBillingAddress');
