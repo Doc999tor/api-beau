@@ -27,7 +27,7 @@ class GroupsCtrl extends Controller {
 		return $response->withJson($groups);
 	}
 	public function getGroupClients (Request $request, Response $response, array $args):Response {
-		return $response->withJson(CustomersList::generateClients(mt_rand(0, 30)));
+		return $response->withJson(rand(0,2) ? CustomersList::generateClients(rand(0, 30)) : []);
 	}
 
 	private function generateGroup(): array {
