@@ -45,16 +45,13 @@ class CustomersList extends Controller {
 
 	public function deleteClients (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
-		$body = is_array($body) ? $body : [];
-
-		$is_correct = true; $msg = '';
 		// if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) { $is_correct = false; $msg .= "date has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
-		if ($is_correct) {
+		if (empty($body['clients']) || preg_match('/^\d[,\d]*$/', $body['clients'])) {
 			return $response->withStatus(204);
 		} else {
-			$body = $response->getBody();
-			$body->write("<br>" . $msg);
+			$response_body = $response->getBody();
+			$response_body->write("clients body param is incorrect: $body[clients] <br>");
 			return $response->withStatus(400);
 		}
 	}

@@ -66,7 +66,8 @@ $app->group('/customers-list', function () use ($app) {
 	$app->post  ('/clients/import', $prefix . 'importBulkClients');
 	$app->post  ('/clients/import/skip', $prefix . 'skipImportBulkClients');
 	$app->map   (['HEAD'], '/clients', $prefix . 'getCount');
-	$app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)*}', $prefix . 'deleteClients');
+	$app->delete('/clients', $prefix . 'deleteClients');
+	// $app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)*}', $prefix . 'deleteClients');
 
 	$app->get   ('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });
