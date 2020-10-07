@@ -3,11 +3,30 @@
 namespace Lib\Controllers;
 
 use Lib\Controllers\Controller as Controller;
+use \Lib\Helpers\Utils;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class RemindersCtrl extends Controller {
-	public function index (Request $request, Response $response):Response {return $response;}
+	public function getReminders (Request $request, Response $response):Response {
+		$reminders = [];
+		for ($i=0, $count = rand(0,3) ? rand(1, 50) : 0; $i < $count; $i++) {
+			$client = CustomersList::generateClient();
+			$reminder = [
+				"id" => $i+1,
+				"is_done" => (bool) rand(0,1),
+				"reminder_date" => (new \DateTime())->setTimestamp((time() - 14 * 86400) + rand(1, 49 * 86400))->format('Y-m-d h:i'),
+				"text" => Utils::generatePhrase('', 0, 15),
+				"client_id" => $client['id'],
+				"client_name" => $client['name'],
+				"client_phone_canonical" => $client['phone_canonical'],
+				"client_phone_number" => $client['phone'],
+				"client_profile_img" => $client['profile_image'],
+			];
+			$reminders []= $reminder;
+		}
+		return $response->withJson($reminders);
+	}
 
 	public function add (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
