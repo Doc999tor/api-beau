@@ -173,7 +173,7 @@ $app->group('/customers-details', function () use ($app) {
 ### Reminders
 $app->group('/reminders', function () use ($app) {
 	$prefix = 'RemindersCtrl:';
-	$app->get   ('', $prefix . 'index');
+	$app->get   ('', $prefix . 'getReminders');
 	$app->get   ('/clients', $prefix . 'getClients');
 	$app->post  ('', $prefix . 'add')->add(new ReturnID());
 	$app->put   ('/{reminder_id:\d+}', $prefix . 'update');
