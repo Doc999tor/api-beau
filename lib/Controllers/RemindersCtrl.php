@@ -42,6 +42,8 @@ class RemindersCtrl extends Controller {
 
 	public function update (Request $request, Response $response, array $args):Response {
 		$body = $request->getParsedBody();
+		$body['is_done'] = 'true'; // in updating no need of "is_done"
+		$body['added'] = '2010-01-01 12:00:00'; // in updating no need of "added"
 
 		list($is_correct, $msg) = $this->checkCorrectness($body);
 		if (!$is_correct) {
