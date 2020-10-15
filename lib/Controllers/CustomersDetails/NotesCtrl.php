@@ -45,7 +45,6 @@ class NotesCtrl extends Controller {
 	public static function checkCorrectnessBody(array $body):string {
 		$error_msg = '';
 
-		var_dump($body['reminder_date']);
 		if (empty($body['text'])) {
 			$error_msg .= 'text cannot be empty <br>';
 		}
