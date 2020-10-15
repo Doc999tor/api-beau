@@ -86,7 +86,6 @@ class RemindersCtrl extends Controller {
 	private function checkCorrectness ($body) {
 		$msg = ''; $is_correct = true;
 
-		var_dump($body['client_id']);
 		if (!mb_strlen($body['text'])) { $msg .= '<br> text has to be one letter at least'; $is_correct = false; }
 		if (!in_array($body['is_done'], ['true', 'false'])) { $msg .= '<br> is_done has to be true or false'; $is_correct = false; }
 		if (isset($body['client_id']) && !ctype_digit($body['client_id'])) { $msg .= '<br> client_id has to be integer'; $is_correct = false; }
