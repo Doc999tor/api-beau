@@ -43,6 +43,16 @@ class GroupsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function rename (Request $request, Response $response) {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		if (!$this->validateGroupName($body['name'])) {
+			return $response->withStatus(400)->write('name cannot be empty');
+		}
+
+		return $response->withStatus(204);
+	}
 	public function addClients (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		if (empty($body) || !$this->validateClientsList($body)) {
@@ -74,7 +84,7 @@ class GroupsCtrl extends Controller {
 			$msg = implode(', ', $diff_keys) . ' argument should exist' . "<br>";
 		}
 
-		if (empty($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
+		if (!$this->validateGroupName($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
 		$clients = json_decode($body['clients'] ?? null);
 		if (empty($clients)) {
 			$is_correct = false; $msg .= 'clients empty' . "<br>";
@@ -88,5 +98,8 @@ class GroupsCtrl extends Controller {
 	}
 	private function validateClientsList($clients) {
 		return count(array_filter($clients, "is_int")) === count($clients);
+	}
+	private function validateGroupName($name) {
+		return !empty($name);
 	}
 }
