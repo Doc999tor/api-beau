@@ -77,6 +77,7 @@ $app->group('/groups', function () use ($app) {
 	$prefix = 'GroupsCtrl:';
 	$app->get('', $prefix . 'getGroups');
 	$app->get('/{group_id:\d+}/clients', $prefix . 'getGroupClients');
+	$app->post('', $prefix . 'add')->add(new ReturnID());
 });
 
 ### Customers Details

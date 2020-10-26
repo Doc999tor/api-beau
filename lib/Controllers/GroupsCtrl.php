@@ -30,6 +30,20 @@ class GroupsCtrl extends Controller {
 		return $response->withJson(rand(0,2) ? CustomersList::generateClients(rand(0, 30)) : []);
 	}
 
+	public function add (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkBodyCorrectness($body);
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
 	private function generateGroup(): array {
 		$group_name = Utils::generatePhrase();
 		return [
@@ -38,5 +52,30 @@ class GroupsCtrl extends Controller {
 			'image_path' => str_replace(' ', '_', $group_name) . '.jpg',
 			'amount' => rand(1, 30),
 		];
+	}
+
+	private function checkBodyCorrectness($body) {
+		$correct_body = ['name', 'clients'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff($correct_body, array_keys($body));
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg = implode(', ', $diff_keys) . ' argument should exist' . "<br>";
+		}
+
+		if (empty($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
+		$clients = json_decode($body['clients'] ?? null);
+		if (empty($clients)) {
+			$is_correct = false; $msg .= 'clients empty' . "<br>";
+		} else {
+			if (count(array_filter($clients, "is_int")) !== count($clients)) {
+				$is_correct = false; $msg .= "clients malformed, has to be an array of integers: $body[clients] <br>";
+			}
+		}
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 }
