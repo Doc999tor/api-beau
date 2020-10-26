@@ -43,6 +43,14 @@ class GroupsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function addClients (Request $request, Response $response) {
+		$body = $request->getParsedBody();
+		if (empty($body) || !$this->validateClientsList($body)) {
+			return $response->withStatus(400)->write('clients malformed, has to be an array of integers: ' . json_encode($body));
+		}
+
+		return $response->withStatus(204);
+	}
 
 	private function generateGroup(): array {
 		$group_name = Utils::generatePhrase();
@@ -71,11 +79,14 @@ class GroupsCtrl extends Controller {
 		if (empty($clients)) {
 			$is_correct = false; $msg .= 'clients empty' . "<br>";
 		} else {
-			if (count(array_filter($clients, "is_int")) !== count($clients)) {
+			if (!$this->validateClientsList($clients)) {
 				$is_correct = false; $msg .= "clients malformed, has to be an array of integers: $body[clients] <br>";
 			}
 		}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+	private function validateClientsList($clients) {
+		return count(array_filter($clients, "is_int")) === count($clients);
 	}
 }
