@@ -79,6 +79,7 @@ $app->group('/groups', function () use ($app) {
 	$app->get('/{group_id:\d+}/clients', $prefix . 'getGroupClients');
 	$app->post('', $prefix . 'add')->add(new ReturnID());
 	$app->put('/{group_id:\d+}/clients', $prefix . 'addClients');
+	$app->delete('/{group_id:\d+}/clients', $prefix . 'addClients');
 });
 
 ### Customers Details
