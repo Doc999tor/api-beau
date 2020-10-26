@@ -53,6 +53,9 @@ class GroupsCtrl extends Controller {
 
 		return $response->withStatus(204);
 	}
+	public function delete (Request $request, Response $response) {
+		return $response->withStatus(204);
+	}
 	public function addClients (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		if (empty($body) || !$this->validateClientsList($body)) {
