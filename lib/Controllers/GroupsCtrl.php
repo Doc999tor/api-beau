@@ -89,7 +89,7 @@ class GroupsCtrl extends Controller {
 
 		if (!$this->validateGroupName($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
 		$clients = json_decode($body['clients'] ?? null);
-		if (empty($clients)) {
+		if (is_array($clients)) {
 			$is_correct = false; $msg .= 'clients empty' . "<br>";
 		} else {
 			if (!$this->validateClientsList($clients)) {
