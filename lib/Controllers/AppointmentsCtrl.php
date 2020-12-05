@@ -240,7 +240,10 @@ class AppointmentsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
-		$is_body_correct = $this->checkAppointmentCorrectness($body);
+		$is_body_correct = !isset($body['off_time'])
+			? $this->checkAppointmentCorrectness($body)
+			: $this->checkMeetingCorrectness($body);
+
 		if ($is_body_correct['is_correct']) {
 			return $response->withJson($this->createCalendarResponseObj());
 		} else {
@@ -290,13 +293,13 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['start', 'client_id', 'services', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
 		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
-		if (!preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
+		if (!isset($body['client_id']) || !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 
 		$services = json_decode($body['services']);
 		if (gettype($services) !== 'array' || count(array_filter($services, function ($s) {
@@ -304,9 +307,9 @@ class AppointmentsCtrl extends Controller {
 		})) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of {id: int, count: int} <br>'; }
 		if (!isset($body['duration']) || !ctype_digit($body['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
-		if (!in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
+		if (!isset($body['is_reminders_set']) || !in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
 
-		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be an integer <br>'; }
+		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be a number <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
@@ -316,11 +319,13 @@ class AppointmentsCtrl extends Controller {
 	}
 	private function checkMeetingCorrectness (array $body): array {
 		// var_dump($body);
-		$correct_body = ['start', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if (!in_array($body['off_time'], ['appointment', 'meeting', 'break', 'vacation'])) { $is_correct = false; $msg .= ' off_time can be appointment, meeting, break or vacation only <br>'; }
+
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DDThh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
