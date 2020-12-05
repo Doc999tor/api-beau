@@ -240,16 +240,24 @@ class AppointmentsCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
-		$is_body_correct = !isset($body['off_time'])
-			? $this->checkAppointmentCorrectness($body)
-			: $this->checkMeetingCorrectness($body);
-
-		if ($is_body_correct['is_correct']) {
-			return $response->withJson($this->createCalendarResponseObj());
+		if (!isset($body['off_time'])) {
+			$is_body_correct = $this->checkAppointmentCorrectness($body);
+			if ($is_body_correct['is_correct']) {
+				return $response->withJson($this->createCalendarResponseObj());
+			} else {
+				$body = $response->getBody();
+				$body->write($is_body_correct['msg']);
+				return $response->withStatus(400);
+			}
 		} else {
-			$body = $response->getBody();
-			$body->write($is_body_correct['msg']);
-			return $response->withStatus(400);
+			$is_body_correct = $this->checkMeetingCorrectness($body);
+			if ($is_body_correct['is_correct']) {
+				return $response->withStatus(204);
+			} else {
+				$body = $response->getBody();
+				$body->write($is_body_correct['msg']);
+				return $response->withStatus(400);
+			}
 		}
 	}
 	public function addMeeting (Request $request, Response $response):Response {
