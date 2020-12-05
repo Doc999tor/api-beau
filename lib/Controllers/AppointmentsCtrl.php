@@ -297,6 +297,12 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
+		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
+
 		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
 		if (!isset($body['client_id']) || !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
@@ -318,10 +324,15 @@ class AppointmentsCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		// var_dump($body);
-		$correct_body = ['off_time', 'start', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
+
+		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
 
 		if (!in_array($body['off_time'], ['appointment', 'meeting', 'break', 'vacation'])) { $is_correct = false; $msg .= ' off_time can be appointment, meeting, break or vacation only <br>'; }
 
