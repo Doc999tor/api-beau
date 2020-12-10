@@ -64,4 +64,33 @@ class TemplatesCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+
+	public function sendSms(Request $request, Response $response) {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_correct = true;
+		$msg = '';
+
+		if (count($body) === 0) {
+			$is_correct = false; $msg .= 'body malformed, has to be a valid json';
+		} else {
+			if (!mb_strlen($body['text'])) {
+				$is_correct = false; $msg .= 'text can\'t be empty';
+			}
+			if (empty($body['clients']) && count(array_filter($body['clients'], "is_int")) === count($body['clients'])) {
+				$is_correct = false; $msg .= 'clients malformed, has to be an array of integers';
+			}
+			if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
+		}
+
+
+		if ($is_correct) {
+			return $response->withStatus(rand(0,3) ? 201 : 409); # 409 means no sms credits
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>\n" . $msg);
+			return $response->withStatus(400);
+		}
+	}
 }

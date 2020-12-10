@@ -257,6 +257,7 @@ $app->group('/templates', function () use ($app) {
 	$app->get ('/{template_name:\w+}',    $prefix . 'getOne');
 	$app->post('',    $prefix . 'add')->add(new ReturnID());
 });
+$app->post('/send-sms', 'TemplatesCtrl:sendSms');
 
 $app->get('/error_page', function (Request $request, Response $response) {
 	return $response->getBody()->write('<h1>Error Page</h1>');
