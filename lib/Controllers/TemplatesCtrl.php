@@ -79,7 +79,7 @@ class TemplatesCtrl extends Controller {
 				$is_correct = false; $msg .= 'text can\'t be empty';
 			}
 			if (empty($body['clients']) && count(array_filter($body['clients'], "is_int")) === count($body['clients'])) {
-				$is_correct = false; $msg .= 'text can\'t be empty';
+				$is_correct = false; $msg .= 'clients malformed, has to be an array of integers';
 			}
 			if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
 		}
