@@ -301,7 +301,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
