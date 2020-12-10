@@ -86,7 +86,7 @@ class TemplatesCtrl extends Controller {
 
 
 		if ($is_correct) {
-			return $response->withStatus(201);
+			return $response->withStatus(rand(0,3) ? 201 : 409); # 409 means no sms credits
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>\n" . $msg);
