@@ -89,7 +89,7 @@ class AddClientCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'status', 'address', 'birthdate', 'birthyear', 'filling_up', 'gender', 'permit_ads', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
+		$correct_body = ['name', 'phone', 'email', 'status', 'address', 'birthdate', 'birthyear', 'is_filling_up_sent', 'gender', 'permit_ads', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
 
 		$is_correct = true;
 		$msg = '';
@@ -112,7 +112,7 @@ class AddClientCtrl extends Controller {
 		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }
 		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= 'birthyear has to be YYYY format, like 1970' . "<br>"; }
 
-		if (isset($body['filling_up']) && !in_array($body['filling_up'], ['true', 'false'])) { $is_correct = false; $msg .= 'filling_up can be true or false' . "<br>"; }
+		if (isset($body['is_filling_up_sent']) && !in_array($body['is_filling_up_sent'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_filling_up_sent can be true or false' . "<br>"; }
 		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= 'gender can be male or female' . "<br>"; }
 
 		if (empty($body['permit_ads']) || !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
