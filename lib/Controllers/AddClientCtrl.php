@@ -81,7 +81,7 @@ class AddClientCtrl extends Controller {
 		// }
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
-			return $response->withStatus(201);
+			return $response->withStatus(rand(0,3) ? 201 : 409);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
