@@ -9,7 +9,7 @@ class PostReturnIDMiddleware {
 	public function __invoke(Request $request, Response $response, callable $next) {
 		$response = $next($request, $response);
 
-		if ($response->getStatusCode() === 201) {
+		if ($response->getStatusCode() === 201 || $response->getStatusCode() === 409) {
 			$body = $response->getBody()->write(self::getRandomID());
 		}
 
