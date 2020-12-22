@@ -284,6 +284,7 @@ $app->group('/filling-up', function () use ($app) {
 	$app->post ('/photo', $prefix . ':setProfileImageFromClient');
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
 });
+$app->post ('/unsubscribe', 'CustomersDetails\\ClientsCtrl:unsubscribe');
 
 $app->group('/home', function () use ($app) {
 	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
