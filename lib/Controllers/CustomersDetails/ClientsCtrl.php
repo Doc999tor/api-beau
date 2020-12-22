@@ -138,6 +138,33 @@ class ClientsCtrl extends Controller {
 		return $response->withStatus(rand(0,3) ? 204 : 409);
 	}
 
+	public function unsubscribe (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+
+		$is_body_correct = ['is_correct' => true, 'msg' => ''];
+		if (!isset($body['b']) || !ctype_digit($body['b'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= 'b has to be an integer';
+		} else if (!isset($body['c']) || !ctype_alnum($body['c'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= 'c has to be an alphanumeric';
+		} else if (!isset($body['phone']) || !$this->isClientPhoneValid($body['phone'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= ' phone value is incorrect <br>';
+		} else if (isset($body['text']) && empty($body['text'])) {
+			$is_body_correct['is_correct'] = false;
+			$is_body_correct['msg'] .= 'text cannot be empty <br>';
+		}
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
 	private function checkClientData ($body) {
 		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
 
