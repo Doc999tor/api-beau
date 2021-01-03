@@ -13,13 +13,13 @@ $app = new \Slim\App(["settings" => $config]);
 
 $app->add(new \Lib\Middlewares\HeadersMiddleware())
 	->add(new \Lib\Middlewares\ErrorMiddleware())
-	->add(new \Tuupola\Middleware\Cors([
+	->add(new \Tuupola\Middleware\CorsMiddleware([
 		"origin" => ["*"],
 		"methods" => ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
-		"headers.allow" => ['X-Requested-With'],
+		"headers.allow" => ['X-Requested-With', 'Content-Type'],
 		"headers.expose" => ['Retry-After', 'X-Total-Count'],
 		"credentials" => true,
-		"cache" => 0,
+		"cache" => 86400,
 	]));
 
 // Get container
