@@ -71,10 +71,14 @@ class CustomersList extends Controller {
 			'id' => $id,
 			"profile_image" => "{$id}.jpg",
 			'name' => Utils::generatePhrase($q, 1, 2),
-			'phone' => '0' . $phone,
-			'phone_canonical' => '+38' . $phone,
+			"permit_ads" => (bool) rand(0,3),
+			"is_unsubscribed" => !rand(0,4),
 			"status" => Utils::generatePhrase('', 1, 4),
 		];
+		if (rand(0,3)) {
+			$client['phone'] = '0' . $phone;
+			$client['phone_canonical'] = '+38' . $phone;
+		}
 		if (rand(0,2)) {
 			$client['address'] = Utils::getRandomAddress();
 		}
