@@ -5,7 +5,6 @@ use \Lib\Controllers\Controller as Controller;
 use \Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use \Lib\Helpers\Utils as Utils;
 
 class AppointmentsCtrl extends Controller {
 	public function getCalendar (Request $request, Response $response):Response {
@@ -157,6 +156,8 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function generateAppointment(\DateTime $start) {
+		$faker = \Faker\Factory::create();
+
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
 		$phone = rand(1000000, 999999999);
@@ -175,18 +176,37 @@ class AppointmentsCtrl extends Controller {
 		];
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
 		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
+		if (rand(0,3)) { # group appointment
+			$clients = [];
+			$clients_count = rand(1,5);
+			for ($i=0; $i < $clients_count; ++$i) {
+				$client_id = rand(1, 120);
+				$phone = rand(1000000, 999999999);
+				$clients []= [
+					'phone' => '0' . $phone,
+					'phone_canonical' => '+38' . $phone,
+					'client_id' => (string) $client_id,
+					'name' => $faker->name,
+					'profile_picture' => $client_id . '.jpg',
+					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
+					'status' => $faker->sentence(rand(1,15)),
+				];
+			}
+			$appointment['clients'] = $clients;
+		}
+
 		if (rand(0,5)) {
 			$client_id = rand(1, 120);
 			$appointment['client_id'] = (string) $client_id;
-			$appointment['name'] = Utils::generatePhrase('', 1, 3);
+			$appointment['name'] = $faker->name;
 			$appointment['profile_picture'] = $client_id . '.jpg';
 			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
 		}
 		if (rand(0,1)) {
-			$appointment['address'] = Utils::getRandomAddress();
+			$appointment['address'] = $faker->address;
 		}
 		if (rand(0,1)) {
-			$appointment['note'] = Utils::generatePhrase('', 0, 15);
+			$appointment['note'] = implode('\n', $faker->paragraphs(rand(1,3)));
 		}
 		if (!rand(0,10)) {
 			$appointment['is_new_client'] = true;
@@ -198,7 +218,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['has_debt'] = true;
 		}
 		if (!rand(0,3)) {
-			$appointment['status'] = Utils::generatePhrase('', 0, 7);
+			$appointment['status'] = $faker->sentence(rand(1,15));
 		}
 
 		if (!rand(0,4)) {
@@ -301,7 +321,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -313,7 +333,13 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
-		if (!isset($body['client_id']) || !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
+		if (isset($body['client_id']) && !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
+		if (isset($body['clients'])) {
+			$clients = json_decode($body['clients']);
+			if (count(array_filter($clients, 'is_int')) !== count($clients)) {
+				$is_correct = false; $msg .= 'clients has to be an array of integers, -1 is not permitted <br>';
+			}
+		}
 
 		$services = json_decode($body['services']);
 		if (gettype($services) !== 'array' || count(array_filter($services, function ($s) {
