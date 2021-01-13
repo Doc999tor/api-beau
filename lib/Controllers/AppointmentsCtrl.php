@@ -200,6 +200,8 @@ class AppointmentsCtrl extends Controller {
 			$appointment['client_id'] = (string) $client_id;
 			$appointment['name'] = $faker->name;
 			$appointment['profile_picture'] = $client_id . '.jpg';
+			$appointment['permit_ads'] = (bool) rand(0,3);
+			$appointment['is_unsubscribed'] = !rand(0,4);
 			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
 		}
 		if (rand(0,1)) {
@@ -355,7 +357,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
-		return ["is_correct" => $is_correct, "msg" => $msg];
+		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
 		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
@@ -377,7 +379,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
-		return ["is_correct" => $is_correct, "msg" => $msg];
+		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkBreakCorrectness (array $body): array {
 		$correct_body = ['start', 'end', 'worker_id', 'added'];
@@ -390,7 +392,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
-		return ["is_correct" => $is_correct, "msg" => $msg];
+		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 
 	private function checkAvailableSlotsParams(array $params) {
@@ -404,7 +406,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($params['duration']) || !ctype_digit($params['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
-		return ["is_correct" => $is_correct, "msg" => $msg];
+		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 
 	public function getRecentAppointments (Request $request, Response $response) {
@@ -471,7 +473,7 @@ class AppointmentsCtrl extends Controller {
 		} else {
 			if (!rand(0,2)) {
 				$response['is_warning'] = true; // показываем или нет желтый тост
-				$response["warning_reason"] = 'no_sms'; // no_sms - пока только один вариант
+				$response['warning_reason'] = 'no_sms'; // no_sms - пока только один вариант
 			}
 		}
 		return $response;

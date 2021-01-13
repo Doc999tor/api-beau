@@ -15,7 +15,7 @@ class CustomersList extends Controller {
 		return $this->view->render($response, $path . '.html', [
 			'base_path' => $base_path,
 			'prefix' => $static_prefix,
-			"path" => $path,
+			'path' => $path,
 		]);
 	}
 
@@ -69,11 +69,11 @@ class CustomersList extends Controller {
 		$phone = rand(1000000, 999999999);
 		$client = [
 			'id' => $id,
-			"profile_image" => "{$id}.jpg",
+			'profile_image' => "{$id}.jpg",
 			'name' => Utils::generatePhrase($q, 1, 2),
-			"permit_ads" => (bool) rand(0,3),
-			"is_unsubscribed" => !rand(0,4),
-			"status" => Utils::generatePhrase('', 1, 4),
+			'permit_ads' => (bool) rand(0,3),
+			'is_unsubscribed' => !rand(0,4),
+			'status' => Utils::generatePhrase('', 1, 4),
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
@@ -83,10 +83,10 @@ class CustomersList extends Controller {
 			$client['address'] = Utils::getRandomAddress();
 		}
 		if (rand(0,5)) {
-			$client["last_appointment"] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
+			$client['last_appointment'] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
 		}
 		if (rand(0,10) < 9) {
-			$client["next_appointment"] = date("Y-m-d H:i", rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
+			$client['next_appointment'] = date("Y-m-d H:i", rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
 		}
 
 		return $client;
