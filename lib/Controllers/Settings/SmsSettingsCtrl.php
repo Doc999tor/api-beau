@@ -22,6 +22,17 @@ class SmsSettingsCtrl extends Controller {
 		}
 	}
 
+	public function editTemplate (Request $request, Response $response, array $args): Response {
+		$setting_canonical_name = filter_var($args['setting_canonical_name'], FILTER_SANITIZE_STRING);
+
+		$body = $request->getParsedBody();
+		if (isset($body['text']) && mb_strlen($body['text']) > 3 && strpos(preg_replace('/\$\$(\w+)\$\$/', '', $body['text']), '$$') === false) {
+			return $response->withStatus(204);
+		} else {
+			$response->getBody()->write('text has to exist and to be more than 3 symbols ' . $body['text']);
+			return $response->withStatus(400);
+		}
+	}
 	public function sendManualEdit (Request $request, Response $response, array $args): Response {
 		$setting_canonical_name = filter_var($args['setting_canonical_name'], FILTER_SANITIZE_STRING);
 
