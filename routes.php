@@ -35,6 +35,7 @@ $app->group('/appointments', function () use ($app) {
 ### Workers
 $app->group('/workers', function () use ($app) {
 	$prefix = 'WorkersCtrl:';
+	$app->get('', $prefix . 'getAllWorkersData');
 	$app->get('/{worker_id:\d+}', $prefix . 'getData');
 });
 
