@@ -9,25 +9,39 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use \Lib\Helpers\Utils;
 
 class WorkersCtrl extends Controller {
+	public function getAllWorkersData (Request $request, Response $response, array $args):Response {
+		$workers = [];
+		for ($i=1; $i < rand(1, 6); ++$i) {
+			$workers []= $this->generateWorker($i);
+		}
+
+		return $response->withJson($workers);
+	}
 	public function getData (Request $request, Response $response, array $args):Response {
-		$data = [
-			'id' => filter_var($args['worker_id'], FILTER_SANITIZE_NUMBER_INT),
-			'name' => Utils::generatePhrase('', 1, 2),
+		return $response->withJson($this->generateWorker(filter_var($args['worker_id'], FILTER_SANITIZE_NUMBER_INT)));
+	}
+
+	private function generateWorker(int $id) {
+		$faker = \Faker\Factory::create();
+
+		$worker = [
+			'id' => $id,
+			'name' => $faker->firstName,
 		];
 
 		$weekend = rand(0,6);
 		$short_day = rand(0,6);
 		for ($i=0; $i < 7; $i++) {
-			if ($i === $weekend) {continue;}
-			$data['day_' . $i] = [
+			if ($i === $weekend) { continue; }
+			$worker['day_' . $i] = [
 				'start' => '10:00',
 				'end' => '18:00',
 			];
 			if ($i === $short_day) {
-				$data['day_' . $i]['end'] = '14:00';
+				$worker['day_' . $i]['end'] = '14:00';
 			}
 		}
 
-		return $response->withJson($data);
+		return $worker;
 	}
 }
