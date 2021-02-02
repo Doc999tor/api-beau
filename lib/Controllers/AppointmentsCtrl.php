@@ -1,12 +1,20 @@
 <?php
 namespace Lib\Controllers;
 
+use Slim\Container as Container;
 use \Lib\Controllers\Controller as Controller;
 use \Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class AppointmentsCtrl extends Controller {
+	private $faker;
+
+	function __construct(Container $container) {
+		parent::__construct($container);
+		$this->faker = \Faker\Factory::create();
+	}
+
 	public function getCalendar (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 
@@ -44,8 +52,10 @@ class AppointmentsCtrl extends Controller {
 				$period = new \DatePeriod($start, new \DateInterval('P1D'), $end);
 
 				$appointments = [];
+				$days_count = 0;
 				foreach ($period as $date) {
-					if (!rand(0,5)) { continue; } # randomly no events
+					if (!rand(0,3)) { continue; } # randomly no events
+					if (++$days_count > 100) { break; }
 
 					$hours_range = range(10, 19);
 					shuffle($hours_range);
@@ -156,8 +166,6 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function generateAppointment(\DateTime $start) {
-		$faker = \Faker\Factory::create();
-
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
 		$phone = rand(1000000, 999999999);
@@ -186,10 +194,10 @@ class AppointmentsCtrl extends Controller {
 					'phone' => '0' . $phone,
 					'phone_canonical' => '+38' . $phone,
 					'client_id' => (string) $client_id,
-					'name' => $faker->name,
+					'name' => $this->faker->name,
 					'profile_picture' => $client_id . '.jpg',
 					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
-					'status' => $faker->sentence(rand(1,15)),
+					'status' => $this->faker->sentence(rand(1,15)),
 				];
 			}
 			$appointment['clients'] = $clients;
@@ -198,17 +206,17 @@ class AppointmentsCtrl extends Controller {
 		if (rand(0,5)) {
 			$client_id = rand(1, 120);
 			$appointment['client_id'] = (string) $client_id;
-			$appointment['name'] = $faker->name;
+			$appointment['name'] = $this->faker->name;
 			$appointment['profile_picture'] = $client_id . '.jpg';
 			$appointment['permit_ads'] = (bool) rand(0,3);
 			$appointment['is_unsubscribed'] = !rand(0,4);
 			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
 		}
 		if (rand(0,1)) {
-			$appointment['address'] = $faker->address;
+			$appointment['address'] = $this->faker->address;
 		}
 		if (rand(0,1)) {
-			$appointment['note'] = implode('\n', $faker->paragraphs(rand(1,3)));
+			$appointment['note'] = implode('\n', $this->faker->paragraphs(rand(1,3)));
 		}
 		if (!rand(0,10)) {
 			$appointment['is_new_client'] = true;
@@ -220,7 +228,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['has_debt'] = true;
 		}
 		if (!rand(0,3)) {
-			$appointment['status'] = $faker->sentence(rand(1,15));
+			$appointment['status'] = $this->faker->sentence(rand(1,15));
 		}
 
 		if (!rand(0,4)) {

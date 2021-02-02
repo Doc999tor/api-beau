@@ -2,6 +2,8 @@
 namespace Lib\Helpers;
 
 class Utils {
+	public static $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
 	public static function returnBytes (string $val):int {
 		$val = trim($val);
 		$last = strtolower($val[strlen($val)-1]);
@@ -20,12 +22,11 @@ class Utils {
 	public static function generateWord (int $word_min_length = 2, int $word_max_length = 12) {
 		if (!mt_rand(0,4)) {return '';}
 		// $letters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת'];
-		$letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 		$word_length = mt_rand($word_min_length, $word_max_length);
 
 		$name = '';
 		for ($i=0; $i < $word_length; $i++) {
-			$name .= $letters[mt_rand(0, count($letters)-1)];
+			$name .= self::$letters[mt_rand(0, count(self::$letters)-1)];
 		}
 		return $name;
 	}
