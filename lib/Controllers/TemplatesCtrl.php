@@ -86,7 +86,13 @@ class TemplatesCtrl extends Controller {
 
 
 		if ($is_correct) {
-			return $response->withStatus(rand(0,3) ? 201 : 409); # 409 means no sms credits
+			if (rand(0,3)) {
+				return $response->withStatus(201);
+			} else if (rand(0,2)) {
+				return $response->withStatus(409); # 409 means no sms credits
+			} else {
+				return $response->withStatus(451); # 451 means sender phone number is not approved / confirmed
+			}
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>\n" . $msg);
