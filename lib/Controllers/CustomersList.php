@@ -92,12 +92,22 @@ class CustomersList extends Controller {
 		return $client;
 	}
 
+	public function validatePhoneNumber (Request $request, Response $response, array $args):Response {
+		$body = $request->getParsedBody();
+		$phone = filter_var($body['phone'], FILTER_SANITIZE_STRING);
+
+		if (!preg_match('/^[\d\s()+*#-]+$/', $phone)) {
+			return $response->withStatus(422);
+		} else {
+			return $response;
+		}
+	}
 	public function checkPhoneNumberExists (Request $request, Response $response, array $args):Response {
 		$number = filter_var($args['number'], FILTER_SANITIZE_STRING);
 
 		$body = $response->getBody();
 
-		if (!preg_match('/^[\d()+\-*\/]+$/', $number)) {
+		if (!preg_match('/^[\d\s()+*#-]+$/', $number)) {
 			$body->write("the number - $number is incorrect");
 			return $response->withStatus(400);
 		}

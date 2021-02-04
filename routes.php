@@ -70,7 +70,8 @@ $app->group('/customers-list', function () use ($app) {
 	$app->delete('/clients', $prefix . 'deleteClients');
 	// $app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)*}', $prefix . 'deleteClients');
 
-	$app->get   ('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
+	$app->post('/clients/validate', $prefix . 'validatePhoneNumber');
+	$app->get ('/clients/check-phone-number-exists/{number}', $prefix . 'checkPhoneNumberExists');
 });
 
 ### Groups
