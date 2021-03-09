@@ -58,8 +58,9 @@ class CustomersList extends Controller {
 	public static function generateClients($limit, $q = '') {
 		$clients = [];
 
-		for ($i=0; $i < $limit; $i++) {
-			$clients []= self::generateClient($q);
+		++$limit;
+		for ($i=1; $i < $limit; $i++) {
+			$clients []= self::generateClient($q, $i);
 		}
 
 		return $clients;
