@@ -79,9 +79,14 @@ class CustomersList extends Controller {
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
 			$client['phone_canonical'] = '+38' . $phone;
+			$client['email'] = Utils::generateWord() . '@repito.app';
+			$client['gender'] = rand(0,3) ? 'male' : 'female';
 		}
 		if (rand(0,2)) {
 			$client['address'] = Utils::getRandomAddress();
+			$birthdate = (new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')); // new date between 15-50 years ago;
+			$client['birthdate'] = $birthdate->format('m-d');
+			$client['birthyear'] = $birthdate->format('Y');
 		}
 		if (rand(0,5)) {
 			$client['last_appointment'] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
