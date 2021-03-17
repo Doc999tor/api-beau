@@ -38,16 +38,21 @@ class ClientsCtrl extends Controller {
 		return $response->withJson($generated_client);
 	}
 	public function setPersonalData (Request $request, Response $response) {
-		$body = $request->getParsedBody();
+		// PUT with form-data not working with php
+		// $body = $request->getParsedBody();
 
-		$is_body_correct = $this->checkClientData($body);
-		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
-		} else {
-			$body = $response->getBody();
-			$body->write("<br>" . $is_body_correct['msg'] . "<br>");
-			return $response->withStatus(400);
-		}
+		// $is_body_correct = $this->checkClientData($body);
+		// if ($is_body_correct['is_correct']) {
+		// 	$random_id = rand(50, 500);
+		// 	return $response->withJson(["profile_image" => "{$random_id}.jpg", ]);
+		// } else {
+		// 	$body = $response->getBody();
+		// 	$body->write("<br>" . $is_body_correct['msg'] . "<br>");
+		// 	return $response->withStatus(400);
+		// }
+
+		$random_id = rand(50, 500);
+		return $response->withJson(["profile_image" => "{$random_id}.jpg", ]);
 	}
 
 	public function setProfileImage (Request $request, Response $response):Response {
