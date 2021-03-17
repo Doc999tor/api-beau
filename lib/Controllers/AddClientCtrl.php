@@ -81,7 +81,8 @@ class AddClientCtrl extends Controller {
 		// }
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
-			return $response->withStatus(rand(0,3) ? 201 : 409);
+			$random_id = rand(50, 500);
+			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson(["id" => $random_id, "profile_image" => "{$random_id}.jpg", ]);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);

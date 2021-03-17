@@ -54,7 +54,7 @@ $app->group('/add-client', function () use ($app) {
 	$app->get('/', $prefix . 'index');
 	$app->get('/clients',    $prefix . 'getClients');
 	$app->get('/clients/{id:\d+}', $prefix . 'getClient');
-	$app->post  ('/clients', $prefix . 'addClient')->add(new ReturnID());
+	$app->post  ('/clients', $prefix . 'addClient');
 
 	$app->get('/media', $prefix . 'getMedia');
 });
