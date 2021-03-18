@@ -75,6 +75,7 @@ class CustomersList extends Controller {
 			'permit_ads' => (bool) rand(0,3),
 			'is_unsubscribed' => !rand(0,4),
 			'status' => Utils::generatePhrase('', 1, 4),
+			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
