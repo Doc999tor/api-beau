@@ -9,29 +9,29 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class TimelineCtrl extends Controller {
-	public function getAppoinments (Request $request, Response $response):Response {
+	public function getAppointments (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('appointments', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('appointments'));
 	}
 	public function getGallery (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('gallery', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('gallery'));
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('depts', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('depts'));
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('notes', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('notes'));
 	}
 	public function getSms (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('sms', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('sms'));
 	}
 	public function getPunchCards (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('punch_cards', $params['start'], $params['end']), 200, JSON_PRETTY_PRINT);
+		return $response->withJson($this->timelineGenericMethod('punch_cards'));
 	}
 
 	private function generateAppointments(\DateTime $date) {
@@ -171,23 +171,28 @@ class TimelineCtrl extends Controller {
 		return $note;
 	}
 
-	private function timelineGenericMethod ($name, $start, $end): array {
-		$start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
-		$end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
+	private function timelineGenericMethod (string $name): array {
+		// $start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
+		// $end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
 
-		$dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
+		// $dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
+
+		$start = (new \DateTime())->sub(new \DateInterval('P' . rand(0,200) . 'D'));
+		$end = $name === 'appointments'
+			? (new \DateTime())->add(new \DateInterval('P' . rand(0,10) . 'D'))
+			: new \DateTime();
+		$dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end);
 
 		$dates = array_map(function ($date) {
 			return $date->add(new \DateInterval('PT' . ((rand(0,16)+20)*30) . 'M')); # adds some random times between 10:00-18:00
 		}, array_values(array_filter(iterator_to_array($dates_collection), function () {
-			return rand(1,2) % 2;
+			return rand(0,1);
 		})));
 
 		$data = array_map(function (\DateTime $date) use ($name) {
 			return $this->{'generate' . ucfirst($name)}($date);
 		}, $dates);
 
-		// return ["name" => $name, "data" => $data, "is_end" => !(rand(1, 5) % 5)]; # temporary for Mykola request
 		return $data; # [data => []] is deprecated
 	}
 }
