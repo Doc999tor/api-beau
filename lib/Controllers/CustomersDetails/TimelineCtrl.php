@@ -34,7 +34,7 @@ class TimelineCtrl extends Controller {
 		return $response->withJson($this->timelineGenericMethod('punch_cards'));
 	}
 
-	private function generateAppointments(\DateTime $date) {
+	private function generateAppointments(\DateTime $date, int $id) {
 		$services_count = rand(1, 5);
 		$is_deleted = !(rand(1, 5) % 5);
 
@@ -44,10 +44,11 @@ class TimelineCtrl extends Controller {
 		$end = (clone $date)->add(new \DateInterval('PT' . (rand(1,12)*15) . 'M'));
 
 		$appoinment = [
-			"id" => rand(1, 1000),
+			"id" => $id,
 			"start" => $date->format('Y-m-d H:i'),
+			"date" => $date->format('Y-m-d H:i'),
 			"end" => $end->format('Y-m-d H:i'),
-			"added_date" => $added_date->format('Y-m-d'),
+			"added_date" => $added_date->format('Y-m-d H:i'),
 			"worker_id" => rand(1, 5),
 			"worker_name" => Utils::generatePhrase('', 1, 2),
 			"worker_profile_image" => (rand(1,2)%2 ? 1 : Utils::generatePhrase('', 1, 2)) . '.jpg',
@@ -61,22 +62,22 @@ class TimelineCtrl extends Controller {
 			$appoinment['is_deleted'] = true;
 			$deleted_date = clone $date;
 			$deleted_date->sub(new \DateInterval('P' . rand(1, 5) . 'D'));
-			$appoinment['deleted_date'] = $deleted_date->format('Y-m-d');
+			$appoinment['deleted_date'] = $deleted_date->format('Y-m-d H:i');
 		}
 		if (!(rand(1, 3) % 3)) { $appoinment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		if (!(rand(1, 3) % 3)) { $appoinment['location'] = Utils::getRandomAddress(); }
 		return $appoinment;
 	}
-	private function generateGallery(\DateTime $date): array {
+	private function generateGallery(\DateTime $date, int $id): array {
 		$media = [
-			"id" => rand(1, 1000),
-			"date" => $date->format('Y-m-d'),
+			"id" => $id,
+			"date" => $date->format('Y-m-d H:i'),
 			"name" => Utils::generatePhrase('', 1, 1) . '.jpg',
 		];
 		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		return $media;
 	}
-	private function generateDepts(\DateTime $date): array {
+	private function generateDepts(\DateTime $date, int $id): array {
 		$is_note = !(rand(1, 4) % 4);
 
 		$is_deleted = !(rand(1, 5) % 5);
@@ -88,19 +89,19 @@ class TimelineCtrl extends Controller {
 		$modified_date->sub(new \DateInterval('P' . rand(3, 10) . 'D'));
 
 		$dept = [
-			"id" => rand(1, 1000),
+			"id" => $id,
 			"sum" => (string)rand(1,30) . (rand(1,2) % 2 ? '5' : '0'),
-			"date" => $date->format('Y-m-d'),
+			"date" => $date->format('Y-m-d H:i'),
 		];
 		if ($is_note) { $dept['desc'] = Utils::generatePhrase('', 1, 21); }
-		if ($is_modified) { $dept['modified_date'] = $modified_date->format('Y-m-d'); }
+		if ($is_modified) { $dept['modified_date'] = $modified_date->format('Y-m-d H:i'); }
 		if ($is_deleted) {
 			$dept['is_deleted'] = $is_deleted;
-			$dept['deleted_date'] = $deleted_date->format('Y-m-d');
+			$dept['deleted_date'] = $deleted_date->format('Y-m-d H:i');
 		}
 		return $dept;
 	}
-	private function generatePunch_cards(\DateTime $date) {
+	private function generatePunch_cards(\DateTime $date, int $id) {
 		$service_count = rand(3, 10);
 		$is_punch_created = !(rand(1,5) % 5);
 		$punch_card = [
@@ -137,37 +138,37 @@ class TimelineCtrl extends Controller {
 		// 		$added_interval = rand(3, 10);
 		// 		$added_date = clone $date;
 		// 		$added_date->sub(new \DateInterval("P{$added_interval}D"));
-		// 		$punch_card['date'] = $added_date->format('Y-m-d');
+		// 		$punch_card['date'] = $added_date->format('Y-m-d H:i');
 		// 		$use_date = clone $date;
 		// 		$use_date->sub(new \DateInterval('P' . rand(1, $added_interval - 1) . 'DT' . rand(8, 16) . 'H'));
 		// 		$punch_card['uses'] = [
 		// 			["id" => rand(1, 150), "date" => $use_date->format('Y-m-d H:i'),],
 		// 		];
-		// 		$punch_card['expiration'] = $date->format('Y-m-d');
+		// 		$punch_card['expiration'] = $date->format('Y-m-d H:i');
 		// 		break;
 		// }
 		// return $punch_card;
 	}
-	private function generateSms(\DateTime $date): array {
+	private function generateSms(\DateTime $date, int $id): array {
 		return [
-			"id" => rand(1, 1000),
-			"date" => $date->format('Y-m-d'),
+			"id" => $id,
+			"date" => $date->format('Y-m-d H:i'),
 			"text" => Utils::generatePhrase('', 1, 21),
 		];
 	}
-	private function generateNotes(\DateTime $date): array {
-		$reminder = !(rand(1, 4) % 4);
+	private function generateNotes(\DateTime $date, int $id): array {
+		// $reminder = !(rand(1, 4) % 4);
 		$note = [
-			"id" => rand(1, 1000),
-			"date" => $date->format('Y-m-d'),
+			"id" => $id,
+			"date" => $date->format('Y-m-d H:i'),
 			"text" => Utils::generatePhrase('', 1, 21),
 		];
-		if ($reminder) {
-			$reminder_date = clone $date;
-			$reminder_date->add(new \DateInterval('P' . rand(1, 15) . 'D'));
-			$note['reminder'] = $reminder;
-			$note['reminder_date'] = $reminder_date->format('Y-m-d');
-		}
+		// if ($reminder) {
+		// 	$reminder_date = clone $date;
+		// 	$reminder_date->add(new \DateInterval('P' . rand(1, 15) . 'D'));
+		// 	$note['reminder'] = $reminder;
+		// 	$note['reminder_date'] = $reminder_date->format('Y-m-d H:i');
+		// }
 		return $note;
 	}
 
@@ -177,21 +178,21 @@ class TimelineCtrl extends Controller {
 
 		// $dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end->add(new \DateInterval('P1D'))); # DatePeriod returns collection of dates excludes the end date
 
-		$start = (new \DateTime())->sub(new \DateInterval('P' . rand(0,200) . 'D'));
+		$start = (new \DateTime())->setTime(10,0)->sub(new \DateInterval('P' . rand(0,200) . 'D'));
 		$end = $name === 'appointments'
 			? (new \DateTime())->add(new \DateInterval('P' . rand(0,10) . 'D'))
 			: new \DateTime();
 		$dates_collection = new \DatePeriod($start, new \DateInterval('P1D'), $end);
 
 		$dates = array_map(function ($date) {
-			return $date->add(new \DateInterval('PT' . ((rand(0,16)+20)*30) . 'M')); # adds some random times between 10:00-18:00
+			return $date->add(new \DateInterval('PT' . (rand(0,16) * 30) . 'M')); # adds some random times between 10:00-18:00
 		}, array_values(array_filter(iterator_to_array($dates_collection), function () {
 			return rand(0,1);
 		})));
 
-		$data = array_map(function (\DateTime $date) use ($name) {
-			return $this->{'generate' . ucfirst($name)}($date);
-		}, $dates);
+		$data = array_map(function (\DateTime $date, $id) use ($name) {
+			return $this->{'generate' . ucfirst($name)}($date, $id);
+		}, $dates, array_keys($dates));
 
 		return $data; # [data => []] is deprecated
 	}
