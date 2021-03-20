@@ -154,7 +154,7 @@ $app->group('/customers-details', function () use ($app) {
 		# Timeline
 		$app->group('/timeline', function () use ($app, $prefix) {
 			$prefix = 'CustomersDetails\TimelineCtrl:';
-			$app->get('/appointments', $prefix . 'getAppoinments');
+			$app->get('/appointments', $prefix . 'getAppointments');
 			$app->get('/gallery', $prefix . 'getGallery');
 			$app->get('/debts', $prefix . 'getDepts');
 			$app->get('/notes', $prefix . 'getNotes');
