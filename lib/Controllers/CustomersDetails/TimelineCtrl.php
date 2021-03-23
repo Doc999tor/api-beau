@@ -191,7 +191,7 @@ class TimelineCtrl extends Controller {
 		})));
 
 		$data = array_map(function (\DateTime $date, $id) use ($name) {
-			return $this->{'generate' . ucfirst($name)}($date, $id);
+			return $this->{'generate' . ucfirst($name)}($date, $id + 1);
 		}, $dates, array_keys($dates));
 
 		return $data; # [data => []] is deprecated

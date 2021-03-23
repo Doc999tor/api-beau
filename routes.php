@@ -278,7 +278,10 @@ $app->any('/500', function (Request $request, Response $response):Response {
 
 $app->group('/metrics', function () use ($app) {
 	$prefix = 'MetricsCtrl:';
-	$app->post  ('/installation_popup_calendar', $prefix . 'getCalendarInstallationAgreement');
+	// https://api.bewebmaster.co.il/metrics/installation_popup_calendar
+	$app->post  ('/installation_popup_calendar', $prefix . 'addCalendarInstallationMetrics');
+	$app->post  ('/messaging_sms', $prefix . 'addMessagingSmsMetrics');
+	$app->post  ('/messaging_whatsapp', $prefix . 'addMessagingWhatsappMetrics');
 });
 
 $app->group('/filling-up', function () use ($app) {
