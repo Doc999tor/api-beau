@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class MetricsCtrl extends Controller {
 	// https://api.bewebmaster.co.il/metrics/installation_popup_calendar
-	public function getCalendarInstallationAgreement (Request $request, Response $response):Response {
+	public function addCalendarInstallationMetrics (Request $request, Response $response):Response {
 		$rawBody = $request->getBody()->getContents();
 
 		$msg = ''; $is_correct = true;
@@ -19,5 +19,11 @@ class MetricsCtrl extends Controller {
 			$rawBody->write($msg);
 			return $response->withStatus(400);
 		} else { return $response->withStatus(201); }
+	}
+	public function addMessagingSmsMetrics (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	}
+	public function addMessagingWhatsappMetrics (Request $request, Response $response):Response {
+		return $response->withStatus(201);
 	}
 }
