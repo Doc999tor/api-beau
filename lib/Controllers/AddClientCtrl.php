@@ -114,7 +114,7 @@ class AddClientCtrl extends Controller {
 		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= 'birthyear has to be YYYY format, like 1970' . "<br>"; }
 
 		if (isset($body['is_filling_up_sent']) && !in_array($body['is_filling_up_sent'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_filling_up_sent can be true or false' . "<br>"; }
-		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= 'gender can be male or female' . "<br>"; }
+		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= 'gender can be male or female' . "<br>"; }
 
 		if (empty($body['permit_ads']) || !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false only <br>';}
 
