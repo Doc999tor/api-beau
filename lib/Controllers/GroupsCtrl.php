@@ -30,7 +30,7 @@ class GroupsCtrl extends Controller {
 		return $response->withJson($groups);
 	}
 	public function getGroupClients (Request $request, Response $response, array $args):Response {
-		return $response->withJson(rand(0,4) ? CustomersList::generateClients(rand(0, 30)) : []);
+		return $response->withJson(rand(0,4) ? CustomersList::generateClients(rand(100, 1000)) : []);
 	}
 
 	public function add (Request $request, Response $response):Response {
