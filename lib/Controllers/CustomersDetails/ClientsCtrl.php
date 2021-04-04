@@ -183,13 +183,8 @@ class ClientsCtrl extends Controller {
 			if ($val === 'null') { $val = null; }
 		}
 
-		if (!empty($body['phone'])) {
-			$phone = json_decode($body['phone'], true);
-			if (is_null($phone) || !is_array($phone)) { $phone = [ (string) $body['phone'] ]; }
-
-			if (count($phone) !== count(array_filter($phone, [$this, 'isClientPhoneValid']))) {
-				 $is_correct = false; $msg .= ' phone value is incorrect <br>';
-			}
+		if (isset($body['phone']) && $body['phone'] !== 'null' && !$this->isClientPhoneValid($body['phone'])) {
+			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
 
 		if (!empty($body['email']) && strpos($body['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
@@ -219,6 +214,6 @@ class ClientsCtrl extends Controller {
 		return $msg;
 	}
 	private function isClientPhoneValid(/*string */$phone_string): bool {
-		return (bool) preg_match('/^((?![a-zA-Z]).)*$/', $phone_string);
+		return (bool) preg_match('/[^\d\s()+*#-]+$/', $phone_string);
 	}
 }

@@ -101,11 +101,8 @@ class AddClientCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if (isset($body['phone']) && $body['phone'] !== 'null') {
-			$phone_arr = json_decode(urldecode($body['phone']));
-			if (is_null($phone_arr) || !count($phone_arr) || !preg_match('/^[0-9-+*#]+$/', $phone_arr[0])) {
-				 $is_correct = false; $msg .= "phone number doesn't match the pattern - ['/^[0-9-+*#]+$/']<br>";
-			}
+		if (isset($body['phone']) && $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
+			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
 		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
