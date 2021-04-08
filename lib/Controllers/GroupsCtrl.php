@@ -34,7 +34,7 @@ class GroupsCtrl extends Controller {
 	}
 
 	public function add (Request $request, Response $response):Response {
-		$body = $request->getParsedBody();
+		$body = json_decode($request->getBody()->getContents(), true);
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
@@ -92,12 +92,11 @@ class GroupsCtrl extends Controller {
 		}
 
 		if (!$this->validateGroupName($body['name'])) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
-		$clients = json_decode($body['clients'] ?? null);
-		if (!is_array($clients)) {
+		if (!is_array($body['clients'])) {
 			$is_correct = false; $msg .= 'clients empty' . "<br>";
 		} else {
-			if (!$this->validateClientsList($clients)) {
-				$is_correct = false; $msg .= "clients malformed, has to be an array of integers: $body[clients] <br>";
+			if (!$this->validateClientsList($body['clients'])) {
+				$is_correct = false; $msg .= "clients malformed, has to be an array of integers: " . json_encode($body[clients]) . " <br>";
 			}
 		}
 
