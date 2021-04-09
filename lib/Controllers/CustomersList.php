@@ -156,11 +156,10 @@ class CustomersList extends Controller {
 	}
 	public function skipImportBulkClients(Request $request, Response $response) { return $response->withStatus(204); }
 
-	private static function getSourceVariants (): array {
+	public static function getSourceVariants (): array {
 		return ['facebook', 'instagram', 'рекомендация_клиента', 'сайт', 'местная_газета', 'подобрал_на_помойке'];
 	}
-	private static function getTagsVariants (): array {
+	public static function getTagsVariants (): array {
 		return ['лид', 'клиент', 'платит', 'новый', 'старый', 'vip', 'регулярно_ходит', 'давно_не_был', 'не_заплатил', 'опаздывает', ];
 	}
-
 }

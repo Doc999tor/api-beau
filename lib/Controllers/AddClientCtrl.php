@@ -206,4 +206,14 @@ class AddClientCtrl extends Controller {
 			}, $files),
 		]);
 	}
+	public function getSourceVariants (Request $request, Response $response):Response {
+		$options = CustomersList::getSourceVariants();
+		return $response->withJson($options);
+	}
+	public function getTagsVariants (Request $request, Response $response):Response {
+		$options = CustomersList::getTagsVariants();
+		return $response->withJson(
+			array_map(function ($o) { return '#' . $o; }, $options)
+		);
+	}
 }

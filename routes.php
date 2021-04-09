@@ -57,6 +57,8 @@ $app->group('/add-client', function () use ($app) {
 	$app->post  ('/clients', $prefix . 'addClient');
 
 	$app->get('/media', $prefix . 'getMedia');
+	$app->get('/options/source', $prefix . 'getSourceVariants');
+	$app->get('/options/tags', $prefix . 'getTagsVariants');
 });
 
 ### Customers List
