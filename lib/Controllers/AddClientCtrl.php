@@ -90,7 +90,7 @@ class AddClientCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'status', 'address', 'birthdate', 'birthyear', 'is_filling_up_sent', 'gender', 'permit_ads', 'debts', 'notes', 'social', 'source', 'recommended_by', 'added'];
+		$correct_body = ['name', 'phone', 'email', 'status', 'address', 'birthdate', 'birthyear', 'is_filling_up_sent', 'gender', 'permit_ads', 'debts', 'notes', 'social', 'source', 'tags', 'added'];
 
 		$is_correct = true;
 		$msg = '';
@@ -140,15 +140,6 @@ class AddClientCtrl extends Controller {
 			if (!$social_links || count(array_filter($social_links, function ($link) use ($types) {
 				return isset($link->type) && in_array($link->type, $types) && isset($link->url) && $this->isValidUrl($link->url);
 			})) !== count($social_links)) { $is_correct = false; $msg .= 'social_links are malformed' . "<br>"; }
-		}
-
-		if (isset($body['source'])) {
-			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
-			if (!in_array($body['source'], $source_options)) { $is_correct = false; $msg .= 'unknown source_option' . "<br>"; }
-			if ($body['source'] === 'recommendation') {
-				if (!isset($body['recommended_by'])) { $is_correct = false; $msg .= 'recommended_by doesnt exist' . "<br>"; }
-				else if (!preg_match('/^\d+$/', $body['recommended_by'])) { $is_correct = false; $msg .= 'recommended_by client_id has to be integer' . "<br>"; }
-			}
 		}
 
 		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }

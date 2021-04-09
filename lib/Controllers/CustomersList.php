@@ -69,7 +69,7 @@ class CustomersList extends Controller {
 		$id = $id ?? rand(0, 300);
 		$phone = rand(1000000, 999999999);
 
-		$source = '';
+		$source = null;
 		if (rand(0,3)) {
 			$source_variants = self::getSourceVariants();
 			$source = $source_variants[array_rand($source_variants)];
@@ -90,7 +90,7 @@ class CustomersList extends Controller {
 			'is_unsubscribed' => !rand(0,4),
 			'status' => Utils::generatePhrase('', 1, 4),
 			'source' => $source,
-			'tags' => $tags ? '#' . $tags : $tags,
+			'tags' => $tags ? '#' . $tags : null,
 			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
 		];
 		if (rand(0,3)) {
