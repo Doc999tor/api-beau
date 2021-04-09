@@ -171,7 +171,7 @@ class ClientsCtrl extends Controller {
 	}
 
 	private function checkClientData ($body) {
-		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'status', 'source', 'permit_ads'];
+		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'note', 'source', 'permit_ads'];
 
 		$is_correct = true;
 		$msg = '';
@@ -192,7 +192,7 @@ class ClientsCtrl extends Controller {
 		if (!empty($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= ' birthyear is incorrect, it has to be YYYY format, like ' . (new \DateTime())->format('YYYY') . ' or null <br>';}
 		if (!empty($body['gender']) && !in_array($body['gender'], ['male', 'female'])) { $is_correct = false; $msg .= ' gender can be null, male or female <br>';}
 		if (!empty($body['isFavorite']) && !in_array($body['isFavorite'], ['true', 'false'])) { $is_correct = false; $msg .= ' isFavorite value is incorrect <br>';}
-		if (!empty($body['status']) && mb_strlen($body['status']) < 2) { $is_correct = false; $msg .= ' status value is too short <br>';}
+		if (!empty($body['note']) && mb_strlen($body['note']) < 2) { $is_correct = false; $msg .= ' note value is too short <br>';}
 		if (!empty($body['address']) && mb_strlen($body['address']) < 4) { $is_correct = false; $msg .= ' address is too short <br>';}
 
 		if (!empty($body['source'])) {
