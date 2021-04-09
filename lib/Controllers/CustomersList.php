@@ -68,6 +68,20 @@ class CustomersList extends Controller {
 	public static function generateClient($q = '', $id = null) {
 		$id = $id ?? rand(0, 300);
 		$phone = rand(1000000, 999999999);
+
+		$source = null;
+		if (rand(0,3)) {
+			$source_variants = self::getSourceVariants();
+			$source = $source_variants[array_rand($source_variants)];
+		}
+
+		$tags = '';
+		if (rand(0,3)) {
+			$tags_variants = self::getTagsVariants();
+			shuffle($tags_variants);
+			$tags = implode(' #', array_slice($tags_variants, 0, rand(0, count($tags_variants) / 2)));
+		}
+
 		$client = [
 			'id' => $id,
 			'profile_image' => "{$id}.jpg",
@@ -75,12 +89,14 @@ class CustomersList extends Controller {
 			'permit_ads' => (bool) rand(0,3),
 			'is_unsubscribed' => !rand(0,4),
 			'status' => Utils::generatePhrase('', 1, 4),
+			'source' => $source,
+			'tags' => $tags ? '#' . $tags : null,
 			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
 			$client['phone_canonical'] = '+38' . $phone;
-			$client['email'] = Utils::generateWord() . '@repito.app';
+			$client['email'] = Utils::generateWord() . '@email.com';
 			$client['gender'] = rand(0,3) ? 'male' : 'female';
 		}
 		if (rand(0,2)) {
@@ -139,4 +155,11 @@ class CustomersList extends Controller {
 		}
 	}
 	public function skipImportBulkClients(Request $request, Response $response) { return $response->withStatus(204); }
+
+	public static function getSourceVariants (): array {
+		return ['facebook', 'instagram', 'рекомендация_клиента', 'сайт', 'местная_газета', 'подобрал_на_помойке'];
+	}
+	public static function getTagsVariants (): array {
+		return ['лид', 'клиент', 'платит', 'новый', 'старый', 'vip', 'регулярно_ходит', 'давно_не_был', 'не_заплатил', 'опаздывает', ];
+	}
 }
