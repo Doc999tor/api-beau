@@ -88,7 +88,7 @@ class CustomersList extends Controller {
 			'name' => Utils::generatePhrase($q, 1, 2),
 			'permit_ads' => (bool) rand(0,3),
 			'is_unsubscribed' => !rand(0,4),
-			'status' => Utils::generatePhrase('', 1, 4),
+			'note' => Utils::generatePhrase('', 1, 4),
 			'source' => $source,
 			'tags' => $tags ? '#' . $tags : null,
 			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
