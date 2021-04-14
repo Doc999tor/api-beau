@@ -4,6 +4,7 @@ namespace Lib\Controllers;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Lib\Helpers\Utils;
 
 class ServicesCtrl extends Controller {
 	public function getAll (Request $request, Response $response) {
@@ -34,6 +35,29 @@ class ServicesCtrl extends Controller {
 		$response = $response->withHeader('Access-Control-Allow-Origin', '*')->withHeader('X-Robots-Tag', 'noindex, nofollow');
 		return $response->withJson($services);
 	}
+	public function getAllRT (Request $request, Response $response) {
+		$categories = [];
+
+		$categories_count = rand(0, 5);
+		$service_id = 0;
+		for ($i=1; $i <= $categories_count; $i++) {
+			$services = [];
+			$services_count = rand(0, 10);
+			for ($k=1; $k <= $services_count; $k++) {
+				$service = self::generateServiceRT(++$service_id);
+				$services []= $service;
+			}
+
+			$category = [
+				"category_id" => $i,
+				"category_name" => Utils::generateWord(5),
+				"services" => $services,
+			];
+			$categories []= $category;
+		}
+
+		return $response->withJson($categories);
+	}
 
 	public function getBI (Request $request, Response $response):Response {
 		$BI_LIMIT = 6;
@@ -51,27 +75,36 @@ class ServicesCtrl extends Controller {
 		return $response->withJson(self::generateService(filter_var($args['service_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
+	public static function generateServiceRT(int $id): array {
+		return [
+			"service_id" => $id,  // AvodaID
+			"service_name" => Utils::generatePhrase('', 1, 6), // Name
+			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
+			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
+			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
+		];
+	}
 	public static function generateService($id, $q = '', $is_one_category = false) {
 		$possible_categories = $is_one_category ? ['sole category'] : ['Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
 		$category_id = array_rand($possible_categories);
 
 		return [
 			"id" => $id,  // AvodaID
-			"name" => \Lib\Helpers\Utils::generatePhrase($q, 1, 6), // Name
-			"duration" => 15 * \Lib\Helpers\Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
-			"price" => 50 * \Lib\Helpers\Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
+			"name" => Utils::generatePhrase($q, 1, 6), // Name
+			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
+			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
 				"id" => $category_id + 1, // smallint, SpecializationID. id is 1-based
 				"name" => $possible_categories[$category_id] // Name
 			],
-			// "shortName" => \Lib\Helpers\Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
+			// "shortName" => Utils::generatePhrase($q, 1, 3, 2, 7), // ShortName
 		];
 	}
 	public static function generateServiceCalendar ($id) {
 		return [
 			"id" => $id,  // AvodaID
-			"name" => \Lib\Helpers\Utils::generatePhrase('', 1, 6), // Name
+			"name" => Utils::generatePhrase('', 1, 6), // Name
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			'count' => rand(1, 3),
 		];

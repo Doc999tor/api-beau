@@ -244,6 +244,7 @@ $app->group('/catalog/services', function () use ($app) {
 	$prefix = 'ServicesCtrl:';
 
 	$app->get    ('',    $prefix . 'getAll');
+	$app->get    ('/rt',    $prefix . 'getAllRT');
 	$app->get    ('/bi', $prefix . 'getBI');
 	$app->get    ('/{service_id:\d+}', $prefix . 'getService');
 	$app->put    ('/{service_id:\d+}', $prefix . 'update');
