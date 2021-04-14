@@ -278,6 +278,12 @@ $app->any('/502', function (Request $request, Response $response):Response {
 $app->any('/500', function (Request $request, Response $response):Response {
 	return $response->withStatus(500);
 });
+$app->get('/helpers/empty-array', function (Request $request, Response $response):Response {
+	return $response->withJson([]);
+});
+$app->get('/helpers/empty-object', function (Request $request, Response $response):Response {
+	return $response->withJson((object) null);
+});
 
 $app->group('/metrics', function () use ($app) {
 	$prefix = 'MetricsCtrl:';
