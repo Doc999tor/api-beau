@@ -14,7 +14,7 @@ class PunchCardsCtrl extends Controller {
 		}
 
 		for ($i=0, $punch_cards_count = rand(1,5); $i < $punch_cards_count; $i++) {
-			$punch_cards []= $this->generatePunchCard();
+			$punch_cards []= $this->generatePunchCard($i+1);
 		}
 		$punch_cards[0]['id'] = 1;
 		$punch_cards[0]['service_id'] = 1;
@@ -95,8 +95,8 @@ class PunchCardsCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 
-	public function generatePunchCard() {
-		$punch_card = [ "id" => rand(1, 51) ];
+	public function generatePunchCard(int $i) {
+		$punch_card = [ "id" => $i ];
 
 		$service = \Lib\Controllers\ServicesCtrl::generateService(rand(1, 45));
 		$punch_card['service_name'] = $service['name'];

@@ -105,7 +105,7 @@ class TimelineCtrl extends Controller {
 		$service_count = rand(3, 10);
 		$is_punch_created = !(rand(1,5) % 5);
 		$punch_card = [
-			'id' => rand(1, 10),
+			'id' => $id,
 			'date' => $date->format('Y-m-d H:i'),
 			'service_name' => Utils::generatePhrase('', 1, 3),
 			'service_count' => $service_count,
