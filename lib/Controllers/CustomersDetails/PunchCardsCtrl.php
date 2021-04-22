@@ -8,24 +8,22 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
 	public function get (Request $request, Response $response):Response {
-
-		$referrer = $request->getHeader('HTTP_REFERER');
-		preg_match('/^.*\/(?<punch_card_id>\d+)$/', $referrer[0], $matches);
-		$punch_card_id = $matches['punch_card_id'] ?? rand(1,10);
-
 		$punch_cards = [];
+		if (!rand(0,3)) {
+			return $response->withJson([]);
+		}
 
-		for ($i=0, $punch_cards_count = rand(1,3); $i < $punch_cards_count; $i++) {
+		for ($i=0, $punch_cards_count = rand(1,5); $i < $punch_cards_count; $i++) {
 			$punch_cards []= $this->generatePunchCard();
 		}
-		$punch_cards[0]['id'] = (int) $punch_card_id;
+		$punch_cards[0]['id'] = 1;
 		$punch_cards[0]['service_id'] = 1;
 
 		return $response->withJson($punch_cards);
 	}
 
 	public function add (Request $request, Response $response) {
-		$body = $request->getParsedBody();
+		$body = json_decode($request->getBody()->getContents(), true);
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
@@ -76,7 +74,7 @@ class PunchCardsCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['service_id', 'service_count', 'sum', 'added', 'expiration'];
+		$correct_body = ['service_id', 'service_count', 'sum', 'sum_before_discount', 'added', 'expiration'];
 
 		$is_correct = true;
 		$msg = '';
@@ -89,6 +87,7 @@ class PunchCardsCtrl extends Controller {
 		if (isset($body['service_id']) && !ctype_digit($body['service_id'])) { $is_correct = false; $msg .= 'service_id has to be an integer' . "<br>"; }
 		if (isset($body['service_count']) && !ctype_digit($body['service_count'])) { $is_correct = false; $msg .= 'service_count has to be an integer' . "<br>"; }
 		if (isset($body['sum']) && !ctype_digit($body['sum'])) { $is_correct = false; $msg .= 'sum has to be an integer' . "<br>"; }
+		if (isset($body['sum_before_discount']) && !ctype_digit($body['sum_before_discount'])) { $is_correct = false; $msg .= 'sum_before_discount has to be an integer' . "<br>"; }
 		if (isset($body['added']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 
 		if (isset($body['expiration']) && !\DateTime::createFromFormat('Y-m-d', $body['expiration'])) { $is_correct = false; $msg .= 'expiration has to be Y-m-d format, like 1970-01-01' . "<br>"; }
@@ -105,14 +104,15 @@ class PunchCardsCtrl extends Controller {
 
 		$possible_service_counts = [3, 5, 7, 10, 20];
 		$punch_card['service_count'] = $possible_service_counts[array_rand($possible_service_counts)]; // array_rand returns a random key
-		$punch_card['sum'] = ($punch_card['service_count'] - 1*rand(0,1)) * $service['price'];
+		$punch_card['sum_before_discount'] = $punch_card['service_count'] * $service['price'];
+		$punch_card['sum'] = ($punch_card['service_count'] - 1*rand(0.5, 1)) * $service['price'];
 
 		$punch_card['added'] = (new \DateTime())
-			->modify(rand(0,180) . ' days ago')
+			->modify(rand(90, 180) . ' days ago')
 			->format('Y-m-d');
 
+		$punch_card['uses'] = [];
 		if (rand(0,1)) {
-			$punch_card['uses'] = [];
 			$uses_count = (new \DateTime())->diff(new \DateTime($punch_card['added']))->m;
 
 			for ($i=1; $i <= $uses_count; $i++) {
@@ -129,7 +129,7 @@ class PunchCardsCtrl extends Controller {
 
 		if (rand(1, 3) % 3) {
 			$punch_card['expiration'] = (new \DateTime())
-				->modify('+' . rand(0,6) . ' month')
+				->modify('+' . (rand(0,1) ? rand(0,6) : rand(-1,-3)) . ' month')
 				->modify('last day of')
 				->format('Y-m-d');
 		}
