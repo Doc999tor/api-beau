@@ -101,6 +101,7 @@ class PunchCardsCtrl extends Controller {
 		$service = \Lib\Controllers\ServicesCtrl::generateService(rand(1, 45));
 		$punch_card['service_name'] = $service['name'];
 		$punch_card['service_id'] = $service['id'];
+		$punch_card['service_color'] = $service['color'];
 
 		$possible_service_counts = [3, 5, 7, 10, 20];
 		$punch_card['service_count'] = $possible_service_counts[array_rand($possible_service_counts)]; // array_rand returns a random key
