@@ -195,6 +195,7 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/google-calendar-client-key', 'SettingsCtrl:getGoogleContactsAPIKey');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
+	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 
 	$app->put('/calendar/calendar_view', 'CalendarSettingsCtrl:setCalendarView');
 	$app->put('/calendar/view_starts_on', 'CalendarSettingsCtrl:setViewStartsOn');
