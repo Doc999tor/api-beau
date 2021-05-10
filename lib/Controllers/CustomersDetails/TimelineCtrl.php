@@ -109,6 +109,7 @@ class TimelineCtrl extends Controller {
 			'date' => $date->format('Y-m-d H:i'),
 			'service_name' => Utils::generatePhrase('', 1, 3),
 			'service_count' => $service_count,
+			'service_color' => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)),
 			'use_id' => $is_punch_created ? null : rand(1, $service_count),
 			'event_type' => $is_punch_created ? 'punch_card_created' : 'punch_card_used',
 		];

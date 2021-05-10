@@ -42,4 +42,13 @@ class SettingsCtrl extends Controller {
 			])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
+	public function signLegal (Request $request, Response $response) {
+		$body = $request->getParsedBody();
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) {
+			$response_body = $response->getBody();
+			$response_body->write('added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>');
+			return $response->withStatus(400);
+		}
+		return $response->withStatus(201);
+	}
 }
