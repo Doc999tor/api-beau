@@ -175,6 +175,21 @@ class ServicesCtrl extends Controller {
 		}
 	}
 
+	public function renameCategory (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$name = filter_var($body['name'], FILTER_SANITIZE_STRING);
+
+		$is_correct = true; $msg = '';
+		if (empty($name)) { $is_correct = false; $msg .= "name cannot be empty<br>"; }
+
+		if ($is_correct) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $msg);
+			return $response->withStatus(400);
+		}
+	}
 	public function deleteCategory (Request $request, Response $response):Response {
 		if ($request->getBody()->getSize()) {
 			$body = $response->getBody();
