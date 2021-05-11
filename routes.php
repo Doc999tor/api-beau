@@ -244,16 +244,17 @@ $app->group('/settings', function () use ($app) {
 $app->group('/catalog/services', function () use ($app) {
 	$prefix = 'ServicesCtrl:';
 
-	$app->get    ('',    $prefix . 'getAll');
-	$app->get    ('/rt',    $prefix . 'getAllRT');
-	$app->get    ('/bi', $prefix . 'getBI');
-	$app->get    ('/{service_id:\d+}', $prefix . 'getService');
-	$app->put    ('/{service_id:\d+}', $prefix . 'update');
-	$app->delete ('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete')->add(new Return422());
-	$app->post   ('', $prefix . 'add')->add(new ReturnID());
+	$app->get   ('',    $prefix . 'getAll');
+	$app->get   ('/rt',    $prefix . 'getAllRT');
+	$app->get   ('/bi', $prefix . 'getBI');
+	$app->get   ('/{service_id:\d+}', $prefix . 'getService');
+	$app->put   ('/{service_id:\d+}', $prefix . 'update');
+	$app->delete('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete')->add(new Return422());
+	$app->post  ('', $prefix . 'add')->add(new ReturnID());
 
-	$app->post   ('/categories', $prefix . 'addCategory')->add(new ReturnID());
-	$app->delete ('/categories/{category_id:\d+}', $prefix . 'deleteCategory');
+	$app->post  ('/categories', $prefix . 'addCategory')->add(new ReturnID());
+	$app->put   ('/categories/{category_id:\d+}', $prefix . 'renameCategory');
+	$app->delete('/categories/{category_id:\d+}', $prefix . 'deleteCategory');
 });
 
 ### SMS Templates
