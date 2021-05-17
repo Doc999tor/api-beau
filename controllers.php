@@ -98,3 +98,6 @@ $container['HomeController'] = function () use ($container) {
 $container['MetricsCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\MetricsCtrl($container);
 };
+$container['AquaPlantsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\AquaPlantsCtrl($container);
+};

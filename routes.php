@@ -307,6 +307,9 @@ $app->group('/home', function () use ($app) {
 	$app->post('/contact_us/leads', 'HomeController:contact_us_leads')/*->add(new ReturnID())*/;
 	$app->post('/contact_us', 'HomeController:contact_us')/*->add(new ReturnID())*/;
 });
+$app->group('/aqua_plants', function () use ($app) {
+	$app->post('/order-sdYoqg', 'AquaPlantsCtrl:order')/*->add(new ReturnID())*/;
+});
 // $app->group('/shadeecat/', function () use ($app) {
 // 	$hn = 'Content-Type'; $hv = 'application/json';
 // 	$sh = 'public/shadeecat/'; $j = '.json';
