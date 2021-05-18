@@ -39,7 +39,7 @@ class AquaPlantsCtrl extends Controller {
 			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
 
-		if (empty($order['email']) || strpos($order['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
+		if (!empty($order['email']) && strpos($order['email'], '@') === false) { $is_correct = false; $msg .= ' email is incorrect <br>';}
 		if (empty($order['address']) || mb_strlen($order['address']) < 4) { $is_correct = false; $msg .= ' address is too short <br>';}
 		if (empty($order['city']) || mb_strlen($order['city']) < 2) { $is_correct = false; $msg .= ' city is too short <br>';}
 		if (!isset($order['total_price'])) { $is_correct = false; $msg .= ' total_price is too short <br>';}
@@ -49,7 +49,7 @@ class AquaPlantsCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function isClientPhoneValid(/*string */$phone_string): bool {
-		return (bool) preg_match('/[^\d\s()+*#-]+$/', $phone_string);
+		return !preg_match('/[^\d\s()+*#-]/', $phone_string);
 	}
 	private function isPlantValid($plant): bool {
 		return !empty($plant['id']) && !empty($plant['qty']) && !empty($plant['price']);
