@@ -197,6 +197,10 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 
+	$app->put('/account', 'SettingsCtrl:setAccountInfo');
+	$app->put('/billing_details', 'SettingsCtrl:setBillingDetails');
+	$app->put('/notifications', 'SettingsCtrl:setNotifications');
+
 	$app->put('/calendar/calendar_view', 'CalendarSettingsCtrl:setCalendarView');
 	$app->put('/calendar/view_starts_on', 'CalendarSettingsCtrl:setViewStartsOn');
 	$app->put('/calendar/show_calendar_from', 'CalendarSettingsCtrl:setShowCalendarFrom');
