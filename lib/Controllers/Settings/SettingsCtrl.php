@@ -57,7 +57,7 @@ class SettingsCtrl extends Controller {
 		$is_body_correct = $this->checkAccountBodyCorrectness($body['business_info']);
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(200);
+			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
@@ -89,7 +89,7 @@ class SettingsCtrl extends Controller {
 		$is_body_correct = $this->checkBillingBodyCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(200);
+			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
@@ -121,7 +121,7 @@ class SettingsCtrl extends Controller {
 		$is_body_correct = $this->checkNotificationsBodyCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(200);
+			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
