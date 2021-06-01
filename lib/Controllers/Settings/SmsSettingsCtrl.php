@@ -10,7 +10,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class SmsSettingsCtrl extends Controller {
 
 	public function getCredits (Request $request, Response $response): Response {
-		return $response->withJson([ "sms_credits" => rand(0, 5) ]);
+		return $response->withJson([ "sms_credits" => rand(0, 3) ? rand(0, 50) : 0 ]);
+	}
+	public function getSent (Request $request, Response $response): Response {
+		return $response->withJson([ "sms_sent" => rand(0, 5) ]);
 	}
 	public function fillCredits (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
