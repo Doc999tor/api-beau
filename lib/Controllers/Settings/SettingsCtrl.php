@@ -78,7 +78,7 @@ class SettingsCtrl extends Controller {
 		}
 
 		if (isset($body['name']) && ($body['name'] !== null && mb_strlen($body['name']) < 2)) { $is_correct = false; $msg .= 'name cannot be empty' . "<br>"; }
-		if (isset($body['category']) && ($body['category'] !== null && mb_strlen($body['category']) < 2)) { $is_correct = false; $msg .= 'category cannot be empty' . "<br>"; }
+		if (isset($body['category']) && ($body['category'] !== null && !intval($body['category']))) { $is_correct = false; $msg .= 'category is not valid' . "<br>"; }
 		if (isset($body['phone']) && ($body['phone'] !== null && !$this->isClientPhoneValid($body['phone']))) { $is_correct = false; $msg .= 'phone is not valid' . "<br>"; }
 		if (isset($body['address']) && ($body['address'] !== null && mb_strlen($body['address']) < 2)) { $is_correct = false; $msg .= 'address cannot be empty' . "<br>"; }
 

@@ -233,6 +233,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/application/timezone', 'ApplicationSettingsCtrl:setApplicationTimezone');
 
 	$app->get('/sms/credits', 'SmsSettingsCtrl:getCredits'); // credits_requested_count=100
+	$app->get('/sms/sent', 'SmsSettingsCtrl:getSent'); // credits_requested_count=100
 	$app->post('/sms/fill-credits', 'SmsSettingsCtrl:fillCredits'); // credits_requested_count=100
 	$app->put('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays|automatic_filling_up_sending}/text', 'SmsSettingsCtrl:editTemplate'); // text=template
 	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays|automatic_filling_up_sending}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
