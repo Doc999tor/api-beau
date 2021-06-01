@@ -214,6 +214,6 @@ class ClientsCtrl extends Controller {
 		return $msg;
 	}
 	private function isClientPhoneValid(/*string */$phone_string): bool {
-		return (bool) preg_match('/[^\d\s()+*#-]+$/', $phone_string);
+		return !preg_match('/[^\d\s()+*#-]/', $phone_string);
 	}
 }
