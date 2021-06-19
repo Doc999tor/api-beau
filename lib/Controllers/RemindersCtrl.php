@@ -19,7 +19,6 @@ class RemindersCtrl extends Controller {
 				"text" => Utils::generatePhrase('', 0, 15),
 				"client_id" => $client['id'],
 				"client_name" => $client['name'],
-				"client_phone_canonical" => $client['phone_canonical'],
 				"client_phone_number" => $client['phone'],
 				"client_profile_img" => $client['profile_image'],
 			];

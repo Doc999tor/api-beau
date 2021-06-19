@@ -175,7 +175,6 @@ class AppointmentsCtrl extends Controller {
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
 			'total_price' => (string) (rand(0,50)*10),
 			'phone' => '0' . $phone,
-			'phone_canonical' => '+38' . $phone,
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
@@ -192,7 +191,6 @@ class AppointmentsCtrl extends Controller {
 				$phone = rand(1000000, 999999999);
 				$clients []= [
 					'phone' => '0' . $phone,
-					'phone_canonical' => '+38' . $phone,
 					'client_id' => (string) $client_id,
 					'name' => $this->faker->name,
 					'profile_picture' => $client_id . '.jpg',
