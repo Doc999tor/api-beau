@@ -95,7 +95,6 @@ class CustomersList extends Controller {
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
-			$client['phone_canonical'] = '+38' . $phone;
 			$client['email'] = Utils::generateWord() . '@email.com';
 			$client['gender'] = rand(0,3) ? 'male' : 'female';
 		}

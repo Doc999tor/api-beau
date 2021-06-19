@@ -52,7 +52,7 @@ class ClientsCtrl extends Controller {
 		// }
 
 		$random_id = rand(50, 500);
-		return $response->withJson(["phone_canonical" => '+38' . rand(1000000, 999999999), "profile_image" => "{$random_id}.jpg", ]);
+		return $response->withJson(["phone" => '+38' . rand(1000000, 999999999), "profile_image" => "{$random_id}.jpg", ]);
 	}
 
 	public function setProfileImage (Request $request, Response $response):Response {
