@@ -305,6 +305,8 @@ $app->group('/filling-up', function () use ($app) {
 	$app->patch('', $prefix . ':setPersonalDataFromClient');
 	$app->post ('/photo', $prefix . ':setProfileImageFromClient');
 	$app->post ('/notes', $prefix . ':addNoteFromClient');
+
+	$app->post('/files', 'CustomersDetails\MediaCtrl:addMedia');
 });
 $app->post ('/unsubscribe', 'CustomersDetails\\ClientsCtrl:unsubscribe');
 
