@@ -196,6 +196,7 @@ class AppointmentsCtrl extends Controller {
 					'profile_picture' => $client_id . '.jpg',
 					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
 					'status' => $this->faker->sentence(rand(1,15)),
+					'is_unsubscribed' => (bool) rand(0,1),
 				];
 			}
 			$appointment['clients'] = $clients;
@@ -339,7 +340,7 @@ class AppointmentsCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
+		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DD hh:mm:ss format, like 2017-12 18 02:09:54 <br>'; }
 
 		if (isset($body['client_id']) && !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 		if (isset($body['clients'])) {
@@ -361,12 +362,12 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -376,14 +377,12 @@ class AppointmentsCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if (!in_array($body['off_time'], ['appointment', 'meeting', 'break', 'vacation'])) { $is_correct = false; $msg .= ' off_time can be appointment, meeting, break or vacation only <br>'; }
-
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DDThh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
@@ -392,11 +391,11 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
