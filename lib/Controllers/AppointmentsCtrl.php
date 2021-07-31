@@ -367,7 +367,7 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ['start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -377,7 +377,7 @@ class AppointmentsCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
@@ -387,11 +387,11 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkBreakCorrectness (array $body): array {
-		$correct_body = ['start', 'end', 'worker_id', 'added'];
+		$correct_body = ['start', 'duration', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
-		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))) { $is_correct = false; $msg .= 'start and end have to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
+		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
