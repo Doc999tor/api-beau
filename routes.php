@@ -200,6 +200,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/account', 'SettingsCtrl:setAccountInfo');
 	$app->put('/billing_details', 'SettingsCtrl:setBillingDetails');
 	$app->put('/notifications', 'SettingsCtrl:setNotifications');
+	$app->put('/calendar', 'SettingsCtrl:setCalendarSettings');
 
 	$app->put('/calendar/calendar_view', 'CalendarSettingsCtrl:setCalendarView');
 	$app->put('/calendar/view_starts_on', 'CalendarSettingsCtrl:setViewStartsOn');

@@ -181,6 +181,43 @@ class SettingsCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 
+	public function setCalendarSettings (Request $request, Response $response) {
+		$body = json_decode($request->getBody()->getContents(), true);
+		var_dump($body);
+		$is_body_correct = $this->checkCalendarBodyCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
+	private function checkCalendarBodyCorrectness($body) {
+		$correct_body = ['calendar_view', 'view_starts_on', 'show_calendar_from', 'show_calendar_to', 'slot_duration', 'default_event_length'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff($correct_body, array_keys($body));
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg = implode(', ', $diff_keys) . ' argument should exist';
+		}
+
+		if (empty($body['calendar_view']) || !(in_array($body['calendar_view'], ['daily', 'three_days', 'weekly', 'monthly']))) { $is_correct = false; $msg .= 'calendar_view supposed to be: daily | three_days | weekly | monthly' . "<br>"; }
+		if (!isset($body['view_starts_on']) || !($body['view_starts_on'] >= 0 && $body['view_starts_on'] < 7)) { $is_correct = false; $msg .= 'view_starts_on cannot be empty' . "<br>"; }
+		if (empty($body['show_calendar_from']) || !(\DateTime::createFromFormat('H:i', $body['show_calendar_from']))) { $is_correct = false; $msg .= 'show_calendar_from supposed to be: hh:mm time' . "<br>"; }
+		if (empty($body['show_calendar_to']) || !(\DateTime::createFromFormat('H:i', $body['show_calendar_to']))) { $is_correct = false; $msg .= 'show_calendar_to supposed to be: hh:mm time' . "<br>"; }
+		if (empty($body['slot_duration']) || !(in_array($body['slot_duration'], ['5', '10', '15', '20', '30', '60']))) { $is_correct = false; $msg .= 'slot_duration supposed to be: 5 | 10 | 15 | 20 | 30 | 60' . "<br>"; }
+		if (empty($body['default_event_length']) || !(in_array($body['default_event_length'], ['5', '10', '15', '20', '30', '60', '90', '120']))) { $is_correct = false; $msg .= 'default_event_length supposed to be: 5 | 10 | 15 | 20 | 30 | 60 | 90 | 120' . "<br>"; }
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+
 	private function isClientPhoneValid(/*string */$phone_string): bool {
 		return !preg_match('/[^\d\s()+*#-]/', $phone_string);
 	}
