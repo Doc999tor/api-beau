@@ -111,6 +111,8 @@ class AppointmentsCtrl extends Controller {
 	public function reschedule (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = $request->getParsedBody();
+		// $body = json_decode($request->getBody()->getContents(), true);
+
 		// var_dump(isset($body['end']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']));
 
 		$response_body = $response->getBody();
@@ -181,8 +183,10 @@ class AppointmentsCtrl extends Controller {
 			'is_reminders_set' => (bool)rand(0,1),
 			'off_time' => null,
 		];
+		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
 		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
+
 		if (rand(0,3)) { # group appointment
 			$clients = [];
 			$clients_count = rand(1,5);
