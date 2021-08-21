@@ -72,7 +72,7 @@ class AppointmentsCtrl extends Controller {
 				if (count($appointments)) {
 					$middle_element = round(count($appointments) / 2);
 					$appointments[$middle_element]['client_id'] = 1;
-					$appointments[$middle_element]['profile_picture'] = 'banner (1600x800).jpg';
+					$appointments[$middle_element]['profile_image'] = 'banner (1600x800).jpg';
 				}
 
 				usort($appointments, function ($a, $b) {
@@ -197,7 +197,7 @@ class AppointmentsCtrl extends Controller {
 					'phone' => '0' . $phone,
 					'client_id' => (string) $client_id,
 					'name' => $this->faker->name,
-					'profile_picture' => $client_id . '.jpg',
+					'profile_image' => $client_id . '.jpg',
 					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
 					'status' => $this->faker->sentence(rand(1,15)),
 					'is_unsubscribed' => (bool) rand(0,1),
@@ -210,7 +210,7 @@ class AppointmentsCtrl extends Controller {
 			$client_id = rand(1, 120);
 			$appointment['client_id'] = (string) $client_id;
 			$appointment['name'] = $this->faker->name;
-			$appointment['profile_picture'] = $client_id . '.jpg';
+			$appointment['profile_image'] = $client_id . '.jpg';
 			$appointment['permit_ads'] = (bool) rand(0,3);
 			$appointment['is_unsubscribed'] = !rand(0,4);
 			$appointment['birthdate'] = ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'); // new date between 15-50 years ago;
@@ -242,7 +242,8 @@ class AppointmentsCtrl extends Controller {
 			unset($appointment['birthdate']);
 			unset($appointment['services']);
 			unset($appointment['total_price']);
-			unset($appointment['profile_picture']);
+			unset($appointment['price_before_discount']);
+			unset($appointment['profile_image']);
 			unset($appointment['is_new_client']);
 			unset($appointment['durationEditable']);
 			unset($appointment['has_debt']);
@@ -252,7 +253,8 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	public function addAppointment (Request $request, Response $response):Response {
-		$body = $request->getParsedBody();
+		$body = json_decode($request->getBody()->getContents(), true);
+		// $body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
@@ -260,7 +262,19 @@ class AppointmentsCtrl extends Controller {
 			$status = rand(0,5) ? 201 : 422;
 			if ($status === 201) {
 				$response_obj = $this->createCalendarResponseObj();
-				$response_obj['appointment_id'] = rand(1, 10000);
+
+				$start = new \DateTime($body['start']);
+				$added_appointment = $this->generateAppointment(clone $start);
+				$added_appointment['start'] = $start->format('Y-m-d H:i');
+				$duration = $body['duration'];
+				$added_appointment['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$added_appointment['off_time'] = null;
+				$added_appointment['total_price'] = $body['total_price'];
+				$added_appointment['note'] = $body['note'];
+				$added_appointment['address'] = $body['address'];
+				$added_appointment['worker_id'] = $body['worker_id'];
+
+				$response_obj['appointment_data'] = $added_appointment;
 				return $response->withStatus($status)->withJson($response_obj);
 			} else { return $response->withStatus($status); }
 		} else {
@@ -276,7 +290,21 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['off_time'])) {
 			$is_body_correct = $this->checkAppointmentCorrectness($body);
 			if ($is_body_correct['is_correct']) {
-				return $response->withJson($this->createCalendarResponseObj());
+				$response_obj = $this->createCalendarResponseObj();
+
+				$start = new \DateTime($body['start']);
+				$edited_appointment = $this->generateAppointment(clone $start);
+				$edited_appointment['start'] = $start->format('Y-m-d H:i');
+				$duration = $body['duration'];
+				$edited_appointment['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$edited_appointment['off_time'] = null;
+				$edited_appointment['total_price'] = $body['total_price'];
+				$edited_appointment['note'] = $body['note'];
+				$edited_appointment['address'] = $body['address'];
+				$edited_appointment['worker_id'] = $body['worker_id'];
+
+				$response_obj['appointment_data'] = $edited_appointment;
+				return $response->withJson($response_obj);
 			} else {
 				$body = $response->getBody();
 				$body->write($is_body_correct['msg']);
@@ -344,29 +372,29 @@ class AppointmentsCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		if (!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start'])) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DD hh:mm:ss format, like 2017-12 18 02:09:54 <br>'; }
+		if (!isset($body['start']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['start']))) { $is_correct = false; $msg .= ' start has to be YYYY-MM-DDThh:mm:ss format, like 2017-12 18T02:09:54 <br>'; }
 
 		if (isset($body['client_id']) && !preg_match('/^-?\d+$/', $body['client_id'])) { $is_correct = false; $msg .= 'client_id has to be a positive integer or -1 for occasional client <br>'; }
 		if (isset($body['clients'])) {
-			$clients = json_decode($body['clients']);
+			$clients = $body['clients'];
 			if (count(array_filter($clients, 'is_int')) !== count($clients)) {
 				$is_correct = false; $msg .= 'clients has to be an array of integers, -1 is not permitted <br>';
 			}
 		}
 
-		$services = json_decode($body['services']);
+		$services = is_array($body['services']) ? $body['services'] : json_decode($body['services']);
 		if (gettype($services) !== 'array' || count(array_filter($services, function ($s) {
-			return is_int($s->id) && (empty($s->count) || (!empty($s->count) && is_int($s->count)));
+			return is_int($s['id']) && (empty($s['count']) || (!empty($s['count']) && is_int($s['count'])));
 		})) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of {id: int, count: int} <br>'; }
-		if (!isset($body['duration']) || !ctype_digit($body['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
+		if (!isset($body['duration']) || !is_numeric($body['duration'])) {$is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
-		if (!isset($body['is_reminders_set']) || !in_array($body['is_reminders_set'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
+		if (!isset($body['is_reminders_set']) || (!in_array($body['is_reminders_set'], ['true', 'false']) && !is_bool($body['is_reminders_set']))) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
 
 		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be a number <br>'; }
 
-		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
+		if (!isset($body['worker_id']) || !is_numeric($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>'; }
+		if (!isset($body['added']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['added']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added']))) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
