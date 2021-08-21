@@ -85,7 +85,7 @@ class AddClientCtrl extends Controller {
 			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson([
 				"id" => $random_id,
 				"profile_image" => "{$random_id}.jpg",
-				"phone" => '+38' . rand(1000000, 999999999)
+				"phone" => '+38' . rand(1000000, 999999999),
 			]);
 		} else {
 			$body = $response->getBody();
