@@ -92,7 +92,7 @@ class ServicesCtrl extends Controller {
 			"id" => $id,  // AvodaID
 			"name" => Utils::generatePhrase($q, 1, 6), // Name
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
-			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
+			"price" => Utils::rand_with_average(50, 1000, 300, 0.1) / 10, // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			"category" => [
 				"id" => $category_id + 1, // smallint, SpecializationID. id is 1-based

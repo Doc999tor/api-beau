@@ -56,7 +56,7 @@ class Utils {
 		int $average_end = 50,
 		float $average_probability = 0.1
 	) {
-		return mt_rand(0, 10) / 10 > $average_probability ? floor(mt_rand($start, $average_end)) : floor(mt_rand($start, $end));
+		return mt_rand($start, (mt_rand(0, 10) / 10 > $average_probability) ? $average_end : $end);
 	}
 
 	public static function getRandomAddress(): string {
