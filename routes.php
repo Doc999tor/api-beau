@@ -236,12 +236,13 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/sms/credits', 'SmsSettingsCtrl:getCredits'); // credits_requested_count=100
 	$app->get('/sms/sent', 'SmsSettingsCtrl:getSent'); // credits_requested_count=100
 	$app->post('/sms/fill-credits', 'SmsSettingsCtrl:fillCredits'); // credits_requested_count=100
-	$app->put('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays|automatic_filling_up_sending}/text', 'SmsSettingsCtrl:editTemplate'); // text=template
-	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|greetings_before_birthdays|automatic_filling_up_sending}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
+	$app->put('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|thank_you_for_coming|greetings_before_birthdays|automatic_filling_up_sending}/text', 'SmsSettingsCtrl:editTemplate'); // text=template
+	$app->post('/sms/{setting_canonical_name:new_event|reschedule_event|delete_event|reminders_before_event|thank_you_for_coming|greetings_before_birthdays|automatic_filling_up_sending}/edit-manual', 'SmsSettingsCtrl:sendManualEdit'); // text=sms-text
 	$app->put('/sms/new_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reschedule_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/delete_event', 'SmsSettingsCtrl:shouldSend');
 	$app->put('/sms/reminders_before_event', 'SmsSettingsCtrl:eventReminders'); // should_send=true&mins_before=30
+	$app->put('/sms/thank_you_for_coming', 'SmsSettingsCtrl:eventThankYou'); // should_send=true&mins_before=30
 	$app->put('/sms/greetings_before_birthdays', 'SmsSettingsCtrl:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
 	$app->put('/sms/automatic_filling_up_sending', 'SmsSettingsCtrl:automaticFillingUpSending'); // should_send=true&days_before=1&time_for_sending=16:30
 });
