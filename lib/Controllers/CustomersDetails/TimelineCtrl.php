@@ -43,7 +43,7 @@ class TimelineCtrl extends Controller {
 
 		$end = (clone $date)->add(new \DateInterval('PT' . (rand(1,12)*15) . 'M'));
 
-		$appoinment = [
+		$appointment = [
 			"id" => $id,
 			"start" => $date->format('Y-m-d H:i'),
 			"date" => $date->format('Y-m-d H:i'),
@@ -53,20 +53,22 @@ class TimelineCtrl extends Controller {
 			"worker_name" => Utils::generatePhrase('', 1, 2),
 			"worker_profile_image" => (rand(1,2)%2 ? 1 : Utils::generatePhrase('', 1, 2)) . '.jpg',
 			"services" => array_map(function ($v) {
-				$appoinment = ServicesCtrl::generateService(rand(1, 50));
-				$appoinment['count'] = rand(1,3)>1 ? 1 : rand(1,40);
-				return $appoinment;
+				$appointment = ServicesCtrl::generateService(rand(1, 50));
+				$appointment['count'] = rand(1,3)>1 ? 1 : rand(1,40);
+				return $appointment;
 			}, array_fill(0, $services_count, null)),
+			"total_price" => (string) (rand(0,50)*10),
 		];
+		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);
 		if ($is_deleted) {
-			$appoinment['is_deleted'] = true;
+			$appointment['is_deleted'] = true;
 			$deleted_date = clone $date;
 			$deleted_date->sub(new \DateInterval('P' . rand(1, 5) . 'D'));
-			$appoinment['deleted_date'] = $deleted_date->format('Y-m-d H:i');
+			$appointment['deleted_date'] = $deleted_date->format('Y-m-d H:i');
 		}
-		if (!(rand(1, 3) % 3)) { $appoinment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
-		if (!(rand(1, 3) % 3)) { $appoinment['location'] = Utils::getRandomAddress(); }
-		return $appoinment;
+		if (!(rand(1, 3) % 3)) { $appointment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
+		if (!(rand(1, 3) % 3)) { $appointment['location'] = Utils::getRandomAddress(); }
+		return $appointment;
 	}
 	private function generateGallery(\DateTime $date, int $id): array {
 		$media = [
