@@ -171,11 +171,22 @@ class AppointmentsCtrl extends Controller {
 		$services_count = rand(1, 5);
 		$duration = rand(1, 8) * 30;
 		$phone = rand(1000000, 999999999);
+
+		$total_price = rand(0,50) * 10;
+
+		$prepayment_chances = rand(1,3);
+		if ($prepayment_chances === 1) {
+			$prepayment = $total_price;
+		} else if ($prepayment_chances === 2) {
+			$prepayment = rand(0, $total_price);
+		} else { $prepayment = 0; }
+
 		$appointment = [
 			"id" => (string) rand(1, 1000),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
-			'total_price' => (string) (rand(0,50)*10),
+			'total_price' => (string) $total_price,
+			'prepayment' => (string) $prepayment,
 			'phone' => '0' . $phone,
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
@@ -362,7 +373,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'prepayment', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -391,6 +402,7 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['is_reminders_set']) || (!in_array($body['is_reminders_set'], ['true', 'false']) && !is_bool($body['is_reminders_set']))) {$is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
 
 		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be a number <br>'; }
+		if (!isset($body['prepayment']) || !is_numeric($body['prepayment'])) {$is_correct = false; $msg .= ' prepayment has to be a number <br>'; }
 
 		if (!isset($body['worker_id']) || !is_numeric($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
