@@ -108,7 +108,7 @@ class AppointmentsCtrl extends Controller {
 		return $response->withJson($slots_start_times);
 	}
 
-	public function reschedule (Request $request, Response $response, array $args):Response {
+	public function singleChange (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = $request->getParsedBody();
 		// $body = json_decode($request->getBody()->getContents(), true);
@@ -126,6 +126,13 @@ class AppointmentsCtrl extends Controller {
 		} else if (isset($body['end'])) { # change duration
 			if (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['end'])) {
 				$response_body->write('end has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54');
+				return $response->withStatus(400);
+			} else {
+				return $response->withStatus(204);
+			}
+		} else if (isset($body['is_deleted'])) { # undelete
+			if (!in_array($body['is_deleted'], ['true', 'false'])) {
+				$response_body->write('is_deleted has to be true or false');
 				return $response->withStatus(400);
 			} else {
 				return $response->withStatus(204);
