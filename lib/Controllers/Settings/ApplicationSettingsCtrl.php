@@ -17,6 +17,15 @@ class ApplicationSettingsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function setApplicationStartPage (Request $request, Response $response): Response {
+		$body = $request->getParsedBody();
+		if (isset($body['start_page']) && in_array($body['start_page'], ['clients', 'calendar'])) {
+			return $response->withStatus(204);
+		} else {
+			$response->getBody()->write('start_page supposed to be one of "clients" or "calendar"');
+			return $response->withStatus(400);
+		}
+	}
 	public function setApplicationCurrency (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
 		if (isset($body['currency']) && in_array($body['currency'], ['nis', 'usd', 'eur', 'uah'])) {

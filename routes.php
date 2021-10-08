@@ -230,6 +230,7 @@ $app->group('/settings', function () use ($app) {
 	$app->delete('/user', 'BusinessSettingsCtrl:deleteAccount');
 
 	$app->put('/application/lang', 'ApplicationSettingsCtrl:setApplicationLang');
+	$app->put('/application/start_page', 'ApplicationSettingsCtrl:setApplicationStartPage');
 	$app->put('/application/currency', 'ApplicationSettingsCtrl:setApplicationCurrency');
 	$app->put('/application/timezone', 'ApplicationSettingsCtrl:setApplicationTimezone');
 
