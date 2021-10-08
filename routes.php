@@ -25,7 +25,7 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
-	$app->patch ('/{appointment_id:\d+}', $prefix . 'reschedule');
+	$app->patch ('/{appointment_id:\d+}', $prefix . 'singleChange');
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 
 	$app->get('/settings', $prefix . 'getCalendarSettings');
