@@ -213,6 +213,7 @@ class SettingsCtrl extends Controller {
 		if (empty($body['show_calendar_to']) || !(\DateTime::createFromFormat('H:i', $body['show_calendar_to']))) { $is_correct = false; $msg .= 'show_calendar_to supposed to be: hh:mm time' . "<br>"; }
 		if (empty($body['slot_duration']) || !(in_array($body['slot_duration'], ['5', '10', '15', '20', '30', '60']))) { $is_correct = false; $msg .= 'slot_duration supposed to be: 5 | 10 | 15 | 20 | 30 | 60' . "<br>"; }
 		if (empty($body['default_event_length']) || !(in_array($body['default_event_length'], ['5', '10', '15', '20', '30', '60', '90', '120']))) { $is_correct = false; $msg .= 'default_event_length supposed to be: 5 | 10 | 15 | 20 | 30 | 60 | 90 | 120' . "<br>"; }
+		if (empty($body['address_based']) || !(in_array($body['address_based'], ['true', 'false']))) { $is_correct = false; $msg .= 'address_based supposed to be boolean' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

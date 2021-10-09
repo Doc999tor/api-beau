@@ -72,13 +72,4 @@ class CalendarSettingsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
-	public function setAddressBased(Request $request, Response $response): Response {
-		$body = $request->getParsedBody();
-		if (isset($body['address_based']) && in_array($body['address_based'], ['true', 'false'])) {
-			return $response->withStatus(204);
-		} else {
-			$response->getBody()->write('address_based supposed to be: true | false');
-			return $response->withStatus(400);
-		}
-	}
 }
