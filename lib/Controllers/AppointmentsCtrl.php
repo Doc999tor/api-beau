@@ -131,7 +131,7 @@ class AppointmentsCtrl extends Controller {
 				return $response->withStatus(204);
 			}
 		} else if (isset($body['is_deleted'])) { # undelete
-			if (!in_array($body['is_deleted'], ['true', 'false'])) {
+			if (!is_bool($body['is_deleted'])) {
 				$response_body->write('is_deleted has to be true or false');
 				return $response->withStatus(400);
 			} else {
