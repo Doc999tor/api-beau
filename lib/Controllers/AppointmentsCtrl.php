@@ -130,8 +130,12 @@ class AppointmentsCtrl extends Controller {
 			} else {
 				return $response->withStatus(204);
 			}
+		} else {
+			$response_body->write('body cannot be empty');
+			return $response->withStatus(400);
 		}
 	}
+
 	public function undelete (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = json_decode($request->getBody()->getContents(), true);
