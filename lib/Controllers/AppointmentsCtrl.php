@@ -130,16 +130,18 @@ class AppointmentsCtrl extends Controller {
 			} else {
 				return $response->withStatus(204);
 			}
-		} else if (isset($body['is_deleted'])) { # undelete
-			if (!is_bool($body['is_deleted'])) {
-				$response_body->write('is_deleted has to be true or false');
-				return $response->withStatus(400);
-			} else {
-				return $response->withStatus(204);
-			}
-		} else {
-			$response_body->write('body cannot be empty');
+		}
+	}
+	public function undelete (Request $request, Response $response, array $args):Response {
+		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		$body = $request->getParsedBody();
+
+		if (!is_bool($body['is_deleted'])) {
+			$response_body = $response->getBody();
+			$response_body->write('is_deleted has to be true or false');
 			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
 		}
 	}
 
