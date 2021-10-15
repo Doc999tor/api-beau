@@ -134,7 +134,7 @@ class AppointmentsCtrl extends Controller {
 	}
 	public function undelete (Request $request, Response $response, array $args):Response {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-		$body = $request->getParsedBody();
+		$body = json_decode($request->getBody()->getContents(), true);
 
 		if (!is_bool($body['is_deleted'])) {
 			$response_body = $response->getBody();
