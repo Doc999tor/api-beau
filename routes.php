@@ -25,6 +25,7 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
+	$app->put ('/{appointment_id:\d+}/undelete', $prefix . 'undelete');
 	$app->patch ('/{appointment_id:\d+}', $prefix . 'singleChange');
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 
