@@ -149,6 +149,19 @@ class AppointmentsCtrl extends Controller {
 		}
 	}
 
+	public function pay (Request $request, Response $response, array $args):Response {
+		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		$body = json_decode($request->getBody()->getContents(), true);
+
+		if (!is_numeric($body['prepayment'])) {
+			$response_body = $response->getBody();
+			$response_body->write('prepayment has to be a number');
+			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
+		}
+	}
+
 	public function delete (Request $request, Response $response, array $args):Response {
 		// $appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		return $response->withJson($this->createCalendarResponseObj());
