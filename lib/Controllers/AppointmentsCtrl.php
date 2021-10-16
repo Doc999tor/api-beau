@@ -155,7 +155,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!is_numeric($body['prepayment'])) {
 			$response_body = $response->getBody();
-			$response_body->write('prepayment has to be a zero for now');
+			$response_body->write('prepayment has to be a number');
 			return $response->withStatus(400);
 		} else {
 			return $response->withStatus(204);
