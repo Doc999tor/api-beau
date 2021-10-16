@@ -153,7 +153,7 @@ class AppointmentsCtrl extends Controller {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = json_decode($request->getBody()->getContents(), true);
 
-		if ($body['prepayment'] !== 0) {
+		if (!is_numeric($body['prepayment'])) {
 			$response_body = $response->getBody();
 			$response_body->write('prepayment has to be a zero for now');
 			return $response->withStatus(400);
