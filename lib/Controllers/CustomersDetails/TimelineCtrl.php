@@ -41,6 +41,14 @@ class TimelineCtrl extends Controller {
 		$added_date = clone $date;
 		$added_date->sub(new \DateInterval('P' . rand(3, 10) . 'D'));
 
+		$total_price = rand(0,50) * 10;
+		$prepayment_chances = rand(1,3);
+		if ($prepayment_chances === 1) {
+			$prepayment = $total_price;
+		} else if ($prepayment_chances === 2) {
+			$prepayment = rand(0, $total_price);
+		} else { $prepayment = 0; }
+
 		$end = (clone $date)->add(new \DateInterval('PT' . (rand(1,12)*15) . 'M'));
 
 		$appointment = [
@@ -57,7 +65,8 @@ class TimelineCtrl extends Controller {
 				$appointment['count'] = rand(1,3)>1 ? 1 : rand(1,40);
 				return $appointment;
 			}, array_fill(0, $services_count, null)),
-			"total_price" => (string) (rand(0,50)*10),
+			"total_price" => $total_price,
+			"prepayment" => $prepayment,
 		];
 		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);
 		if ($is_deleted) {
