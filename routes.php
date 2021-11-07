@@ -248,6 +248,10 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/sms/thank_you_for_coming', 'SmsSettingsCtrl:eventThankYou'); // should_send=true&mins_before=30
 	$app->put('/sms/greetings_before_birthdays', 'SmsSettingsCtrl:greetingsBeforeBirthdays'); // should_send=true&days_before=1&time_for_sending=16:30
 	$app->put('/sms/automatic_filling_up_sending', 'SmsSettingsCtrl:automaticFillingUpSending'); // should_send=true&days_before=1&time_for_sending=16:30
+
+	$app->post('/workers', 'WorkersCtrl:addWorker');
+	$app->put('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorker');
+	$app->delete('/workers/{worker_id:\d+}', 'WorkersCtrl:deleteWorker');
 });
 
 ### Catalog
