@@ -72,4 +72,13 @@ class CalendarSettingsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function setIsIncomeShown(Request $request, Response $response): Response {
+		$body = $request->getParsedBody();
+		if (isset($body['is_income_shown']) && in_array($body['is_income_shown'], ['true', 'false'])) {
+			return $response->withStatus(204);
+		} else {
+			$response->getBody()->write('is_income_shown supposed to be: true | false');
+			return $response->withStatus(400);
+		}
+	}
 }
