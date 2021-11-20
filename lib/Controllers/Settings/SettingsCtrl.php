@@ -196,7 +196,15 @@ class SettingsCtrl extends Controller {
 	}
 
 	private function checkCalendarBodyCorrectness($body) {
-		$correct_body = ['calendar_view', 'view_starts_on', 'show_calendar_from', 'show_calendar_to', 'slot_duration', 'default_event_length'];
+		$correct_body = [
+			'calendar_view',
+			'view_starts_on',
+			'show_calendar_from',
+			'show_calendar_to',
+			'slot_duration',
+			'default_event_length',
+			'is_income_shown',
+		];
 
 		$is_correct = true;
 		$msg = '';
@@ -214,6 +222,7 @@ class SettingsCtrl extends Controller {
 		if (empty($body['slot_duration']) || !(in_array($body['slot_duration'], [5, 10, 15, 20, 30, 60]))) { $is_correct = false; $msg .= 'slot_duration supposed to be: 5 | 10 | 15 | 20 | 30 | 60' . "<br>"; }
 		if (empty($body['default_event_length']) || !(in_array($body['default_event_length'], ['5', '10', '15', '20', '30', '60', '90', '120']))) { $is_correct = false; $msg .= 'default_event_length supposed to be: 5 | 10 | 15 | 20 | 30 | 60 | 90 | 120' . "<br>"; }
 		if (!isset($body['address_based']) || !is_bool($body['address_based'])) { $is_correct = false; $msg .= 'address_based supposed to be boolean' . "<br>"; }
+		if (!isset($body['is_income_shown']) || !is_bool($body['is_income_shown'])) { $is_correct = false; $msg .= 'is_income_shown supposed to be boolean' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
