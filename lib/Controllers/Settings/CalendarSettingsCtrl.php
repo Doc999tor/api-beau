@@ -81,4 +81,13 @@ class CalendarSettingsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function importCalendar (Request $request, Response $response) {
+		if (count($request->getUploadedFiles()) && !empty($request->getUploadedFiles()['file'])) {
+			return $response->withStatus(201);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>the file is not correct");
+			return $response->withStatus(400);
+		}
+	}
 }

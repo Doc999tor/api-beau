@@ -183,7 +183,6 @@ class SettingsCtrl extends Controller {
 
 	public function setCalendarSettings (Request $request, Response $response) {
 		$body = json_decode($request->getBody()->getContents(), true);
-		var_dump($body);
 		$is_body_correct = $this->checkCalendarBodyCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
