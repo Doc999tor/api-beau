@@ -212,6 +212,7 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/calendar/allow_multiple_events_on_the_same_time_slot', 'CalendarSettingsCtrl:setAllowMultipleEventsOnTheSameTimeSlot');
 	$app->put('/calendar/allow_scheduling_outside_of_time_slots', 'CalendarSettingsCtrl:setAllowSchedulingOutsideOfTimeSlots');
 	$app->put('/calendar/is_income_shown', 'CalendarSettingsCtrl:setIsIncomeShown');
+	$app->post('/calendar/import', 'CalendarSettingsCtrl:importCalendar');
 
 	$app->put('/business/business_name', 'BusinessSettingsCtrl:setBusinessName');
 	$app->put('/business/business_phone_number', 'BusinessSettingsCtrl:setBusinessPhoneNumber');
