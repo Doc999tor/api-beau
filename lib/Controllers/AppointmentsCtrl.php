@@ -218,6 +218,7 @@ class AppointmentsCtrl extends Controller {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
 			'is_reminders_set' => (bool)rand(0,1),
+			'is_booked_remotely' => (bool)rand(0,1),
 			'off_time' => null,
 		];
 		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);

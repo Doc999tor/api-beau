@@ -74,7 +74,7 @@ class CalendarSettingsCtrl extends Controller {
 	}
 	public function setIsIncomeShown(Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
-		if (isset($body['is_income_shown']) && in_array($body['is_income_shown'], ['true', 'false'])) {
+		if (isset($body['is_income_shown']) && is_bool($body['is_income_shown'])) {
 			return $response->withStatus(204);
 		} else {
 			$response->getBody()->write('is_income_shown supposed to be: true | false');
