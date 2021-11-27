@@ -8,6 +8,8 @@ use \Lib\Middlewares\RandomReturn422		 as Return422;
 
 $app->post('/check-credentials', 'AuthCtrl:checkSignup');
 $app->post('/signup', 'AuthCtrl:signup');
+$app->post('/reset_password', 'AuthCtrl:resetPassword');
+$app->post('/set_password', 'AuthCtrl:setPassword');
 $app->get('/countries', 'AuthCtrl:countries');
 $app->get('/business_types', 'AuthCtrl:getBusinessTypes');
 

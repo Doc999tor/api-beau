@@ -36,6 +36,30 @@ class AuthCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+
+	public function resetPassword (Request $request, Response $response):Response {
+		$req_body = $request->getParsedBody();
+		if (!empty($req_body['email'])) {
+			return $response->withStatus($req_body['email'] === 'exists@mail.com' ? 404 : 201);
+		} else {
+			$body = $response->getBody();
+			$body->write('email is not valid');
+			return $response->withStatus(400);
+		}
+	}
+	public function setPassword (Request $request, Response $response):Response {
+		$req_body = $request->getParsedBody();
+
+		$is_body_correct = $this->checkSetPasswordCorrectness($req_body);
+		if ($is_body_correct['is_correct']) {
+			return $response;
+		} else {
+			$body = $response->getBody();
+			$body->write($is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
 	public function countries (Request $request, Response $response):Response {
 		return $response->withJson([
 			"country" => "IL",
@@ -69,6 +93,12 @@ class AuthCtrl extends Controller {
 		if (empty($body['email']) || strpos($body['email'], '@') === false) { $is_correct = false; $msg .= " email {$body['email']} value is incorrect <br>"; }
 		if (empty($body['pass']) || mb_strlen(trim($body['pass'])) <= 3) { $is_correct = false; $msg .= " pass {$body['pass']} value is incorrect or less than 4 chars<br>"; }
 		return [ "is_correct" => $is_correct, "msg" => $msg, 'error_code' => $error_code, ];
+	}
+	private function checkSetPasswordCorrectness($body): array {
+		$is_correct = true; $msg = '';
+		if (empty($body['current-password']) || strpos($body['current-password'], '@') === false) { $is_correct = false; $msg .= " current-password value is incorrect <br>"; }
+		if (empty($body['rid']) || mb_strlen(trim($body['rid'])) <= 3) { $is_correct = false; $msg .= " rid value is incorrect or less than 4 chars<br>"; }
+		return [ "is_correct" => $is_correct, "msg" => $msg];
 	}
 
 	private function checkExistingCreds(string $email, string $pass): int {
