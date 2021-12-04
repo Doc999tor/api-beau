@@ -96,7 +96,7 @@ class AuthCtrl extends Controller {
 	}
 	private function checkSetPasswordCorrectness($body): array {
 		$is_correct = true; $msg = '';
-		if (empty($body['current-password']) || strpos($body['current-password'], '@') === false) { $is_correct = false; $msg .= " current-password value is incorrect <br>"; }
+		if (empty($body['current-password']) || strlen($body['current-password']) <= 3) { $is_correct = false; $msg .= " current-password value is too short <br>"; }
 		if (empty($body['rid']) || mb_strlen(trim($body['rid'])) <= 3) { $is_correct = false; $msg .= " rid value is incorrect or less than 4 chars<br>"; }
 		return [ "is_correct" => $is_correct, "msg" => $msg];
 	}
