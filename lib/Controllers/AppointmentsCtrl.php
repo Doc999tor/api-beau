@@ -231,7 +231,7 @@ class AppointmentsCtrl extends Controller {
 			for ($i=0; $i < $clients_count; ++$i) {
 				$client_id = rand(1, 120);
 				$phone = rand(1000000, 999999999);
-				$clients []= [
+				$client = [
 					'phone' => '0' . $phone,
 					'client_id' => (string) $client_id,
 					'name' => $this->faker->name,
@@ -240,6 +240,10 @@ class AppointmentsCtrl extends Controller {
 					'status' => $this->faker->sentence(rand(1,15)),
 					'is_unsubscribed' => (bool) rand(0,1),
 				];
+				if (rand(0,2)) {
+					$client['telegram'] = 'doc999tor';
+				}
+				$clients []= $client;
 			}
 			$appointment['clients'] = $clients;
 		}

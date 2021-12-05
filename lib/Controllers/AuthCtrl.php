@@ -40,7 +40,7 @@ class AuthCtrl extends Controller {
 	public function resetPassword (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
 		if (!empty($req_body['email'])) {
-			return $response->withStatus($req_body['email'] === 'exists@mail.com' ? 404 : 201);
+			return $response->withStatus($req_body['email'] === 'non_exists@mail.com' ? 404 : 201);
 		} else {
 			$body = $response->getBody();
 			$body->write('email is not valid');
@@ -96,7 +96,7 @@ class AuthCtrl extends Controller {
 	}
 	private function checkSetPasswordCorrectness($body): array {
 		$is_correct = true; $msg = '';
-		if (empty($body['current-password']) || strpos($body['current-password'], '@') === false) { $is_correct = false; $msg .= " current-password value is incorrect <br>"; }
+		if (empty($body['current-password']) || strlen($body['current-password']) <= 3) { $is_correct = false; $msg .= " current-password value is too short <br>"; }
 		if (empty($body['rid']) || mb_strlen(trim($body['rid'])) <= 3) { $is_correct = false; $msg .= " rid value is incorrect or less than 4 chars<br>"; }
 		return [ "is_correct" => $is_correct, "msg" => $msg];
 	}
