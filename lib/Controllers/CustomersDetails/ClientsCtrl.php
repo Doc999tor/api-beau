@@ -52,7 +52,15 @@ class ClientsCtrl extends Controller {
 		// }
 
 		$random_id = rand(50, 500);
-		return $response->withJson(["phone" => '+38' . rand(1000000, 999999999), "profile_image" => "{$random_id}.jpg", ]);
+		$client = ["phone" => '+38' . rand(1000000, 999999999), "profile_image" => "{$random_id}.jpg", ];
+		if (rand(0,2)) {
+			$client['telegram'] = 'doc999tor';
+		}
+		if (rand(0,2)) {
+			$client['instagram'] = 'javascript.js';
+		}
+
+		return $response->withJson($client);
 	}
 
 	public function setProfileImage (Request $request, Response $response):Response {

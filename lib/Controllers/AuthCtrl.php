@@ -40,7 +40,7 @@ class AuthCtrl extends Controller {
 	public function resetPassword (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
 		if (!empty($req_body['email'])) {
-			return $response->withStatus($req_body['email'] === 'exists@mail.com' ? 404 : 201);
+			return $response->withStatus($req_body['email'] === 'non_exists@mail.com' ? 404 : 201);
 		} else {
 			$body = $response->getBody();
 			$body->write('email is not valid');
