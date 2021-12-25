@@ -111,8 +111,8 @@ class AddClientCtrl extends Controller {
 		if (isset($body['email']) && !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 
-		if (isset($body['birthdate']) && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }
-		if (isset($body['birthyear']) && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= 'birthyear has to be YYYY format, like 1970' . "<br>"; }
+		if (isset($body['birthdate']) && $body['birthdate'] !== 'null' && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }
+		if (isset($body['birthyear']) && $body['birthyear'] !== 'null' && !\DateTime::createFromFormat('Y', $body['birthyear'])) { $is_correct = false; $msg .= 'birthyear has to be YYYY format, like 1970' . "<br>"; }
 
 		if (isset($body['is_filling_up_sent']) && !in_array($body['is_filling_up_sent'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_filling_up_sent can be true or false' . "<br>"; }
 		if (isset($body['gender']) && !in_array($body['gender'], ['male', 'female', 'null'])) { $is_correct = false; $msg .= 'gender can be male or female' . "<br>"; }
