@@ -59,7 +59,7 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = ["id" => $random_id];
+			$response_body = ["id" => $random_id, "permission_level" => "staff", ];
 			if (!empty($files)) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
@@ -84,7 +84,7 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = ["id" => $args['worker_id']];
+			$response_body = ["id" => $args['worker_id'], "permission_level" => "staff", ];
 			if (!empty($body['photo'])) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}

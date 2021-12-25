@@ -110,6 +110,16 @@ class CustomersList extends Controller {
 		if (rand(0,2)) {
 			$client['instagram'] = 'javascript.js';
 		}
+		if (rand(0,2)) {
+			$client['custom_fields'] = [
+				[
+					"name" => "Waist Circumference",
+					"type" => "text",
+					"value" => rand(50, 150),
+					"date" => (new \DateTime())->sub(new \DateInterval('P' . (rand(0,180)) . 'D'))->format('Y-m-d H:i'),
+				]
+			];
+		}
 		if (rand(0,5)) {
 			$client['last_appointment'] = date("Y-m-d", rand(time() - 3600 * 24 * 90, time() + 3600 * 24 * 30)) . ' ' . str_pad(rand(9,20), 2, '0', STR_PAD_LEFT) . ':' . (rand(0,1) ? '30' : '00'); # 3 months back and 1 forth
 		}
