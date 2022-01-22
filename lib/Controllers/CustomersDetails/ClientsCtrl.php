@@ -41,7 +41,7 @@ class ClientsCtrl extends Controller {
 		// PUT with form-data not working with php
 		// $body = $request->getParsedBody();
 
-		// $is_body_correct = $this->checkClientData($body);
+		// $is_body_correct = $this->checkFillingUpData($body);
 		// if ($is_body_correct['is_correct']) {
 		// 	$random_id = rand(50, 500);
 		// 	return $response->withJson(["profile_image" => "{$random_id}.jpg", ]);
@@ -91,7 +91,7 @@ class ClientsCtrl extends Controller {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] = 'c has to be an alphanumeric';
 		} else {
-			$is_body_correct = $this->checkClientData(array_diff_key($body, array_flip(['b', 'c'])));
+			$is_body_correct = $this->checkFillingUpData(array_diff_key($body, array_flip(['b', 'c'])));
 		}
 
 		if ($is_body_correct['is_correct']) {
@@ -178,7 +178,7 @@ class ClientsCtrl extends Controller {
 		}
 	}
 
-	private function checkClientData ($body) {
+	private function checkFillingUpData ($body) {
 		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'note', 'source', 'permit_ads'];
 
 		$is_correct = true;
@@ -207,7 +207,7 @@ class ClientsCtrl extends Controller {
 			$source_options = ["ads", "fb_page", "family", "friends", "recommendation"];
 			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [ <br>' . implode(',', $source_options) . ']';}
 		}
-		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], [/*'true', */'false'])) { $is_correct = false; $msg .= ' permit_ads value can be false only <br>';}
+		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false <br>';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
