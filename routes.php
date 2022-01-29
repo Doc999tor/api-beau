@@ -309,8 +309,10 @@ $app->group('/metrics', function () use ($app) {
 	$prefix = 'MetricsCtrl:';
 	// https://api.bewebmaster.co.il/metrics/installation_popup_calendar
 	$app->post  ('/installation_popup_calendar', $prefix . 'addCalendarInstallationMetrics');
-	$app->post  ('/messaging_sms', $prefix . 'addMessagingSmsMetrics');
-	$app->post  ('/messaging_whatsapp', $prefix . 'addMessagingWhatsappMetrics');
+	$app->post  ('/installation_popup_clients', $prefix . 'addCalendarInstallationMetrics');
+	$app->post  ('/tracking_events', $prefix . 'addCustomMetrics');
+	$app->post  ('/messaging_sms', $prefix . 'addCustomMetrics');
+	$app->post  ('/messaging_whatsapp', $prefix . 'addCustomMetrics');
 });
 
 $app->group('/filling-up', function () use ($app) {

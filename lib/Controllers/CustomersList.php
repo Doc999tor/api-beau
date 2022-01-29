@@ -116,7 +116,7 @@ class CustomersList extends Controller {
 					"name" => "Waist Circumference",
 					"type" => "text",
 					"value" => rand(50, 150),
-					"date" => (new \DateTime())->sub(new \DateInterval('P' . (rand(0,180)) . 'D'))->format('Y-m-d H:i'),
+					"added" => (new \DateTime())->sub(new \DateInterval('P' . (rand(0,180)) . 'D'))->format('Y-m-d H:i'),
 				]
 			];
 		}

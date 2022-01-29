@@ -20,10 +20,7 @@ class MetricsCtrl extends Controller {
 			return $response->withStatus(400);
 		} else { return $response->withStatus(201); }
 	}
-	public function addMessagingSmsMetrics (Request $request, Response $response):Response {
-		return $response->withStatus(201);
-	}
-	public function addMessagingWhatsappMetrics (Request $request, Response $response):Response {
+	public function addCustomMetrics (Request $request, Response $response):Response {
 		return $response->withStatus(201);
 	}
 }
