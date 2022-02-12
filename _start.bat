@@ -1,2 +1,2 @@
 subl .
-git pull origin master && php -S localhost:3000
+git pull && php -S localhost:3000
