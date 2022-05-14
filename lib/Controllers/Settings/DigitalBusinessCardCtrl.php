@@ -50,7 +50,22 @@ class DigitalBusinessCardCtrl extends Controller {
 						$pics []= "{$filename}_{$random_id}.{$extension}";
 					}
 				}
-				$response_body['gallery'] = json_encode($pics);
+				$response_body['gallery'] = $pics;
+			} else {
+				$response_body['gallery'] = null;
+			}
+			if (isset($files['gallery[]'])) {
+				$pics = [];
+				for ($i=0; $i < count($files['gallery[]']); ++$i) {
+					$file = $files['gallery[]'][$i];
+
+					if (isset($file)) {
+						$filename = pathinfo($file->getClientFilename(), PATHINFO_FILENAME);
+						$extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+						$pics []= "{$filename}_{$random_id}.{$extension}";
+					}
+				}
+				$response_body['gallery'] = $pics;
 			} else {
 				$response_body['gallery'] = null;
 			}
@@ -68,7 +83,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		// var_dump($body);
 		$logo = $body['logo'];
 		unset($body['logo']);
-		$gallery = $body['gallery'];
+		$gallery = $body['gallery'] ?? $body['gallery[]'];
 		unset($body['gallery']);
 		$cover = $body['cover'];
 		unset($body['cover']);
@@ -107,7 +122,7 @@ class DigitalBusinessCardCtrl extends Controller {
 						$pics []= "{$filename}_{$random_id}.{$extension}";
 					}
 				}
-				$response_body['gallery'] = json_encode($pics);
+				$response_body['gallery'] = $pics;
 			} else {
 				$response_body['gallery'] = null;
 			}
@@ -130,7 +145,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'added', 'logo', 'cover', 'gallery'];
+		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
 		$is_correct = true;
 		$msg = '';
@@ -247,12 +262,15 @@ class DigitalBusinessCardCtrl extends Controller {
 						file_put_contents($filename, $body);
 						break;
 					case 'gallery':
-						$data[$name] []= $filename;
+					case 'gallery[]':
+						$data['gallery'] []= $filename;
 						break;
 
 					// default for all other files is to populate $data
 					default:
-						if (!empty($filename)) {
+						if ($filename === 'null') {
+							$data[$name] = null;
+						} else if (!empty($filename)) {
 							$data[$name] = $filename;
 						} else {
 							$data[$name] = substr($body, 0, strlen($body) - 2);
