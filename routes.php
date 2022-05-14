@@ -260,7 +260,7 @@ $app->group('/settings', function () use ($app) {
 
 	$app->post('/digital-business-card', 'DigitalBusinessCardCtrl:addCard');
 	$app->put('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:updateCard');
-	$app->delete('/digital-business-card', 'DigitalBusinessCardCtrl:deleteCard');
+	$app->delete('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:deleteCard');
 });
 
 ### Catalog

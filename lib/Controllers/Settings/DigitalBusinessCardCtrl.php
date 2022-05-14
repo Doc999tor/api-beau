@@ -26,12 +26,33 @@ class DigitalBusinessCardCtrl extends Controller {
 			$response_body = $body;
 			$response_body['id'] = $random_id;
 			if (isset($files['cover'])) {
-				$filename = pathinfo($files['cover']->getClientFilename(),  PATHINFO_FILENAME);
-				$response_body['cover'] = "{$filename}_{$random_id}";
+				$filename = pathinfo($files['cover']->getClientFilename(), PATHINFO_FILENAME);
+				$extension = pathinfo($files['cover']->getClientFilename(), PATHINFO_EXTENSION);
+				$response_body['cover'] = "{$filename}_{$random_id}.{$extension}";
+			} else {
+				$response_body['cover'] = null;
 			}
 			if (isset($files['logo'])) {
-				$filename = pathinfo($files['logo']->getClientFilename(),  PATHINFO_FILENAME);
-				$response_body['logo'] = "{$filename}_{$random_id}";
+				$filename = pathinfo($files['logo']->getClientFilename(), PATHINFO_FILENAME);
+				$extension = pathinfo($files['logo']->getClientFilename(), PATHINFO_EXTENSION);
+				$response_body['logo'] = "{$filename}_{$random_id}.{$extension}";
+			} else {
+				$response_body['logo'] = null;
+			}
+			if (isset($files['gallery'])) {
+				$pics = [];
+				for ($i=0; $i < count($files['gallery']); ++$i) {
+					$file = $files['gallery'][$i];
+
+					if (isset($file)) {
+						$filename = pathinfo($file->getClientFilename(), PATHINFO_FILENAME);
+						$extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+						$pics []= "{$filename}_{$random_id}.{$extension}";
+					}
+				}
+				$response_body['gallery'] = json_encode($pics);
+			} else {
+				$response_body['gallery'] = null;
 			}
 			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson($response_body);
 		} else {
@@ -41,22 +62,57 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 	}
 	public function updateCard (Request $request, Response $response, $args):Response {
-		$files = $request->getUploadedFiles();
-
 		$body = $this->parsePutBody($request->getBody()->getContents());
 		$body = is_array($body) ? $body : [];
-		var_dump($_FILES, $body);
+
+		// var_dump($body);
+		$logo = $body['logo'];
 		unset($body['logo']);
+		$gallery = $body['gallery'];
 		unset($body['gallery']);
-		unset($body['gallery[]']);
+		$cover = $body['cover'];
 		unset($body['cover']);
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
-			// $response_body = $body;
-			// $response_body['id'] = $args['card_id'];
-			return $response->withStatus(204);
+			$response_body = $body;
+			$response_body['id'] = $args['card_id'];
+
+			$random_id = $args['card_id'];
+			$response_body = $body;
+			$response_body['id'] = $random_id;
+			if (isset($cover)) {
+				$filename = pathinfo($cover, PATHINFO_FILENAME);
+				$extension = pathinfo($cover, PATHINFO_EXTENSION);
+				$response_body['cover'] = "{$filename}_{$random_id}.{$extension}";
+			} else {
+				$response_body['cover'] = null;
+			}
+			if (isset($logo)) {
+				$filename = pathinfo($logo, PATHINFO_FILENAME);
+				$extension = pathinfo($logo, PATHINFO_EXTENSION);
+				$response_body['logo'] = "{$filename}_{$random_id}.{$extension}";
+			} else {
+				$response_body['logo'] = null;
+			}
+			if (isset($gallery)) {
+				$pics = [];
+				for ($i=0; $i < count($gallery); ++$i) {
+					$file = $gallery[$i];
+
+					if (isset($file)) {
+						$filename = pathinfo($file, PATHINFO_FILENAME);
+						$extension = pathinfo($file, PATHINFO_EXTENSION);
+						$pics []= "{$filename}_{$random_id}.{$extension}";
+					}
+				}
+				$response_body['gallery'] = json_encode($pics);
+			} else {
+				$response_body['gallery'] = null;
+			}
+
+			return $response->withJson($response_body);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
@@ -74,7 +130,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'added'];
+		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'added', 'logo', 'cover', 'gallery'];
 
 		$is_correct = true;
 		$msg = '';
@@ -86,15 +142,16 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 
 		if (empty($body['business_name']) || mb_strlen($body['business_name']) < 3) { $is_correct = false; $msg .= 'business_name too short' . "<br>"; }
-		if (isset($body['business_description']) && mb_strlen($body['business_description']) < 3) { $is_correct = false; $msg .= 'business_description too short' . "<br>"; }
-		if (empty($body['phone']) || $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
+		if (!empty($body['business_description']) && mb_strlen($body['business_description']) < 3) { $is_correct = false; $msg .= 'business_description too short' . "<br>"; }
+		if (!empty($body['phone']) && $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
 			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
-		if (isset($body['profession_name']) && mb_strlen($body['profession_name']) < 3) { $is_correct = false; $msg .= 'profession_name too short' . "<br>"; }
-		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
-		if (isset($body['telegram']) && mb_strlen($body['telegram']) < 3) { $is_correct = false; $msg .= 'telegram too short' . "<br>"; }
-		if (isset($body['instagram']) && mb_strlen($body['instagram']) < 3) { $is_correct = false; $msg .= 'instagram too short' . "<br>"; }
-		if (isset($body['facebook']) && mb_strlen($body['facebook']) < 3) { $is_correct = false; $msg .= 'facebook too short' . "<br>"; }
+		if (!empty($body['profession_name']) && mb_strlen($body['profession_name']) < 3) { $is_correct = false; $msg .= 'profession_name too short' . "<br>"; }
+		if (!empty($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
+		if (!empty($body['telegram']) && mb_strlen($body['telegram']) < 3) { $is_correct = false; $msg .= 'telegram too short' . "<br>"; }
+		if (!empty($body['viber']) && !in_array($body['viber'], ['true', 'false'])) { $is_correct = false; $msg .= 'viber is not correct' . "<br>"; }
+		if (!empty($body['instagram']) && mb_strlen($body['instagram']) < 3) { $is_correct = false; $msg .= 'instagram too short' . "<br>"; }
+		if (!empty($body['facebook']) && mb_strlen($body['facebook']) < 3) { $is_correct = false; $msg .= 'facebook too short' . "<br>"; }
 
 
 		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
@@ -154,48 +211,55 @@ class DigitalBusinessCardCtrl extends Controller {
 
 		// Fetch each part
 		$parts = array_slice(explode($boundary, $raw_data), 1);
-		$data = array();
+		$data = ['gallery' => []];
 
 		foreach ($parts as $part) {
-		    // If this is the last part, break
-		    if ($part == "--\r\n") break;
+			// If this is the last part, break
+			if ($part == "--\r\n") break;
 
-		    // Separate content from headers
-		    $part = ltrim($part, "\r\n");
-		    list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);
+			// Separate content from headers
+			$part = ltrim($part, "\r\n");
+			list($raw_headers, $body) = explode("\r\n\r\n", $part, 2);
 
-		    // Parse the headers list
-		    $raw_headers = explode("\r\n", $raw_headers);
-		    $headers = array();
-		    foreach ($raw_headers as $header) {
-		        list($name, $value) = explode(':', $header);
-		        $headers[strtolower($name)] = ltrim($value, ' ');
-		    }
+			// Parse the headers list
+			$raw_headers = explode("\r\n", $raw_headers);
+			$headers = array();
+			foreach ($raw_headers as $header) {
+				list($name, $value) = explode(':', $header);
+				$headers[strtolower($name)] = ltrim($value, ' ');
+			}
 
-		    // Parse the Content-Disposition to get the field name, etc.
-		    if (isset($headers['content-disposition'])) {
-		        $filename = null;
-		        preg_match(
-		            '/^(.+); *name="([^"]+)"(; *filename="([^"]+)")?/',
-		            $headers['content-disposition'],
-		            $matches
-		        );
-		        list(, $type, $name) = $matches;
-		        isset($matches[4]) and $filename = $matches[4];
+			// Parse the Content-Disposition to get the field name, etc.
+			if (isset($headers['content-disposition'])) {
+				$filename = null;
+				preg_match(
+					'/^(.+); *name="([^"]+)"(; *filename="([^"]+)")?/',
+					$headers['content-disposition'],
+					$matches
+				);
+				list(, $type, $name) = $matches;
+				isset($matches[4]) and $filename = $matches[4];
 
-		        // handle your fields here
-		        switch ($name) {
-		            // this is a file upload
-		            case 'userfile':
-		                 file_put_contents($filename, $body);
-		                 break;
+				// handle your fields here
+				switch ($name) {
+					// this is a file upload
+					case 'userfile':
+						file_put_contents($filename, $body);
+						break;
+					case 'gallery':
+						$data[$name] []= $filename;
+						break;
 
-		            // default for all other files is to populate $data
-		            default:
-		                 $data[$name] = substr($body, 0, strlen($body) - 2);
-		                 break;
-		        }
-		    }
+					// default for all other files is to populate $data
+					default:
+						if (!empty($filename)) {
+							$data[$name] = $filename;
+						} else {
+							$data[$name] = substr($body, 0, strlen($body) - 2);
+						}
+						break;
+				}
+			}
 		}
 		return $data;
 	}
