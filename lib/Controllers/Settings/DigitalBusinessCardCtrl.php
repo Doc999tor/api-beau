@@ -144,6 +144,14 @@ class DigitalBusinessCardCtrl extends Controller {
 		return $response->withStatus(204);
 	}
 
+	public function getQR (Request $request, Response $response) {
+		$response->write(file_get_contents('public/qr.jpg'));
+
+		return $response
+			->withHeader('Content-Type', 'image/jpeg')
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60)));
+	}
+
 	private function checkBodyCorrectness (array $body): array {
 		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
