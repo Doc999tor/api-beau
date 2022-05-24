@@ -257,6 +257,11 @@ $app->group('/settings', function () use ($app) {
 	$app->post('/workers', 'WorkersCtrl:addWorker');
 	$app->put('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorker');
 	$app->delete('/workers/{worker_id:\d+}', 'WorkersCtrl:deleteWorker');
+
+	$app->post('/digital-business-card', 'DigitalBusinessCardCtrl:addCard');
+	$app->put('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:updateCard');
+	$app->delete('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:deleteCard');
+	$app->get('/digital-business-card/{card_id:\d+}/qr', 'DigitalBusinessCardCtrl:getQR');
 });
 
 ### Catalog
