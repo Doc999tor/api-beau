@@ -8,7 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 class AuthCtrl extends Controller {
 	public function checkLogin (Request $request, Response $response):Response {
-		$req_body = $request->getParsedBody();
+		$req_body = json_decode($request->getBody()->getContents(), true);
 
 		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['pass']);
 		return $response->withStatus($error_code);
