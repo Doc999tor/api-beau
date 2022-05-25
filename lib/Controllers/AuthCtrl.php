@@ -7,6 +7,13 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class AuthCtrl extends Controller {
+	public function checkLogin (Request $request, Response $response):Response {
+		$req_body = $request->getParsedBody();
+
+		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['pass']);
+		return $response->withStatus($error_code);
+	}
+
 	public function checkSignup (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
 
@@ -102,13 +109,13 @@ class AuthCtrl extends Controller {
 	}
 
 	private function checkExistingCreds(string $email, string $pass): int {
-		$error_code = 404; # uknown email
+		$error_code = 404; # unknown email
 
 		if ($email === 'exists@mail.com') {
 			if ($pass === 'existing_pass') {
-				$error_code = 302; # found
+				$error_code = 201; # found
 			} else {
-				$error_code = 409; # email exists, pass doesn't
+				// $error_code = 409; # email exists, pass doesn't
 			}
 		}
 

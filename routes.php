@@ -6,6 +6,7 @@ use \Psr\Http\Message\ResponseInterface		 as Response;
 use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
 use \Lib\Middlewares\RandomReturn422		 as Return422;
 
+$app->post('/personal_cabinet/check-login', 'AuthCtrl:checkLogin');
 $app->post('/check-credentials', 'AuthCtrl:checkSignup');
 $app->post('/signup', 'AuthCtrl:signup');
 $app->post('/reset_password', 'AuthCtrl:resetPassword');

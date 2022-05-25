@@ -1,2 +1,3 @@
 subl .
-git pull origin digital-business-card && php -S localhost:3000
+rem git pull origin personal_cabinet
+php -S localhost:3000
