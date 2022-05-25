@@ -16,8 +16,26 @@ class AuthCtrl extends Controller {
 
 	public function checkSignup (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
+		if (is_array($req_body) && count($req_body) < 2) {
+			$raw_body = $request->getBody()->getContents();
+			$req_body = json_decode($raw_body, true);
+		}
 
-		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['pass']);
+		$base_creds_validation = $this->validateBasicCreds($req_body);
+		if (!$base_creds_validation['is_correct']) {
+			$body = $response->getBody();
+			$body->write($base_creds_validation['msg']);
+			return $response->withStatus($base_creds_validation['error_code']);
+		}
+
+		$client_details_validation = $this->validateClientDetails($req_body);
+		if (!$client_details_validation['is_correct']) {
+			$body = $response->getBody();
+			$body->write($client_details_validation['msg']);
+			return $response->withStatus($client_details_validation['error_code']);
+		}
+
+		$error_code = $this->checkNonExistingCreds($req_body['email'], $req_body['pass']);
 		return $response->withStatus($error_code);
 	}
 
@@ -96,9 +114,19 @@ class AuthCtrl extends Controller {
 	}
 
 	private function validateBasicCreds($body): array {
-		$is_correct = true; $msg = ''; $error_code = $is_correct ? 200 : 400;
+		$is_correct = true; $msg = '';
 		if (empty($body['email']) || strpos($body['email'], '@') === false) { $is_correct = false; $msg .= " email {$body['email']} value is incorrect <br>"; }
 		if (empty($body['pass']) || mb_strlen(trim($body['pass'])) <= 3) { $is_correct = false; $msg .= " pass {$body['pass']} value is incorrect or less than 4 chars<br>"; }
+		$error_code = $is_correct ? 200 : 400;
+		return [ "is_correct" => $is_correct, "msg" => $msg, 'error_code' => $error_code, ];
+	}
+	private function validateClientDetails($body): array {
+		$is_correct = true; $msg = '';
+		if (empty($body['name']) || mb_strlen($body['name']) < 4) { $is_correct = false; $msg .= " name value is incorrect or less than 4 chars<br>"; }
+		if (empty($body['phone']) || !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
+			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
+		}
+		$error_code = $is_correct ? 200 : 400;
 		return [ "is_correct" => $is_correct, "msg" => $msg, 'error_code' => $error_code, ];
 	}
 	private function checkSetPasswordCorrectness($body): array {
@@ -114,6 +142,19 @@ class AuthCtrl extends Controller {
 		if ($email === 'exists@mail.com') {
 			if ($pass === 'existing_pass') {
 				$error_code = 201; # found
+			} else {
+				// $error_code = 409; # email exists, pass doesn't
+			}
+		}
+
+		return $error_code;
+	}
+	private function checkNonExistingCreds(string $email, string $pass): int {
+		$error_code = 201; # unknown email
+
+		if ($email === 'exists@mail.com') {
+			if ($pass === 'existing_pass') {
+				$error_code = 409; # found
 			} else {
 				// $error_code = 409; # email exists, pass doesn't
 			}
