@@ -263,6 +263,12 @@ class AppointmentsCtrl extends Controller {
 		if (rand(0,1)) {
 			$appointment['note'] = implode('\n', $this->faker->paragraphs(rand(1,3)));
 		}
+		if (rand(0,1)) {
+			$appointment['client_note'] = "Pls don't be late";
+		}
+		if (rand(0,1)) {
+			$appointment['zoom_link'] = "https://us02web.zoom.us/j/repito.app\nID: 123123123\nPasscode: 456789";
+		}
 		if (!rand(0,10)) {
 			$appointment['is_new_client'] = true;
 		}
@@ -404,7 +410,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'total_price', 'prepayment', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'client_note', 'zoom_link', 'total_price', 'prepayment', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
