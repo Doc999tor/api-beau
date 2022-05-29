@@ -88,6 +88,49 @@ class AppointmentsCtrl extends Controller {
 			}
 		}
 	}
+	public function getCalendarCabinet (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		$start = (new \DateTime())->sub(new \DateInterval('P12D'));
+		$end = (new \DateTime())->add(new \DateInterval('P24D'));
+
+		$period = new \DatePeriod($start, new \DateInterval('P4D'), $end);
+
+		$appointments = [];
+		$valid_fields = ['id', 'start', 'end', 'total_price', 'services', 'client_note', 'zoom_link'];
+		foreach ($period as $date) {
+			if (!rand(0,3)) { continue; } # randomly no events
+
+			$hours_range = range(10, 19);
+			shuffle($hours_range);
+			$hours = array_slice($hours_range, 0, rand(0, count($hours_range)));
+			sort($hours);
+
+			for ($i=0, $count_hours = count($hours); $i < $count_hours; $i++) {
+				$datetime = (clone $date)->add(new \DateInterval("PT{$hours[$i]}H" . (rand(0,3)*15) . 'M'));
+
+				$appointment = $this->generateAppointment($datetime);
+				foreach ($appointment as $key => $value) {
+					if (!in_array($key, $valid_fields)) {
+						unset($appointment[$key]);
+					}
+				}
+				$appointments []= $appointment;
+			}
+		}
+
+		if (count($appointments)) {
+			$middle_element = round(count($appointments) / 2);
+			$appointments[$middle_element]['client_id'] = 1;
+			$appointments[$middle_element]['profile_image'] = 'banner (1600x800).jpg';
+		}
+
+		usort($appointments, function ($a, $b) {
+			return new \DateTime($a['start']) < new \DateTime($b['start']);
+		});
+
+		return $response->withJson($appointments);
+	}
 	public function getAvailableSlots (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 
@@ -261,10 +304,10 @@ class AppointmentsCtrl extends Controller {
 			$appointment['address'] = $this->faker->address;
 		}
 		if (rand(0,1)) {
-			$appointment['note'] = implode('\n', $this->faker->paragraphs(rand(1,3)));
+			$appointment['note'] = implode("\n", $this->faker->paragraphs(rand(1,3)));
 		}
 		if (rand(0,1)) {
-			$appointment['client_note'] = "Pls don't be late";
+			$appointment['client_note'] = trim("Pls don't be late\n" . implode("\n", $this->faker->paragraphs(rand(0,2))));
 		}
 		if (rand(0,1)) {
 			$appointment['zoom_link'] = "https://us02web.zoom.us/j/repito.app\nID: 123123123\nPasscode: 456789";
