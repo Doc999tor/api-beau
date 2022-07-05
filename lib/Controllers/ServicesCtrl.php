@@ -82,6 +82,7 @@ class ServicesCtrl extends Controller {
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
+			'is_open_online' => (bool) rand(0, 1),
 		];
 	}
 	public static function generateService($id, $q = '', $is_one_category = false) {

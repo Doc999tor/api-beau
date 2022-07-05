@@ -260,6 +260,7 @@ $app->group('/settings', function () use ($app) {
 
 	$app->post('/workers', 'WorkersCtrl:addWorker');
 	$app->put('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorker');
+	$app->patch('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorkerDetail');
 	$app->delete('/workers/{worker_id:\d+}', 'WorkersCtrl:deleteWorker');
 
 	$app->post('/digital-business-card', 'DigitalBusinessCardCtrl:addCard');
