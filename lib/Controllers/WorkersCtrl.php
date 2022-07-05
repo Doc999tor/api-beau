@@ -106,7 +106,7 @@ class WorkersCtrl extends Controller {
 			return $response->withStatus(200);
 		} else {
 			$body = $response->getBody();
-			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
+			$body->write("<br>" . $is_body_correct['msg']);
 			return $response->withStatus(400);
 		}
 	}
