@@ -13,9 +13,9 @@ class TimelineCtrl extends Controller {
 		$params = $request->getQueryParams();
 		return $response->withJson($this->timelineGenericMethod('appointments'));
 	}
-	public function getGallery (Request $request, Response $response):Response {
+	public function getGallery (Request $request, Response $response, $args):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('gallery'));
+		return $response->withJson($this->timelineGenericMethod('gallery', $args['client_id']));
 	}
 	public function getDepts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -34,7 +34,7 @@ class TimelineCtrl extends Controller {
 		return $response->withJson($this->timelineGenericMethod('punch_cards'));
 	}
 
-	private function generateAppointments(\DateTime $date, int $id) {
+	private function generateAppointments(\DateTime $date, int $id, int $client_id = 1) {
 		$services_count = rand(1, 5);
 		$is_deleted = !(rand(1, 5) % 5);
 
@@ -79,16 +79,16 @@ class TimelineCtrl extends Controller {
 		if (!(rand(1, 3) % 3)) { $appointment['location'] = Utils::getRandomAddress(); }
 		return $appointment;
 	}
-	private function generateGallery(\DateTime $date, int $id): array {
+	private function generateGallery(\DateTime $date, int $id, $client_id): array {
 		$media = [
 			"id" => $id,
 			"date" => $date->format('Y-m-d H:i'),
-			"name" => Utils::generatePhrase('', 1, 1) . '.jpg',
+			"name" => $id === $client_id ? "{$id}.jpg" : Utils::generatePhrase('', 1, 1) . '.jpg',
 		];
 		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		return $media;
 	}
-	private function generateDepts(\DateTime $date, int $id): array {
+	private function generateDepts(\DateTime $date, int $id, int $client_id = 1): array {
 		$is_note = !(rand(1, 4) % 4);
 
 		$is_deleted = !(rand(1, 5) % 5);
@@ -112,7 +112,7 @@ class TimelineCtrl extends Controller {
 		}
 		return $dept;
 	}
-	private function generatePunch_cards(\DateTime $date, int $id) {
+	private function generatePunch_cards(\DateTime $date, int $id, int $client_id = 1): array {
 		$service_count = rand(3, 10);
 		$is_punch_created = !(rand(1,5) % 5);
 		$punch_card = [
@@ -161,14 +161,14 @@ class TimelineCtrl extends Controller {
 		// }
 		// return $punch_card;
 	}
-	private function generateSms(\DateTime $date, int $id): array {
+	private function generateSms(\DateTime $date, int $id, int $client_id = 1): array {
 		return [
 			"id" => $id,
 			"date" => $date->format('Y-m-d H:i'),
 			"text" => Utils::generatePhrase('', 1, 21),
 		];
 	}
-	private function generateNotes(\DateTime $date, int $id): array {
+	private function generateNotes(\DateTime $date, int $id, int $client_id = 1): array {
 		// $reminder = !(rand(1, 4) % 4);
 		$note = [
 			"id" => $id,
@@ -184,7 +184,7 @@ class TimelineCtrl extends Controller {
 		return $note;
 	}
 
-	private function timelineGenericMethod (string $name): array {
+	private function timelineGenericMethod (string $name, int $client_id = 1): array {
 		// $start = new \DateTime(filter_var($start, FILTER_SANITIZE_STRING));
 		// $end = new \DateTime(filter_var($end, FILTER_SANITIZE_STRING));
 
@@ -202,8 +202,8 @@ class TimelineCtrl extends Controller {
 			return rand(0,1);
 		})));
 
-		$data = array_map(function (\DateTime $date, $id) use ($name) {
-			return $this->{'generate' . ucfirst($name)}($date, $id + 1);
+		$data = array_map(function (\DateTime $date, $id) use ($name, $client_id) {
+			return $this->{'generate' . ucfirst($name)}($date, $id + 1, $client_id);
 		}, $dates, array_keys($dates));
 
 		return $data; # [data => []] is deprecated
