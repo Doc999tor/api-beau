@@ -103,7 +103,7 @@ class WorkersCtrl extends Controller {
 		$is_body_correct = $this->checkWorkerDetailCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(200);
+			return $response->withStatus(204);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
