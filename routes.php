@@ -6,6 +6,9 @@ use \Psr\Http\Message\ResponseInterface		 as Response;
 use \Lib\Middlewares\PostReturnIDMiddleware  as ReturnID;
 use \Lib\Middlewares\RandomReturn422		 as Return422;
 
+$app->post('/personal_cabinet/check-login', 'AuthCtrl:checkLogin');
+$app->post('/personal_cabinet/signup', 'AuthCtrl:checkSignup');
+
 $app->post('/check-credentials', 'AuthCtrl:checkSignup');
 $app->post('/signup', 'AuthCtrl:signup');
 $app->post('/reset_password', 'AuthCtrl:resetPassword');
@@ -17,6 +20,7 @@ $app->get('/business_types', 'AuthCtrl:getBusinessTypes');
 $app->group('/appointments', function () use ($app) {
 	$prefix = 'AppointmentsCtrl:';
 	$app->get('', $prefix . 'getCalendar');
+	$app->get('/{bid:\w+}/personal_cabinet', $prefix . 'getCalendarCabinet');
 	// http://localhost:3000/appointments/available_slots?date=2020-01-01&worker_id=1&duration=120
 	$app->get('/available_slots', $prefix . 'getAvailableSlots');
 

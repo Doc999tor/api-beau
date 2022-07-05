@@ -19,12 +19,20 @@ class DigitalBusinessCardCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
+		foreach ($body as $key => &$value) {
+			if ($value === 'null') {
+				$value = null;
+			}
+		}
+
 		$is_body_correct = $this->checkBodyCorrectness($body);
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
 			$response_body = $body;
 			$response_body['id'] = $random_id;
+			$response_body['slug'] = $this->clearBusinessName($response_body['business_name']);
+
 			if (isset($files['cover'])) {
 				$filename = pathinfo($files['cover']->getClientFilename(), PATHINFO_FILENAME);
 				$extension = pathinfo($files['cover']->getClientFilename(), PATHINFO_EXTENSION);
@@ -97,14 +105,16 @@ class DigitalBusinessCardCtrl extends Controller {
 			$random_id = $args['card_id'];
 			$response_body = $body;
 			$response_body['id'] = $random_id;
-			if (isset($cover)) {
+			$response_body['slug'] = $this->clearBusinessName($response_body['business_name']);
+
+			if (isset($cover) && $cover !== 'null') {
 				$filename = pathinfo($cover, PATHINFO_FILENAME);
 				$extension = pathinfo($cover, PATHINFO_EXTENSION);
 				$response_body['cover'] = "{$filename}_{$random_id}.{$extension}";
 			} else {
 				$response_body['cover'] = null;
 			}
-			if (isset($logo)) {
+			if (isset($logo) && $logo !== 'null') {
 				$filename = pathinfo($logo, PATHINFO_FILENAME);
 				$extension = pathinfo($logo, PATHINFO_EXTENSION);
 				$response_body['logo'] = "{$filename}_{$random_id}.{$extension}";
@@ -153,7 +163,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
+		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
 		$is_correct = true;
 		$msg = '';
@@ -281,12 +291,19 @@ class DigitalBusinessCardCtrl extends Controller {
 						} else if (!empty($filename)) {
 							$data[$name] = $filename;
 						} else {
-							$data[$name] = substr($body, 0, strlen($body) - 2);
+							$val = substr($body, 0, strlen($body) - 2);
+							$data[$name] = $val === 'null'
+								? null
+								: $val;
 						}
 						break;
 				}
 			}
 		}
 		return $data;
+	}
+
+	private function clearBusinessName($business_name): string {
+		return trim(preg_replace('/[:;%#$^&.,\\|+\s]+/', '-', $business_name), '-');
 	}
 }
