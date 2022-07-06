@@ -267,6 +267,8 @@ $app->group('/settings', function () use ($app) {
 	$app->put('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:updateCard');
 	$app->delete('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:deleteCard');
 	$app->get('/digital-business-card/{card_id:\d+}/qr', 'DigitalBusinessCardCtrl:getQR');
+
+	$app->put('/online-booking', 'DigitalBusinessCardCtrl:updateOnlineBooking');
 });
 
 ### Catalog

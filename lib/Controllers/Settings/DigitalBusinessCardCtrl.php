@@ -306,4 +306,34 @@ class DigitalBusinessCardCtrl extends Controller {
 	private function clearBusinessName($business_name): string {
 		return trim(preg_replace('/[:;%#$^&.,\\|+\s]+/', '-', $business_name), '-');
 	}
+
+
+	public function updateOnlineBooking (Request $request, Response $response, $args):Response {
+		$body = json_decode($request->getBody()->getContents(), true);
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkOnlineBookingCorrectness($body);
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+	private function checkOnlineBookingCorrectness (array $body): array {
+		$correct_body = ['is_online_booking_enabled'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
+
+		if (!isset($body['is_online_booking_enabled']) || !is_bool($body['is_online_booking_enabled'])) { $is_correct = false; $msg .= 'is_online_booking_enabled has to be boolean' . "<br>"; }
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
 }
