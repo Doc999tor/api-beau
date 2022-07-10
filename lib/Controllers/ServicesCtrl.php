@@ -144,6 +144,20 @@ class ServicesCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function singleUpdate (Request $request, Response $response):Response {
+		$body = json_decode($request->getBody()->getContents(), true);
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkSingleDetailCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
 
 	public function delete (Request $request, Response $response):Response {
 		if ($request->getBody()->getSize()) {
@@ -217,6 +231,22 @@ class ServicesCtrl extends Controller {
 		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price has to be a number' . "<br>"; }
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit((string) $body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+	private function checkSingleDetailCorrectness($body) {
+		$correct_body = ['is_open_online'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff($correct_body, array_keys($body));
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg = implode(', ', $diff_keys) . ' argument should exist';
+		}
+
+		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be a number' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

@@ -62,6 +62,19 @@ class ClientsCtrl extends Controller {
 
 		return $response->withJson($client);
 	}
+	public function setRTPersonalData (Request $request, Response $response) {
+		$body = json_decode($request->getBody()->getContents(), true);
+
+		$is_body_correct = $this->checkFillingUpData($body);
+		if ($is_body_correct['is_correct']) {
+			$random_id = rand(50, 500);
+			return $response->withJson(["profile_image" => "{$random_id}.jpg", ]);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg'] . "<br>");
+			return $response->withStatus(400);
+		}
+	}
 
 	public function setProfileImage (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -179,7 +192,7 @@ class ClientsCtrl extends Controller {
 	}
 
 	private function checkFillingUpData ($body) {
-		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'note', 'source', 'permit_ads'];
+		$possible_keys = ['fb_data', 'name', 'phone', 'email', 'birthyear', 'birthdate', 'gender', 'isFavorite', 'address', 'note', 'source', 'permit_ads', 'is_open_online'];
 
 		$is_correct = true;
 		$msg = '';
@@ -208,6 +221,8 @@ class ClientsCtrl extends Controller {
 			if (!in_array(strtolower($body['source']), $source_options)) { $is_correct = false; $msg .= ' source is not from the list: [ <br>' . implode(',', $source_options) . ']';}
 		}
 		if (!empty($body['permit_ads']) && !in_array($body['permit_ads'], ['true', 'false'])) { $is_correct = false; $msg .= ' permit_ads value can be true or false <br>';}
+
+		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= ' is_open_online value can be true or false <br>';}
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
