@@ -262,6 +262,7 @@ class AppointmentsCtrl extends Controller {
 			}, array_fill(0, $services_count, null)),
 			'is_reminders_set' => (bool)rand(0,1),
 			'is_booked_remotely' => (bool)rand(0,1),
+			'is_recurring' => !(bool)rand(0,3),
 			'off_time' => null,
 		];
 		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);
@@ -394,6 +395,8 @@ class AppointmentsCtrl extends Controller {
 				$edited_appointment['address'] = $body['address'];
 				$edited_appointment['worker_id'] = $body['worker_id'];
 
+				$edited_appointment['is_recurring'] = $body['recurring_total_amount'] !== 0;
+
 				$response_obj['appointment_data'] = $edited_appointment;
 				return $response->withJson($response_obj);
 			} else {
@@ -453,7 +456,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'client_note', 'zoom_link', 'total_price', 'prepayment', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'client_note', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -484,14 +487,17 @@ class AppointmentsCtrl extends Controller {
 		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) {$is_correct = false; $msg .= ' total_price has to be a number <br>'; }
 		if (!isset($body['prepayment']) || !is_numeric($body['prepayment'])) {$is_correct = false; $msg .= ' prepayment has to be a number <br>'; }
 
-		if (!isset($body['worker_id']) || !is_numeric($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
+		if (!isset($body['recurring_step_days']) || !ctype_digit($body['recurring_step_days'])) {$is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
+		if (!isset($body['recurring_total_amount']) || !ctype_digit($body['recurring_total_amount'])) {$is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
+
+		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (!isset($body['added']) || (!\DateTime::createFromFormat('Y-m-d H:i:s', $body['added']) && !\DateTime::createFromFormat('Y-m-d\TH:i:s', $body['added']))) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -504,6 +510,9 @@ class AppointmentsCtrl extends Controller {
 		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
 
 		if (isset($body['is_all_day']) && !in_array($body['is_all_day'], ['true', 'false'])) {$is_correct = false; $msg .= ' is_all_day can be true or false only <br>'; }
+		if (!isset($body['recurring_step_days']) || !ctype_digit($body['recurring_step_days'])) {$is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
+		if (!isset($body['recurring_total_amount']) || !ctype_digit($body['recurring_total_amount'])) {$is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
+
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
@@ -511,11 +520,14 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkBreakCorrectness (array $body): array {
-		$correct_body = ['start', 'duration', 'worker_id', 'added'];
+		$correct_body = ['start', 'duration', 'recurring_step_days', 'recurring_total_amount', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
 		if ((!isset($body['start']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['start']))/* || (!isset($body['end']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['end']))*/) { $is_correct = false; $msg .= 'start has to exist and to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18 02:09:54 <br>'; }
+
+		if (!isset($body['recurring_step_days']) || !ctype_digit($body['recurring_step_days'])) {$is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
+		if (!isset($body['recurring_total_amount']) || !ctype_digit($body['recurring_total_amount'])) {$is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
 
 		if (!isset($body['worker_id']) || !ctype_digit($body['worker_id'])) {$is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 

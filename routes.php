@@ -35,6 +35,7 @@ $app->group('/appointments', function () use ($app) {
 	$app->put ('/{appointment_id:\d+}/prepayment', $prefix . 'pay');
 	$app->patch ('/{appointment_id:\d+}', $prefix . 'singleChange');
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
+	$app->delete('/{appointment_id:\d+}/recurring', $prefix . 'delete');
 
 	$app->get('/settings', $prefix . 'getCalendarSettings');
 	$app->get('/settings/holidays', $prefix . 'getHolidays');
