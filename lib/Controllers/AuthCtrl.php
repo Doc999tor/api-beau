@@ -77,7 +77,7 @@ class AuthCtrl extends Controller {
 
 		$is_body_correct = $this->checkSetPasswordCorrectness($req_body);
 		if ($is_body_correct['is_correct']) {
-			return $response;
+			return $response->withStatus(201);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
