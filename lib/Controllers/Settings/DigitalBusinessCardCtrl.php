@@ -163,7 +163,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
+		$correct_body = ['business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
 		$is_correct = true;
 		$msg = '';
@@ -179,6 +179,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		if (!empty($body['phone']) && $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
 			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
+		if (empty($body['is_personal_cabinet_enabled']) || !in_array($body['is_personal_cabinet_enabled'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_personal_cabinet_enabled has to be boolean' . "<br>"; }
 		if (!empty($body['profession_name']) && mb_strlen($body['profession_name']) < 3) { $is_correct = false; $msg .= 'profession_name too short' . "<br>"; }
 		if (!empty($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 		if (!empty($body['telegram']) && mb_strlen($body['telegram']) < 3) { $is_correct = false; $msg .= 'telegram too short' . "<br>"; }
