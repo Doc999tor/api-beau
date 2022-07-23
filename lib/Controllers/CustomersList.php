@@ -92,6 +92,7 @@ class CustomersList extends Controller {
 			'source' => $source,
 			'tags' => $tags ? '#' . $tags : null,
 			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
+			'is_open_online' => (bool) rand(0, 1),
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;

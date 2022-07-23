@@ -109,6 +109,7 @@ $app->group('/customers-details', function () use ($app) {
 		$app->get('', $cl_prefix . 'getPersonalData');
 		$app->put('', $cl_prefix . 'setPersonalData');
 		$app->patch('', $cl_prefix . 'setPersonalData');
+		$app->patch('/rt', $cl_prefix . 'setRTPersonalData');
 		$app->delete('', $cl_prefix . 'removeUser');
 		$app->post('/profile_image', $cl_prefix . 'setProfileImage');
 
@@ -260,12 +261,15 @@ $app->group('/settings', function () use ($app) {
 
 	$app->post('/workers', 'WorkersCtrl:addWorker');
 	$app->put('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorker');
+	$app->patch('/workers/{worker_id:\d+}', 'WorkersCtrl:updateWorkerDetail');
 	$app->delete('/workers/{worker_id:\d+}', 'WorkersCtrl:deleteWorker');
 
 	$app->post('/digital-business-card', 'DigitalBusinessCardCtrl:addCard');
 	$app->put('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:updateCard');
 	$app->delete('/digital-business-card/{card_id:\d+}', 'DigitalBusinessCardCtrl:deleteCard');
 	$app->get('/digital-business-card/{card_id:\d+}/qr', 'DigitalBusinessCardCtrl:getQR');
+
+	$app->put('/online-booking', 'DigitalBusinessCardCtrl:updateOnlineBooking');
 });
 
 ### Catalog
@@ -277,6 +281,7 @@ $app->group('/catalog/services', function () use ($app) {
 	$app->get   ('/bi', $prefix . 'getBI');
 	$app->get   ('/{service_id:\d+}', $prefix . 'getService');
 	$app->put   ('/{service_id:\d+}', $prefix . 'update');
+	$app->patch ('/{service_id:\d+}', $prefix . 'singleUpdate');
 	$app->delete('/{service_ids:(?:\d+)(?:,\d+)*}', $prefix . 'delete')->add(new Return422());
 	$app->post  ('', $prefix . 'add')->add(new ReturnID());
 

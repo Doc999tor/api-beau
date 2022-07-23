@@ -1,3 +1,3 @@
 subl .
-git pull origin personal_cabinet
+git pull origin online-booking-settings
 php -S localhost:3000

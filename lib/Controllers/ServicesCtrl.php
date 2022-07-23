@@ -82,6 +82,7 @@ class ServicesCtrl extends Controller {
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
+			'is_open_online' => (bool) rand(0, 1),
 		];
 	}
 	public static function generateService($id, $q = '', $is_one_category = false) {
@@ -134,6 +135,20 @@ class ServicesCtrl extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_body_correct = $this->checkBodyCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+	public function singleUpdate (Request $request, Response $response):Response {
+		$body = json_decode($request->getBody()->getContents(), true);
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkSingleDetailCorrectness($body);
 
 		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(204);
@@ -216,6 +231,22 @@ class ServicesCtrl extends Controller {
 		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price has to be a number' . "<br>"; }
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit((string) $body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
+
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+	private function checkSingleDetailCorrectness($body) {
+		$correct_body = ['is_open_online'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff($correct_body, array_keys($body));
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg = implode(', ', $diff_keys) . ' argument should exist';
+		}
+
+		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be a number' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

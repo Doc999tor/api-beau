@@ -163,7 +163,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
+		$correct_body = ['business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
 		$is_correct = true;
 		$msg = '';
@@ -179,6 +179,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		if (!empty($body['phone']) && $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
 			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
+		if (empty($body['is_personal_cabinet_enabled']) || !in_array($body['is_personal_cabinet_enabled'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_personal_cabinet_enabled has to be boolean' . "<br>"; }
 		if (!empty($body['profession_name']) && mb_strlen($body['profession_name']) < 3) { $is_correct = false; $msg .= 'profession_name too short' . "<br>"; }
 		if (!empty($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 		if (!empty($body['telegram']) && mb_strlen($body['telegram']) < 3) { $is_correct = false; $msg .= 'telegram too short' . "<br>"; }
@@ -305,5 +306,35 @@ class DigitalBusinessCardCtrl extends Controller {
 
 	private function clearBusinessName($business_name): string {
 		return trim(preg_replace('/[:;%#$^&.,\\|+\s]+/', '-', $business_name), '-');
+	}
+
+
+	public function updateOnlineBooking (Request $request, Response $response, $args):Response {
+		$body = json_decode($request->getBody()->getContents(), true);
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkOnlineBookingCorrectness($body);
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+	private function checkOnlineBookingCorrectness (array $body): array {
+		$correct_body = ['is_online_booking_enabled'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
+
+		if (!isset($body['is_online_booking_enabled']) || !is_bool($body['is_online_booking_enabled'])) { $is_correct = false; $msg .= 'is_online_booking_enabled has to be boolean' . "<br>"; }
+		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 }

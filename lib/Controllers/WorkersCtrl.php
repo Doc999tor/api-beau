@@ -27,6 +27,7 @@ class WorkersCtrl extends Controller {
 		$worker = [
 			'id' => $id,
 			'name' => $faker->firstName,
+			'is_open_online' => (bool) rand(0, 1),
 		];
 
 		$weekend = rand(0,6);
@@ -95,6 +96,20 @@ class WorkersCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
+	public function updateWorkerDetail (Request $request, Response $response, $args):Response {
+		$body = json_decode($request->getBody()->getContents(), true);
+		$body = is_array($body) ? $body : [];
+
+		$is_body_correct = $this->checkWorkerDetailCorrectness($body);
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
 
 	public function deleteWorker (Request $request, Response $response, array $args):Response {
 		if ($request->getBody()->getSize()) {
@@ -140,6 +155,22 @@ class WorkersCtrl extends Controller {
 
 		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
 
+		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+	private function checkWorkerDetailCorrectness (array $body): array {
+		$correct_body = ['is_open_online'];
+
+		$is_correct = true;
+		$msg = '';
+
+		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		if (!empty($diff_keys)) {
+			$is_correct = false;
+			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
+		}
+		if (!count(array_keys($body))) { $is_correct = false; $msg .= 'body can\'t be empty' . "<br>"; }
+
+		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be boolean' . "<br>"; }
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkFilesCorrectness(array $files): array {
