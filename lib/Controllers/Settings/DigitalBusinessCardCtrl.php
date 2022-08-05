@@ -32,6 +32,7 @@ class DigitalBusinessCardCtrl extends Controller {
 			$response_body = $body;
 			$response_body['id'] = $random_id;
 			$response_body['slug'] = $this->clearBusinessName($response_body['business_name']);
+			$response_body['is_personal_cabinet_enabled'] = $response_body['is_personal_cabinet_enabled'] === 'true';
 
 			if (isset($files['cover'])) {
 				$filename = pathinfo($files['cover']->getClientFilename(), PATHINFO_FILENAME);
@@ -106,6 +107,7 @@ class DigitalBusinessCardCtrl extends Controller {
 			$response_body = $body;
 			$response_body['id'] = $random_id;
 			$response_body['slug'] = $this->clearBusinessName($response_body['business_name']);
+			$response_body['is_personal_cabinet_enabled'] = $response_body['is_personal_cabinet_enabled'] === 'true';
 
 			if (isset($cover) && $cover !== 'null') {
 				$filename = pathinfo($cover, PATHINFO_FILENAME);

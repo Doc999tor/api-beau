@@ -27,7 +27,19 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('', $prefix . 'addAppointment'); // custom returned object
 
 	$app->post('/meeting', $prefix . 'addMeeting');
+	$app->post('/meeting/recurring-force', function (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	});
+	$app->post('/meeting/recurring-skip-overlapping', function (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	});
 	$app->post('/break', $prefix . 'addBreak');
+	$app->post('/break/recurring-force', function (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	});
+	$app->post('/break/recurring-skip-overlapping', function (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	});
 	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
