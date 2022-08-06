@@ -97,7 +97,7 @@ class AppointmentsCtrl extends Controller {
 		$period = new \DatePeriod($start, new \DateInterval('P4D'), $end);
 
 		$appointments = [];
-		$valid_fields = ['id', 'start', 'end', 'total_price', 'services', 'client_note', 'zoom_link'];
+		$valid_fields = ['id', 'start', 'end', 'total_price', 'services', 'info_for_client', 'zoom_link'];
 		foreach ($period as $date) {
 			if (!rand(0,3)) { continue; } # randomly no events
 
@@ -308,7 +308,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['note'] = implode("\n", $this->faker->paragraphs(rand(1,3)));
 		}
 		if (rand(0,1)) {
-			$appointment['client_note'] = trim("Pls don't be late\n" . implode("\n", $this->faker->paragraphs(rand(0,2))));
+			$appointment['info_for_client'] = trim("Pls don't be late\n" . implode("\n", $this->faker->paragraphs(rand(0,2))));
 		}
 		if (rand(0,1)) {
 			$appointment['zoom_link'] = "https://us02web.zoom.us/j/repito.app\nID: 123123123\nPasscode: 456789";
@@ -478,7 +478,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'client_note', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
