@@ -29,17 +29,17 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('/meeting', $prefix . 'addMeeting');
 	$app->post('/meeting/recurring-force', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/meeting/recurring-skip-overlapping', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/break', $prefix . 'addBreak');
 	$app->post('/break/recurring-force', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/break/recurring-skip-overlapping', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
