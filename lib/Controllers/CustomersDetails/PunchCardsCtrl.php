@@ -2,11 +2,19 @@
 
 namespace Lib\Controllers\CustomersDetails;
 
+use Slim\Container as Container;
 use Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class PunchCardsCtrl extends Controller {
+	private $faker;
+
+	function __construct(Container $container) {
+		parent::__construct($container);
+		$this->faker = \Faker\Factory::create();
+	}
+
 	public function get (Request $request, Response $response):Response {
 		$punch_cards = [];
 		if (!rand(0,3)) {
@@ -74,7 +82,7 @@ class PunchCardsCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['service_id', 'service_count', 'sum', 'sum_before_discount', 'added', 'expiration'];
+		$correct_body = ['service_id', 'service_count', 'sum', 'sum_before_discount', 'note', 'added', 'expiration'];
 
 		$is_correct = true;
 		$msg = '';
@@ -133,6 +141,9 @@ class PunchCardsCtrl extends Controller {
 				->modify('+' . (rand(0,1) ? rand(0,6) : rand(-1,-3)) . ' month')
 				->modify('last day of')
 				->format('Y-m-d');
+		}
+		if (!rand(0, 3)) {
+			$punch_card['note'] = $this->faker->sentence(rand(1,15));
 		}
 		return $punch_card;
 	}

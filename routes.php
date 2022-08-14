@@ -29,17 +29,17 @@ $app->group('/appointments', function () use ($app) {
 	$app->post('/meeting', $prefix . 'addMeeting');
 	$app->post('/meeting/recurring-force', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/meeting/recurring-skip-overlapping', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/break', $prefix . 'addBreak');
 	$app->post('/break/recurring-force', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/break/recurring-skip-overlapping', function (Request $request, Response $response):Response {
 		return $response->withStatus(201);
-	});
+	})->add(new ReturnID());
 	$app->post('/vacation', $prefix . 'addVacation');
 
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
@@ -216,6 +216,9 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/google-calendar-client-key', 'SettingsCtrl:getGoogleContactsAPIKey');
+	$app->get('/business_data/new_appointments', 'SettingsCtrl:getBusinessDataAppointments');
+	$app->get('/business_data/new_clients', 'SettingsCtrl:getBusinessDataClients');
+	$app->get('/business_data/income', 'SettingsCtrl:getBusinessDataIncome');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 

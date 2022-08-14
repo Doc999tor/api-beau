@@ -3,12 +3,20 @@
 namespace Lib\Controllers\CustomersDetails;
 
 use \Lib\Helpers\Utils as Utils;
+use Slim\Container as Container;
 use Lib\Controllers\Controller as Controller;
 use Lib\Controllers\ServicesCtrl as ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class TimelineCtrl extends Controller {
+	private $faker;
+
+	function __construct(Container $container) {
+		parent::__construct($container);
+		$this->faker = \Faker\Factory::create();
+	}
+
 	public function getAppointments (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 		return $response->withJson($this->timelineGenericMethod('appointments'));
@@ -124,6 +132,9 @@ class TimelineCtrl extends Controller {
 			'use_id' => $is_punch_created ? null : rand(1, $service_count),
 			'event_type' => $is_punch_created ? 'punch_card_created' : 'punch_card_used',
 		];
+		if (!rand(0, 3)) {
+			$punch_card['note'] = $this->faker->sentence(rand(1,15));
+		}
 		return $punch_card;
 
 
