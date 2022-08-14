@@ -42,6 +42,21 @@ class SettingsCtrl extends Controller {
 			])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
+	public function getBusinessDataAppointments (Request $request, Response $response) {
+		return $response
+			->withJson([ 'new_appointments' => rand(1,200) ])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+	}
+	public function getBusinessDataClients (Request $request, Response $response) {
+		return $response
+			->withJson([ 'new_clients' => rand(1,20) ])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+	}
+	public function getBusinessDataIncome (Request $request, Response $response) {
+		return $response
+			->withJson([ 'income' => rand(500,5000) + (rand(0,1) ? 0 : 0.5) ])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+	}
 	public function signLegal (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) {

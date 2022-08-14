@@ -216,6 +216,9 @@ $app->group('/reminders', function () use ($app) {
 $app->group('/settings', function () use ($app) {
 	$app->get('/maps-api-key', 'SettingsCtrl:getMapsAPIKey');
 	$app->get('/google-calendar-client-key', 'SettingsCtrl:getGoogleContactsAPIKey');
+	$app->get('/business_data/new_appointments', 'SettingsCtrl:getBusinessDataAppointments');
+	$app->get('/business_data/new_clients', 'SettingsCtrl:getBusinessDataClients');
+	$app->get('/business_data/income', 'SettingsCtrl:getBusinessDataIncome');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 
