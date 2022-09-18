@@ -218,6 +218,8 @@ class SettingsCtrl extends Controller {
 			'slot_duration',
 			'default_event_length',
 			'is_income_shown',
+			'is_cancellation_reason_shown',
+			'default_cancellation_reason',
 		];
 
 		$is_correct = true;
@@ -237,6 +239,10 @@ class SettingsCtrl extends Controller {
 		if (empty($body['default_event_length']) || !(in_array($body['default_event_length'], ['5', '10', '15', '20', '30', '60', '90', '120']))) { $is_correct = false; $msg .= 'default_event_length supposed to be: 5 | 10 | 15 | 20 | 30 | 60 | 90 | 120' . "<br>"; }
 		if (!isset($body['address_based']) || !is_bool($body['address_based'])) { $is_correct = false; $msg .= 'address_based supposed to be boolean' . "<br>"; }
 		if (!isset($body['is_income_shown']) || !is_bool($body['is_income_shown'])) { $is_correct = false; $msg .= 'is_income_shown supposed to be boolean' . "<br>"; }
+
+		if (!isset($body['is_cancellation_reason_shown']) || !is_bool($body['is_cancellation_reason_shown'])) { $is_correct = false; $msg .= 'is_cancellation_reason_shown supposed to be boolean' . "<br>"; }
+		$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up'];
+		if (empty($body['default_cancellation_reason']) || !(in_array($body['default_cancellation_reason'], $cancellation_reasons))) { $is_correct = false; $msg .= 'default_cancellation_reason supposed to be: ' . implode(' | ', $cancellation_reasons) . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

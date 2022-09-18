@@ -206,8 +206,22 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	public function delete (Request $request, Response $response, array $args):Response {
-		// $appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-		return $response->withJson($this->createCalendarResponseObj());
+		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+		$body = json_decode($request->getBody()->getContents(), true);
+
+		$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up'];
+
+		if (!isset($body['added']) || !\date_create($body['added'])) {
+			$response_body = $response->getBody();
+			$response_body->write(' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>');
+			return $response->withStatus(400);
+		} else if (empty($body['cancellation_reason']) || !(in_array($body['cancellation_reason'], $cancellation_reasons))) {
+			$response_body = $response->getBody();
+			$response_body->write('cancellation_reason supposed to be: ' . implode(' | ', $cancellation_reasons) . "<br>");
+			return $response->withStatus(400);
+		} else {
+			return $response->withStatus(204);
+		}
 	}
 
 	public function getCalendarSettings(Request $request, Response $response) {
@@ -395,7 +409,7 @@ class AppointmentsCtrl extends Controller {
 				$edited_appointment['address'] = $body['address'];
 				$edited_appointment['worker_id'] = $body['worker_id'];
 
-				$edited_appointment['is_recurring'] = $body['recurring_total_amount'] !== 0;
+				$edited_appointment['is_recurring'] = empty($body['recurring_total_amount']); // undefined or = 0
 
 				$response_obj['appointment_data'] = $edited_appointment;
 				return $response->withJson($response_obj);
