@@ -213,7 +213,7 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($body['added']) || !\date_create($body['added'])) {
 			$response_body = $response->getBody();
-			$response_body->write(' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>');
+			$response_body->write(' added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>');
 			return $response->withStatus(400);
 		} else if (empty($body['cancellation_reason']) || !(in_array($body['cancellation_reason'], $cancellation_reasons))) {
 			$response_body = $response->getBody();

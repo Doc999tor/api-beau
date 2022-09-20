@@ -43,18 +43,24 @@ class SettingsCtrl extends Controller {
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
 	public function getBusinessDataAppointments (Request $request, Response $response) {
+		$new_appointments = rand(1,200);
+		$max = round($new_appointments * (rand(0,2) ? 1.1 : 2));
 		return $response
-			->withJson([ 'new_appointments' => rand(1,200) ])
+			->withJson([ 'new_appointments' => $new_appointments, "max" => $max ])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
 	public function getBusinessDataClients (Request $request, Response $response) {
+		$new_clients = rand(1,20);
+		$max = round($new_clients * (rand(0,2) ? 1.1 : 2));
 		return $response
-			->withJson([ 'new_clients' => rand(1,20) ])
+			->withJson([ 'new_clients' => $new_clients, "max" => $max ])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
 	public function getBusinessDataIncome (Request $request, Response $response) {
+		$income = rand(500,5000) + (rand(0,1) ? 0 : 0.5);
+		$max = round($income * (rand(0,2) ? 1.1 : 2), 2);
 		return $response
-			->withJson([ 'income' => rand(500,5000) + (rand(0,1) ? 0 : 0.5) ])
+			->withJson([ 'income' => $income, "max" => $max ])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
 	public function signLegal (Request $request, Response $response) {
