@@ -365,7 +365,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			$status = rand(0,5) ? 201 : 422;
+			$status = rand(0,1) ? 201 : 402;
 			if ($status === 201) {
 				$response_obj = $this->createCalendarResponseObj();
 
@@ -382,7 +382,17 @@ class AppointmentsCtrl extends Controller {
 
 				$response_obj['appointment_data'] = $added_appointment;
 				return $response->withStatus($status)->withJson($response_obj);
-			} else { return $response->withStatus($status); }
+			} else {
+				$new_appointments = rand(100,200);
+				$max = round($new_appointments * (rand(0,2) ? 1.1 : 1));
+				$response_obj = [
+					"used" => $new_appointments,
+					"max" => $max,
+					"is_limit_reached" => $new_appointments >= $max
+				];
+
+				return $response->withStatus($status)->withJson($response_obj);
+			}
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
