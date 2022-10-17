@@ -11,7 +11,7 @@ use \Lib\Helpers\Utils;
 class WorkersCtrl extends Controller {
 	public function getAllWorkersData (Request $request, Response $response, array $args):Response {
 		$workers = [];
-		for ($i=1; $i < rand(1, 6); ++$i) {
+		for ($i=1; $i < rand(2, 6); ++$i) {
 			$workers []= $this->generateWorker($i);
 		}
 
