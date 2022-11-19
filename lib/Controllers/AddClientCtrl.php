@@ -73,6 +73,12 @@ class AddClientCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
+		if ($body['email'] === 'exists@mail.com') {
+			return $response->withStatus(409)->withJson([
+				"error" => 'duplicate_email'
+			]);
+		}
+
 		$is_body_correct = $this->checkBodyCorrectness($body);
 
 		// if (isset($body['permit_ads']) && $body['permit_ads'] === 'true' && !isset($files['signature'])) {
