@@ -73,7 +73,7 @@ class AddClientCtrl extends Controller {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
-		if ($body['email'] === 'exists@mail.com') {
+		if (isset($body['email']) && $body['email'] === 'exists@mail.com') {
 			return $response->withStatus(409)->withJson([
 				"error" => 'duplicate_email'
 			]);
