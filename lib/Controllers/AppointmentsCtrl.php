@@ -129,7 +129,7 @@ class AppointmentsCtrl extends Controller {
 			return new \DateTime($a['start']) < new \DateTime($b['start']);
 		});
 
-		return $response->withJson($appointments);
+		return $response->withHeader('cache-control', 'no-cache')->withJson($appointments);
 	}
 	public function getAvailableSlots (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();

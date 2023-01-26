@@ -16,7 +16,7 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 	->add(new \Tuupola\Middleware\CorsMiddleware([
 		"origin" => ["*"],
 		"methods" => ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
-		"headers.allow" => ['X-Requested-With', 'Content-Type'],
+		"headers.allow" => ['X-Requested-With', 'Content-Type', 'Cache-Control'],
 		"headers.expose" => ['Retry-After', 'X-Total-Count'],
 		"credentials" => true,
 		"cache" => 86400,
