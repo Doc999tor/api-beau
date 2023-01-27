@@ -193,6 +193,8 @@ $app->group('/customers-details', function () use ($app) {
 			$app->post('', $prefix . 'add')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard')->add(new Return422());
 
+			$app->put('/{punch_card_id:\d+}/note', $prefix . 'editNote')->add(new ReturnID());
+
 			$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}/use/{use_id:\d+}', $prefix . 'unuse');
 		});
