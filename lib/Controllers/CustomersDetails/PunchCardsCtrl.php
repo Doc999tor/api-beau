@@ -21,7 +21,7 @@ class PunchCardsCtrl extends Controller {
 			return $response->withJson([]);
 		}
 
-		for ($i=0, $punch_cards_count = rand(1,5); $i < $punch_cards_count; $i++) {
+		for ($i=0, $punch_cards_count = rand(1,15); $i < $punch_cards_count; $i++) {
 			$punch_cards []= $this->generatePunchCard($i+1);
 		}
 		$punch_cards[0]['id'] = 1;
@@ -51,6 +51,22 @@ class PunchCardsCtrl extends Controller {
 			return $response->withStatus(400);
 		} else {
 			return $response->withStatus(204);
+		}
+	}
+
+	public function editNote (Request $request, Response $response):Response {
+		$body = $request->getParsedBody();
+		$body = is_array($body) ? $body : [];
+
+		$is_correct = true; $msg = '';
+		if (empty($body['note'])) { $is_correct = false; $msg .= " note has to be non-empty string<br>"; }
+
+		if ($is_correct) {
+			return $response->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $msg);
+			return $response->withStatus(400);
 		}
 	}
 
