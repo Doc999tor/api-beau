@@ -95,6 +95,9 @@ $container['SmsSettingsCtrl'] = function () use ($container) {
 $container['DigitalBusinessCardCtrl'] = function () use ($container) {
 	return new \Lib\Controllers\Settings\DigitalBusinessCardCtrl($container);
 };
+$container['BonusPointsCtrl'] = function () use ($container) {
+	return new \Lib\Controllers\Settings\BonusPointsCtrl($container);
+};
 $container['HomeController'] = function () use ($container) {
 	return new \Lib\Controllers\HomeController($container);
 };
