@@ -12,8 +12,8 @@ class BonusPointsCtrl extends Controller {
 		$body = is_array($body) ? $body : [];
 
 		$is_correct = true; $msg = '';
-		if (empty($body['bonus']) || $body['bonus'] !== 'daily') {
-			$is_correct = false; $msg .= " bonus has to be 'daily'<br>";
+		if (empty($body['bonus'])) {
+			$is_correct = false; $msg .= " bonus has to be non-empty string'<br>";
 		}
 
 		if ($is_correct) {
