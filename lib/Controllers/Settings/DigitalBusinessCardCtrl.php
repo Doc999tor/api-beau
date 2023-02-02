@@ -78,7 +78,16 @@ class DigitalBusinessCardCtrl extends Controller {
 			} else {
 				$response_body['gallery'] = null;
 			}
-			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson($response_body);
+
+			$res = ['data' => $response_body, 'bonus_points' => null];
+			if (rand(0,3)) {
+				$res['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+				if (rand(0,1)) {
+					$res['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+				}
+			}
+
+			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson($res);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
@@ -142,7 +151,7 @@ class DigitalBusinessCardCtrl extends Controller {
 			return $response->withJson($response_body);
 		} else {
 			$body = $response->getBody();
-			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
+			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_body_correct['msg']);
 			return $response->withStatus(400);
 		}
 	}
@@ -317,7 +326,15 @@ class DigitalBusinessCardCtrl extends Controller {
 
 		$is_body_correct = $this->checkOnlineBookingCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
+			$res = ['data' => null, 'bonus_points' => null];
+			if (rand(0,3)) {
+				$res['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+				if (rand(0,1)) {
+					$res['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+				}
+			}
+
+			return $response->withJson($res);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);

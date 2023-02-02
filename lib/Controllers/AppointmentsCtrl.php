@@ -365,7 +365,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			$status = rand(0,1) ? 201 : 402;
+			$status = rand(0,3) ? 201 : 402;
 			if ($status === 201) {
 				$response_obj = $this->createCalendarResponseObj();
 
@@ -381,6 +381,13 @@ class AppointmentsCtrl extends Controller {
 				$added_appointment['worker_id'] = $body['worker_id'];
 
 				$response_obj['appointment_data'] = $added_appointment;
+				if (rand(0,3)) {
+					$response_obj['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+					if (rand(0,1)) {
+						$response_obj['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+					}
+				}
+
 				return $response->withStatus($status)->withJson($response_obj);
 			} else {
 				$new_appointments = rand(100,200);
@@ -648,6 +655,7 @@ class AppointmentsCtrl extends Controller {
 		$response = [
 			"is_notification_sent" => true, // показываем или нет вторую строку в зеленом тосте
 			"is_sms_failed" => false, // показываем или нет красный тост
+			'bonus_points' => null,
 		];
 
 		if (!rand(0,2)) { // false

@@ -78,7 +78,14 @@ class SettingsCtrl extends Controller {
 		$is_body_correct = $this->checkAccountBodyCorrectness($body['business_info']);
 
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(204);
+			$res = ['data' => null, 'bonus_points' => null];
+			if (rand(0,3)) {
+				$res['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+				if (rand(0,1)) {
+					$res['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+				}
+			}
+			return $response->withJson($res);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);

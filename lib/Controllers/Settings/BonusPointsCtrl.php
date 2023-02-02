@@ -3,10 +3,8 @@
 namespace Lib\Controllers\Settings;
 
 use \Lib\Controllers\Controller;
-use \Lib\Controllers\ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use \Lib\Helpers\Utils;
 
 class BonusPointsCtrl extends Controller {
 	public function earn (Request $request, Response $response):Response {
