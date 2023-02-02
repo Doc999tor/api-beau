@@ -63,6 +63,12 @@ class SettingsCtrl extends Controller {
 			->withJson([ 'income' => $income, "max" => $max ])
 			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
 	}
+	public function getBusinessDataBonusPoints (Request $request, Response $response) {
+		$bonus_points = rand(1,15) * 10;
+		return $response
+			->withJson([ 'bonus_points' => $bonus_points ])
+			->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (86400 * 10)));
+	}
 	public function signLegal (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 		if (!isset($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) {

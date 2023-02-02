@@ -221,6 +221,7 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/business_data/new_appointments', 'SettingsCtrl:getBusinessDataAppointments');
 	$app->get('/business_data/new_clients', 'SettingsCtrl:getBusinessDataClients');
 	$app->get('/business_data/income', 'SettingsCtrl:getBusinessDataIncome');
+	$app->get('/business_data/bonus_points', 'SettingsCtrl:getBusinessDataBonusPoints');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 
