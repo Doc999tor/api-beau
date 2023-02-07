@@ -295,7 +295,7 @@ class AppointmentsCtrl extends Controller {
 					'name' => $this->faker->name,
 					'profile_image' => $client_id . '.jpg',
 					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
-					'status' => $this->faker->sentence(rand(1,15)),
+					'note' => $this->faker->sentence(rand(1,15)),
 					'is_unsubscribed' => (bool) rand(0,1),
 				];
 				if (rand(0,2)) {
@@ -337,7 +337,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['has_debt'] = true;
 		}
 		if (!rand(0,3)) {
-			$appointment['status'] = $this->faker->sentence(rand(1,15));
+			$appointment['note'] = $this->faker->sentence(rand(1,15));
 		}
 
 		if (!rand(0,4)) {
