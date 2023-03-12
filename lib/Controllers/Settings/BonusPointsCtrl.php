@@ -7,7 +7,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class BonusPointsCtrl extends Controller {
-	public function earn (Request $request, Response $response):Response {
+	public function earn (Request $request, Response $response): Response {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 

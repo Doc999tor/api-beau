@@ -87,7 +87,7 @@ class DigitalBusinessCardCtrl extends Controller {
 				}
 			}
 
-			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson($res);
+			return $response->withStatus(201)->withJson($res);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg'] . "<br>" . $is_files_correct['msg']);
