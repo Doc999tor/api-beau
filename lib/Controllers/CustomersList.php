@@ -163,7 +163,9 @@ class CustomersList extends Controller {
 		$body = $request->getParsedBody();
 
 		if (is_array($body)) {
-			return $response->withStatus(202);
+ 			return rand(0, 2)
+				? $response->withStatus(202)
+				: $response->withStatus(402);
 		} else {
 			$body = $response->getBody();
 			$body->write('body is incorrect: ' . json_encode($body));
