@@ -193,7 +193,7 @@ $app->group('/customers-details', function () use ($app) {
 			$app->post('', $prefix . 'add')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}', $prefix . 'deletePunchCard')->add(new Return422());
 
-			$app->put('/{punch_card_id:\d+}/note', $prefix . 'editNote')->add(new ReturnID());
+			$app->put('/{punch_card_id:\d+}/note', $prefix . 'editNote');
 
 			$app->post('/{punch_card_id:\d+}/use', $prefix . 'use')->add(new ReturnID());
 			$app->delete('/{punch_card_id:\d+}/use/{use_id:\d+}', $prefix . 'unuse');
@@ -221,6 +221,7 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/business_data/new_appointments', 'SettingsCtrl:getBusinessDataAppointments');
 	$app->get('/business_data/new_clients', 'SettingsCtrl:getBusinessDataClients');
 	$app->get('/business_data/income', 'SettingsCtrl:getBusinessDataIncome');
+	$app->get('/business_data/bonus_points', 'SettingsCtrl:getBusinessDataBonusPoints');
 	$app->get('/business_data', 'SettingsCtrl:getBusinessData');
 	$app->post('/sign/legal', 'SettingsCtrl:signLegal');
 
@@ -288,6 +289,9 @@ $app->group('/settings', function () use ($app) {
 	$app->get('/digital-business-card/{card_id:\d+}/qr', 'DigitalBusinessCardCtrl:getQR');
 
 	$app->put('/online-booking', 'DigitalBusinessCardCtrl:updateOnlineBooking');
+
+	$app->post('/bonus_points/earn', 'BonusPointsCtrl:earn');
+	$app->post('/bonus_points/redeem', 'BonusPointsCtrl:redeem');
 });
 
 ### Catalog

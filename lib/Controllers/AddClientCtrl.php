@@ -87,15 +87,26 @@ class AddClientCtrl extends Controller {
 		// }
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
-			$status = rand(0,1) ? 201 : 402;
+			$status = rand(0,3) ? 201 : 402;
 			if ($status === 201) {
 				$random_id = rand(50, 500);
 				// $status_with_sms = rand(0,3) ? 201 : 409;
-				return $response->withStatus($status)->withJson([
-					"id" => $random_id,
-					"profile_image" => "{$random_id}.jpg",
-					"phone" => '+38' . rand(1000000, 999999999),
-				]);
+				$res = [
+					'bonus_points' => null,
+					'data' => [
+						"id" => $random_id,
+						"profile_image" => "{$random_id}.jpg",
+						"phone" => '+38' . rand(1000000, 999999999),
+					]
+				];
+				if (rand(0,3)) {
+					$res['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+					if (rand(0,1)) {
+						$res['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+					}
+				}
+
+				return $response->withStatus($status)->withJson($res);
 			} else {
 				$new_clients = rand(10,50);
 				$max = round($new_clients * (rand(0,2) ? 1.1 : 1));
