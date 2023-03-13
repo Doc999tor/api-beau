@@ -271,6 +271,7 @@ class AppointmentsCtrl extends Controller {
 			'total_price' => (string) $total_price,
 			'prepayment' => (string) $prepayment,
 			'phone' => '0' . $phone,
+			'phone_canonical' => '+' . $phone,
 			"services" => array_map(function ($v) {
 				return ServicesCtrl::generateServiceCalendar(rand(1, 50));
 			}, array_fill(0, $services_count, null)),
@@ -291,6 +292,7 @@ class AppointmentsCtrl extends Controller {
 				$phone = rand(1000000, 999999999);
 				$client = [
 					'phone' => '0' . $phone,
+					'phone_canonical' => '+' . $phone,
 					'client_id' => (string) $client_id,
 					'name' => $this->faker->name,
 					'profile_image' => $client_id . '.jpg',
@@ -345,6 +347,7 @@ class AppointmentsCtrl extends Controller {
 			unset($appointment['client_id']);
 			unset($appointment['name']);
 			unset($appointment['phone']);
+			unset($appointment['phone_canonical']);
 			unset($appointment['birthdate']);
 			unset($appointment['services']);
 			unset($appointment['total_price']);
