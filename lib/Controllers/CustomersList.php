@@ -62,8 +62,9 @@ class CustomersList extends Controller {
 			foreach ($clients as &$client) {
 				$client[$sorting_criteria] = round(rand(0, 100) * $multiplier, 2);
 			}
-			usort($clients, function($b, $a) use ($sorting_criteria) {
-				return $a[$sorting_criteria] <=> $b[$sorting_criteria];
+			$order_directions = ['desc' => -1, 'asc' => 1];
+			usort($clients, function($a, $b) use ($sorting_criteria, $order_directions, $params) {
+				return ($a[$sorting_criteria] <=> $b[$sorting_criteria]) * $order_directions[$params['order']];
 			});
 		}
 
