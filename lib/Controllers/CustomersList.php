@@ -1,12 +1,18 @@
 <?php
-
 namespace Lib\Controllers;
 
+use Slim\Container as Container;
+use \Lib\Controllers\Controller as Controller;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use \Lib\Helpers\Utils;
 
 class CustomersList extends Controller {
+	private static $faker;
+	function __construct(Container $container) {
+		parent::__construct($container);
+		self::$faker = \Faker\Factory::create();
+	}
+
 	public function index (Request $request, Response $response):Response {
 		$path = 'customers-list';
 		$static_prefix = str_repeat('../', substr_count($request->getUri()->getPath(), '/'));
@@ -31,8 +37,8 @@ class CustomersList extends Controller {
 			}
 			return $response->withJson($clients);
 		} else {
-			if (!isset($params['limit'])) {
-				return $response->withStatus(400);
+			if (empty($params['limit'])) {
+				$params['limit'] = 1000;
 			}
 			if (!isset($params['offset'])) {
 				$params['offset'] = 0;
@@ -40,7 +46,29 @@ class CustomersList extends Controller {
 			$q = isset($params['q']) ? filter_var($params['q'], FILTER_SANITIZE_STRING) : '';
 		}
 
-		return $response->withJson(self::generateClients($params['limit'], $q));
+		$clients = self::generateClients($params['limit'], $q);
+
+		if (!empty($params['sorting_criteria'])) {
+			$sorting_criteria = $params['sorting_criteria'];
+			$multiplier = 1;
+			switch ($sorting_criteria) {
+				case 'total_income':
+					$multiplier = round(rand(0, 100000) / 100, 2);
+					break;
+				case 'appointment_count':
+					$multiplier = 1;
+					break;
+			}
+			foreach ($clients as &$client) {
+				$client[$sorting_criteria] = round(rand(0, 100) * $multiplier, 2);
+			}
+			$order_directions = ['desc' => -1, 'asc' => 1];
+			usort($clients, function($a, $b) use ($sorting_criteria, $order_directions, $params) {
+				return ($a[$sorting_criteria] <=> $b[$sorting_criteria]) * $order_directions[$params['order']];
+			});
+		}
+
+		return $response->withJson($clients);
 	}
 
 	public function deleteClients (Request $request, Response $response):Response {
@@ -66,6 +94,10 @@ class CustomersList extends Controller {
 		return $clients;
 	}
 	public static function generateClient($q = '', $id = null) {
+		if (is_null(self::$faker)) {
+			self::$faker = \Faker\Factory::create();
+		}
+
 		$id = $id ?? rand(0, 300);
 		$phone = rand(1000000, 999999999);
 
@@ -85,10 +117,10 @@ class CustomersList extends Controller {
 		$client = [
 			'id' => $id,
 			'profile_image' => "{$id}.jpg",
-			'name' => Utils::generatePhrase($q, 1, 2),
+			'name' => self::$faker->name,
 			'permit_ads' => (bool) rand(0,3),
-			'is_unsubscribed' => !rand(0,4),
-			'note' => Utils::generatePhrase('', 1, 4),
+			'is_unsubscribed' => !rand(0,3),
+			'note' => self::$faker->sentence(rand(1,15)),
 			'source' => $source,
 			'tags' => $tags ? '#' . $tags : null,
 			'registration_date' => (new \DateTime())->sub(new \DateInterval('P' . (361 + rand(0,1805)) . 'D'))->format('Y-m-d'), // new date between 1-5 years ago;
@@ -96,11 +128,12 @@ class CustomersList extends Controller {
 		];
 		if (rand(0,3)) {
 			$client['phone'] = '0' . $phone;
-			$client['email'] = Utils::generateWord() . '@email.com';
+			$client['phone_canonical'] = '+' . $phone;
+			$client['email'] = self::$faker->email;
 			$client['gender'] = rand(0,3) ? 'male' : 'female';
 		}
 		if (rand(0,2)) {
-			$client['address'] = Utils::getRandomAddress();
+			$client['address'] = self::$faker->address;
 			$birthdate = (new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')); // new date between 15-50 years ago;
 			$client['birthdate'] = $birthdate->format('m-d');
 			$client['birthyear'] = $birthdate->format('Y');
