@@ -335,6 +335,15 @@ $app->any('/502', function (Request $request, Response $response):Response {
 $app->any('/500', function (Request $request, Response $response):Response {
 	return $response->withStatus(500);
 });
+$app->any('/422', function (Request $request, Response $response):Response {
+	return $response->withStatus(422);
+});
+$app->any('/409', function (Request $request, Response $response):Response {
+	return $response->withStatus(409);
+});
+$app->any('/402', function (Request $request, Response $response):Response {
+	return $response->withStatus(402);
+});
 $app->get('/helpers/empty-array', function (Request $request, Response $response):Response {
 	return $response->withJson([]);
 });
