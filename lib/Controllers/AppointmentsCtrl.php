@@ -277,6 +277,7 @@ class AppointmentsCtrl extends Controller {
 			}, array_fill(0, $services_count, null)),
 			'is_reminders_set' => (bool)rand(0,1),
 			'is_booked_remotely' => (bool)rand(0,1),
+			'is_confirmed' => (bool)rand(0,1),
 			'is_recurring' => !(bool)rand(0,3),
 			'off_time' => null,
 		];
