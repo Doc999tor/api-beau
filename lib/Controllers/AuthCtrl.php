@@ -28,11 +28,13 @@ class AuthCtrl extends Controller {
 			return $response->withStatus($base_creds_validation['error_code']);
 		}
 
-		$client_details_validation = $this->validateClientDetails($req_body);
-		if (!$client_details_validation['is_correct']) {
-			$body = $response->getBody();
-			$body->write($client_details_validation['msg']);
-			return $response->withStatus($client_details_validation['error_code']);
+		if (!empty($req_body['name'])) {
+			$client_details_validation = $this->validateClientDetails($req_body);
+			if (!$client_details_validation['is_correct']) {
+				$body = $response->getBody();
+				$body->write($client_details_validation['msg']);
+				return $response->withStatus($client_details_validation['error_code']);
+			}
 		}
 
 		$error_code = $this->checkNonExistingCreds($req_body['email'], $req_body['pass']);
@@ -48,7 +50,7 @@ class AuthCtrl extends Controller {
 			$body->write("/{$req_body['lang']}/calendar");
 
 			switch ($is_body_correct['error_code']) {
-				case 404: $error_code = 201; break; # 404 means it's a unrecognised email
+				case 404: $error_code = 201; break; # 404 means it's a unrecognized email
 				case 409:
 				case 302: $error_code = 422; break;
 				default: $error_code = $is_body_correct['error_code'];
@@ -150,7 +152,7 @@ class AuthCtrl extends Controller {
 		return $error_code;
 	}
 	private function checkNonExistingCreds(string $email, string $pass): int {
-		$error_code = 201; # unknown email
+		$error_code = 404; # unknown email
 
 		if ($email === 'exists@mail.com') {
 			if ($pass === 'existing_pass') {
