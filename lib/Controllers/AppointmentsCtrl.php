@@ -280,34 +280,34 @@ class AppointmentsCtrl extends Controller {
 			'is_confirmed' => (bool)rand(0,1),
 			'is_recurring' => !(bool)rand(0,3),
 			'off_time' => null,
+			'added_date' => (new \DateTime)->sub(new \DateInterval('P' . rand(0, 30) . 'D'))->format('Y-m-d H:i:s'),
 		];
 		$appointment['price_before_discount'] = (string) (rand(0,3) ? round($appointment['total_price'] / (rand(70, 99) / 100 )) : $appointment['total_price']);
 		// $duration_obj = (new \DateTime($appointment['start']))->diff(new \DateTime($appointment['end']));
 		// $appointment['duration'] = $duration_obj->days * 24 * 60 + $duration_obj->h * 60 + $duration_obj->i;
 
-		if (rand(0,3)) { # group appointment
-			$clients = [];
-			$clients_count = rand(1,5);
-			for ($i=0; $i < $clients_count; ++$i) {
-				$client_id = rand(1, 120);
-				$phone = rand(1000000, 999999999);
-				$client = [
-					'phone' => '0' . $phone,
-					'phone_canonical' => '+' . $phone,
-					'client_id' => (string) $client_id,
-					'name' => $this->faker->name,
-					'profile_image' => $client_id . '.jpg',
-					'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
-					'note' => $this->faker->sentence(rand(1,15)),
-					'is_unsubscribed' => (bool) rand(0,1),
-				];
-				if (rand(0,2)) {
-					$client['telegram'] = 'doc999tor';
-				}
-				$clients []= $client;
+		$clients = [];
+		$clients_count = rand(0,3) ? rand(2,5) : 1;
+		for ($i=0; $i < $clients_count; ++$i) {
+			$client_id = rand(1, 120);
+			$phone = rand(1000000, 999999999);
+			$client = [
+				'phone' => '0' . $phone,
+				'phone_canonical' => '+' . $phone,
+				'client_id' => (string) $client_id,
+				'name' => $this->faker->name,
+				'email' => $this->faker->email,
+				'profile_image' => $client_id . '.jpg',
+				'birthdate' => ((new \DateTime())->sub(new \DateInterval('P' . (6000 + rand(0,14000)) . 'D')))->format('m-d'), // new date between 15-50 years ago;
+				'note' => $this->faker->sentence(rand(1,15)),
+				'is_unsubscribed' => (bool) rand(0,1),
+			];
+			if (rand(0,2)) {
+				$client['telegram'] = 'doc999tor';
 			}
-			$appointment['clients'] = $clients;
+			$clients []= $client;
 		}
+		$appointment['clients'] = $clients;
 
 		if (rand(0,5)) {
 			$client_id = rand(1, 120);
@@ -343,9 +343,14 @@ class AppointmentsCtrl extends Controller {
 			$appointment['note'] = $this->faker->sentence(rand(1,15));
 		}
 
+		if (!rand(0,5)) {
+			$appointment['deleted_date'] = (new \DateTime)->sub(new \DateInterval('P' . rand(0, 7) . 'D'))->format('Y-m-d H:i:s');
+		}
+
 		if (!rand(0,4)) {
 			$appointment['off_time'] = rand(0,1) ? 'break' : 'meeting';
 			unset($appointment['client_id']);
+			unset($appointment['clients']);
 			unset($appointment['name']);
 			unset($appointment['phone']);
 			unset($appointment['phone_canonical']);
