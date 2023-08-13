@@ -106,6 +106,7 @@ class ServicesCtrl extends Controller {
 		return [
 			"id" => $id,  // AvodaID
 			"name" => Utils::generatePhrase('', 1, 6), // Name
+			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			'count' => rand(1, 3),
 		];
