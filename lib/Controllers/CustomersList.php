@@ -207,6 +207,16 @@ class CustomersList extends Controller {
 	}
 	public function skipImportBulkClients(Request $request, Response $response) { return $response->withStatus(204); }
 
+	public function importClientsFile (Request $request, Response $response) {
+		if (count($request->getUploadedFiles()) && !empty($request->getUploadedFiles()['file'])) {
+			return $response->withStatus(202);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>the file is not correct");
+			return $response->withStatus(400);
+		}
+	}
+
 	public static function getSourceVariants (): array {
 		return ['facebook', 'instagram', 'рекомендация_клиента', 'сайт', 'местная_газета', 'подобрал_на_помойке'];
 	}

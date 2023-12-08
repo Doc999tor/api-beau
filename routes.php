@@ -90,6 +90,7 @@ $app->group('/customers-list', function () use ($app) {
 	$app->get   ('/clients', $prefix . 'getClients');
 	$app->post  ('/clients/import', $prefix . 'importBulkClients');
 	$app->post  ('/clients/import/skip', $prefix . 'skipImportBulkClients');
+	$app->post  ('/clients/import/manual', $prefix . 'importClientsFile');
 	$app->map   (['HEAD'], '/clients', $prefix . 'getCount');
 	$app->delete('/clients', $prefix . 'deleteClients');
 	// $app->delete('/clients/{client_ids:(?:\d+)(?:,\d+)*}', $prefix . 'deleteClients');

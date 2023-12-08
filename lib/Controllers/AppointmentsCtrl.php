@@ -485,7 +485,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkBreakCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			if ($body['recurring_total_amount'] == 99) {
+			if (!empty($body['recurring_total_amount']) && $body['recurring_total_amount'] == 99) {
 				$dates_count = rand(1, 6);
 				$dates = [];
 				for ($i=0; $i < $dates_count; $i++) {
