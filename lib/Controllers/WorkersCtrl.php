@@ -3,7 +3,6 @@
 namespace Lib\Controllers;
 
 use \Lib\Controllers\Controller;
-use \Lib\Controllers\ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Lib\Helpers\Utils;
@@ -60,7 +59,7 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = ["id" => $random_id, "permission_level" => "staff", ];
+			$response_body = array_merge(["id" => $random_id, "permission_level" => "staff", ], $body);
 			if (!empty($files)) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
@@ -85,7 +84,7 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = ["id" => $args['worker_id'], "permission_level" => "staff", ];
+			$response_body = array_merge(["id" => $args['worker_id'], "permission_level" => "staff"], $body);
 			if (!empty($body['photo'])) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
@@ -121,7 +120,7 @@ class WorkersCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo'];
+		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo', 'email_appointments_notifications'];
 
 		$is_correct = true;
 		$msg = '';
@@ -191,7 +190,7 @@ class WorkersCtrl extends Controller {
 			if (isset($files[$file_name])) {
 				$file = $files[$file_name];
 				if ($file->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
-				if ($file->getSize() > \Lib\Helpers\Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
+				if ($file->getSize() > Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
 				if (substr($file->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
 
 				$extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
