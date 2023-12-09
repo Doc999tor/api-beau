@@ -59,7 +59,14 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = array_merge(["id" => $random_id, "permission_level" => "staff", ], $body);
+			$response_body = array_merge(
+				["id" => $random_id, "permission_level" => "staff"],
+				array_map(function ($v) {
+					$decoded_value = json_decode($v, true);
+					$decoded_value = $decoded_value ? $decoded_value : $v;
+					return $decoded_value === 'null' ? null : $decoded_value;
+				}, $body)
+			);
 			if (!empty($files)) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
@@ -84,7 +91,14 @@ class WorkersCtrl extends Controller {
 
 		if ($is_body_correct['is_correct'] && $is_files_correct['is_correct']) {
 			$random_id = rand(50, 500);
-			$response_body = array_merge(["id" => $args['worker_id'], "permission_level" => "staff"], $body);
+			$response_body = array_merge(
+				["id" => $args['worker_id'], "permission_level" => "staff"],
+				array_map(function ($v) {
+					$decoded_value = json_decode($v, true);
+					$decoded_value = $decoded_value ? $decoded_value : $v;
+					return $decoded_value === 'null' ? null : $decoded_value;
+				}, $body)
+			);
 			if (!empty($body['photo'])) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
