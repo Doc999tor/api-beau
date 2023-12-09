@@ -51,9 +51,17 @@ class AppointmentsCtrl extends Controller {
 
 				$period = new \DatePeriod($start, new \DateInterval('P1D'), $end);
 
+				$today = (new \DateTime())->format('Y-m-d');
+
 				$appointments = [];
 				$days_count = 0;
 				foreach ($period as $date) {
+					if ($date->format('Y-m-d') === $today) {
+						$appointments []= $this->generateAppointment((clone $date)->setTime(9, 0), 90);
+						$appointments []= $this->generateAppointment((clone $date)->setTime(13, 0), 120);
+						continue;
+					}
+
 					if (!rand(0,3)) { continue; } # randomly no events
 					if (++$days_count > 100) { break; }
 
@@ -76,7 +84,7 @@ class AppointmentsCtrl extends Controller {
 				}
 
 				usort($appointments, function ($a, $b) {
-					return new \DateTime($a['start']) < new \DateTime($b['start']);
+					return new \DateTime($a['start']) > new \DateTime($b['start']);
 				});
 
 				return $response->withJson($appointments);
@@ -142,8 +150,8 @@ class AppointmentsCtrl extends Controller {
 		}
 
 		$start_time = (new \DateTime())->setTime(10, 0);
-		$max_avaiable_slots = 8 * 4 + 1; # 10:00-18:00 including
-		$slots_order_nums = rand(0,3) ? array_rand(range(1, $max_avaiable_slots), rand(8, 15)) : [];
+		$max_available_slots = 8 * 4 + 1; # 10:00-18:00 including
+		$slots_order_nums = rand(0,3) ? array_rand(range(1, $max_available_slots), rand(8, 15)) : [];
 		sort($slots_order_nums);
 		$slots_start_times = array_map(function (int $offset) use ($start_time) {
 			return ['time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 15 . 'M'))->format('H:i')];
@@ -250,9 +258,9 @@ class AppointmentsCtrl extends Controller {
 		return $response->withJson($holidays);
 	}
 
-	private function generateAppointment(\DateTime $start) {
+	private function generateAppointment(\DateTime $start, int $duration = null) {
 		$services_count = rand(1, 5);
-		$duration = rand(1, 8) * 30;
+		$duration = $duration ?? rand(1, 8) * 30;
 		$phone = rand(1000000, 999999999);
 
 		$total_price = rand(0,50) * 10;
@@ -522,7 +530,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		$diff_keys = array_diff(array_keys($body), $correct_body); # non-expected fields exist
 		if (!empty($diff_keys)) {
 			$is_correct = false;
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
@@ -563,7 +571,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_correct = true; $msg = '';
 
-		$diff_keys = array_diff(array_keys($body), $correct_body); # nonexpected fields exist
+		$diff_keys = array_diff(array_keys($body), $correct_body); # non-expected fields exist
 		if (!empty($diff_keys)) {
 			$is_correct = false;
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
