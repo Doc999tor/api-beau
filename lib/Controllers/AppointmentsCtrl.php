@@ -57,7 +57,7 @@ class AppointmentsCtrl extends Controller {
 				$days_count = 0;
 				foreach ($period as $date) {
 					if ($date->format('Y-m-d') === $today) {
-						$appointments []= $this->generateAppointment((clone $date)->setTime(9, 0), 90);
+						$appointments []= $this->generateAppointment((clone $date)->setTime(9, 0), 60);
 						$appointments []= $this->generateAppointment((clone $date)->setTime(13, 0), 120);
 						continue;
 					}

@@ -63,8 +63,7 @@ class WorkersCtrl extends Controller {
 				["id" => $random_id, "permission_level" => "staff"],
 				array_map(function ($v) {
 					$decoded_value = json_decode($v, true);
-					$decoded_value = $decoded_value ? $decoded_value : $v;
-					return $decoded_value === 'null' ? null : $decoded_value;
+					return json_last_error() === JSON_ERROR_NONE ? $decoded_value : $v;
 				}, $body)
 			);
 			if (!empty($files)) {
@@ -95,8 +94,7 @@ class WorkersCtrl extends Controller {
 				["id" => $args['worker_id'], "permission_level" => "staff"],
 				array_map(function ($v) {
 					$decoded_value = json_decode($v, true);
-					$decoded_value = $decoded_value ? $decoded_value : $v;
-					return $decoded_value === 'null' ? null : $decoded_value;
+					return json_last_error() === JSON_ERROR_NONE ? $decoded_value : $v;
 				}, $body)
 			);
 			if (!empty($body['photo'])) {
@@ -156,14 +154,14 @@ class WorkersCtrl extends Controller {
 		if (empty($body['businessHours'])) { $is_correct = false; $msg .= 'businessHours is missing' . "<br>"; }
 		else {
 			$businessHours = json_decode($body['businessHours'], true);
-			if (count($businessHours) !== 7 || count(array_filter($businessHours, function ($day) {
+			if (count($businessHours) !== count(array_filter($businessHours, function ($day) {
 				return isset($day['daysOfWeek'])
 						&& is_array($day['daysOfWeek'])
 						&& count($day['daysOfWeek']) === 1
 						&& is_int($day['daysOfWeek'][0])
 					&& isset($day['startTime']) && strlen($day['startTime']) === 5
 					&& isset($day['endTime']) && strlen($day['endTime']) === 5;
-			})) !== 7) { $is_correct = false; $msg .= 'businessHours incorrect' . "<br>"; }
+			}))) { $is_correct = false; $msg .= 'businessHours incorrect' . "<br>"; }
 		}
 
 		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
