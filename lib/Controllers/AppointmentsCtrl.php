@@ -287,6 +287,7 @@ class AppointmentsCtrl extends Controller {
 			'is_booked_remotely' => (bool)rand(0,1),
 			'is_confirmed' => (bool)rand(0,1),
 			'is_recurring' => !(bool)rand(0,3),
+			'recurring_rule' => null,
 			'off_time' => null,
 			'added_date' => (new \DateTime)->sub(new \DateInterval('P' . rand(0, 30) . 'D'))->format('Y-m-d H:i:s'),
 		];
@@ -349,6 +350,35 @@ class AppointmentsCtrl extends Controller {
 		}
 		if (!rand(0,3)) {
 			$appointment['note'] = $this->faker->sentence(rand(1,15));
+		}
+
+		if (!rand(0,5)) {
+			$freq_list = ['DAILY', 'WEEKLY', 'MONTHLY'];
+			$freq_value = $freq_list[array_rand($freq_list)];
+			$freq = 'FREQ=' . $freq_value . ';';
+			$interval = 'INTERVAL=' . rand(1, 2) . ';';
+			$count = 'COUNT=' . rand(2, 10);
+			$by_rule = '';
+			switch ($freq_value) {
+				case $freq_list[1]:
+					$weekdays = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+					$by_days_values = [(new \DateTime($appointment['start']))->format('N') - 1];
+					if (!rand(0,1)) {
+						$by_days_values []= array_rand($weekdays);
+					}
+					sort($by_days_values, SORT_NUMERIC);
+					$by_days = implode(',', array_map(function ($v) use ($weekdays) {
+						return $weekdays[$v];
+					}, $by_days_values));
+					$by_rule = 'BYDAY=' . $by_days . ';';
+					break;
+				case $freq_list[2]:
+					$by_rule = 'BYMONTHDAY=' . substr($appointment['start'], 8, 2) . ';';
+					break;
+
+				default: break;
+			}
+			$appointment['recurring_rule'] = $freq . $interval . $by_rule . $count;
 		}
 
 		if (!rand(0,5)) {
