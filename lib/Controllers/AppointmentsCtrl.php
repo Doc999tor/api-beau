@@ -556,7 +556,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -590,6 +590,23 @@ class AppointmentsCtrl extends Controller {
 		if (isset($body['recurring_step_days']) && !ctype_digit($body['recurring_step_days'])) { $is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
 		if (isset($body['recurring_total_amount']) && !ctype_digit($body['recurring_total_amount'])) { $is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
 
+		if (isset($body['recurring_rule'])) {
+			$rule = [];
+			$components = explode(';', $body['recurring_rule']);
+			foreach ($components as $pair) {
+				list($key, $value) = explode('=', $pair);
+				$rule[$key] = $value;
+			}
+			if (
+				!isset($rule['FREQ'])
+				|| !in_array($rule['FREQ'], ['DAILY', 'WEEKLY', 'MONTHLY'])
+				|| !isset($rule['INTERVAL'])
+				|| !ctype_digit($rule['INTERVAL'])
+				|| !isset($rule['COUNT'])
+				|| !ctype_digit($rule['COUNT'])
+			) { $is_correct = false; $msg .= ' recurring_rule ' . $body['recurring_rule'] . ' has is not correct <br>'; }
+		}
+
 		if (!isset($body['worker_id']) || !ctype_digit((string) $body['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (!isset($body['added']) || !\date_create($body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
@@ -613,6 +630,23 @@ class AppointmentsCtrl extends Controller {
 		if (isset($body['recurring_step_days']) && !ctype_digit($body['recurring_step_days'])) { $is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
 		if (isset($body['recurring_total_amount']) && !ctype_digit($body['recurring_total_amount'])) { $is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
 
+		if (isset($body['recurring_rule'])) {
+			$rule = [];
+			$components = explode(';', $body['recurring_rule']);
+			foreach ($components as $pair) {
+				list($key, $value) = explode('=', $pair);
+				$rule[$key] = $value;
+			}
+			if (
+				!isset($rule['FREQ'])
+				|| !in_array($rule['FREQ'], ['DAILY', 'WEEKLY', 'MONTHLY'])
+				|| !isset($rule['INTERVAL'])
+				|| !ctype_digit($rule['INTERVAL'])
+				|| !isset($rule['COUNT'])
+				|| !ctype_digit($rule['COUNT'])
+			) { $is_correct = false; $msg .= ' recurring_rule ' . $body['recurring_rule'] . ' has is not correct <br>'; }
+		}
+
 		if (!isset($body['worker_id']) || !ctype_digit((string) $body['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (!isset($body['added']) || !\date_create($body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DD hh:mm:ss format, like 2019-12-18T02:09:54 <br>'; }
@@ -628,6 +662,23 @@ class AppointmentsCtrl extends Controller {
 
 		if (isset($body['recurring_step_days']) && !ctype_digit($body['recurring_step_days'])) { $is_correct = false; $msg .= ' recurring_step_days has to be an integer <br>'; }
 		if (isset($body['recurring_total_amount']) && !ctype_digit($body['recurring_total_amount'])) { $is_correct = false; $msg .= ' recurring_total_amount has to be an integer <br>'; }
+
+		if (isset($body['recurring_rule'])) {
+			$rule = [];
+			$components = explode(';', $body['recurring_rule']);
+			foreach ($components as $pair) {
+				list($key, $value) = explode('=', $pair);
+				$rule[$key] = $value;
+			}
+			if (
+				!isset($rule['FREQ'])
+				|| !in_array($rule['FREQ'], ['DAILY', 'WEEKLY', 'MONTHLY'])
+				|| !isset($rule['INTERVAL'])
+				|| !ctype_digit($rule['INTERVAL'])
+				|| !isset($rule['COUNT'])
+				|| !ctype_digit($rule['COUNT'])
+			) { $is_correct = false; $msg .= ' recurring_rule ' . $body['recurring_rule'] . ' has is not correct <br>'; }
+		}
 
 		if (!isset($body['worker_id']) || !ctype_digit((string) $body['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
