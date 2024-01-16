@@ -96,6 +96,40 @@ class AppointmentsCtrl extends Controller {
 			}
 		}
 	}
+	public function getRecurrentAppointments (Request $request, Response $response):Response {
+		if (!rand(0,2)) {
+			return $response->withJson([]);
+		}
+
+		$start = new \DateTime();
+		$end = (clone $start)->add(new \DateInterval('P1M'));
+		$period = new \DatePeriod($start, new \DateInterval('P1D'), $end);
+
+		$appointments = [];
+		$days_count = 0;
+		foreach ($period as $date) {
+			if (rand(0,3)) { continue; } # randomly no events
+			if (++$days_count > 100) { break; }
+
+			$hours_range = range(10, 19);
+			shuffle($hours_range);
+			$hours = array_slice($hours_range, 0, rand(0, count($hours_range)));
+			sort($hours);
+
+			for ($i=0, $count_hours = count($hours); $i < $count_hours; $i++) {
+				$datetime = (clone $date)->add(new \DateInterval("PT{$hours[$i]}H" . (rand(0,3)*15) . 'M'));
+
+				$appointments []= $this->generateAppointment($datetime);
+			}
+		}
+
+		usort($appointments, function ($a, $b) {
+			return new \DateTime($a['start']) > new \DateTime($b['start']);
+		});
+
+		return $response->withJson($appointments);
+
+	}
 	public function getCalendarCabinet (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
 
@@ -426,6 +460,7 @@ class AppointmentsCtrl extends Controller {
 				$added_appointment['note'] = $body['note'];
 				$added_appointment['address'] = $body['address'];
 				$added_appointment['worker_id'] = $body['worker_id'];
+				$added_appointment['recurring_rule'] = $body['recurring_rule'];
 
 				$response_obj['appointment_data'] = $added_appointment;
 				if (rand(0,3)) {
@@ -474,6 +509,7 @@ class AppointmentsCtrl extends Controller {
 				$edited_appointment['worker_id'] = $body['worker_id'];
 
 				$edited_appointment['is_recurring'] = empty($body['recurring_total_amount']); // undefined or = 0
+				$edited_appointment['recurring_rule'] = $body['recurring_rule'];
 
 				$response_obj['appointment_data'] = $edited_appointment;
 				return $response->withJson($response_obj);
@@ -556,7 +592,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
+		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
 
 		$is_correct = true; $msg = '';
 
