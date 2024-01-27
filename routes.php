@@ -43,6 +43,7 @@ $app->group('/appointments', function () use ($app) {
 	})->add(new ReturnID());
 	$app->post('/vacation', $prefix . 'addVacation');
 
+	$app->get('/{appointment_id:\d+}/recurring/touched', $prefix . 'getRecurrentAppointments');
 	$app->put ('/{appointment_id:\d+}', $prefix . 'editAppointment');
 	$app->put ('/{appointment_id:\d+}/undelete', $prefix . 'undelete');
 	$app->put ('/{appointment_id:\d+}/prepayment', $prefix . 'pay');
