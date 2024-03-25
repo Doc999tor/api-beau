@@ -51,6 +51,8 @@ $app->group('/appointments', function () use ($app) {
 	$app->delete('/{appointment_id:\d+}', $prefix . 'delete');
 	$app->delete('/{appointment_id:\d+}/recurring', $prefix . 'delete');
 
+	$app->put('/{appointment_id:\d+}/confirmation', $prefix . 'confirm');
+
 	$app->get('/settings', $prefix . 'getCalendarSettings');
 	$app->get('/settings/holidays', $prefix . 'getHolidays');
 });
@@ -144,7 +146,7 @@ $app->group('/customers-details', function () use ($app) {
 		});
 
 		# Note
-		$app->group('/notes', function () use ($app, $prefix) {
+		$app->group('/{notes:notes|inventory}', function () use ($app, $prefix) {
 			$note_prefix = $prefix . 'NotesCtrl';
 			$app->post('', $note_prefix . ':addNote')->add(new ReturnID());
 

@@ -266,6 +266,10 @@ class AppointmentsCtrl extends Controller {
 		}
 	}
 
+	public function confirm (Request $request, Response $response) {
+		return $response->withStatus(204);
+	}
+
 	public function getCalendarSettings(Request $request, Response $response) {
 		$week_types = ['daily', 'weekly', 'monthly', 'agenda'];
 		$slot_duration_options = [5,10,15,20,30,60];
@@ -460,7 +464,7 @@ class AppointmentsCtrl extends Controller {
 				$added_appointment['note'] = $body['note'];
 				$added_appointment['address'] = $body['address'];
 				$added_appointment['worker_id'] = $body['worker_id'];
-				$added_appointment['recurring_rule'] = $body['recurring_rule'];
+				$added_appointment['recurring_rule'] = $body['recurring_rule'] ?? null;
 
 				$response_obj['appointment_data'] = $added_appointment;
 				if (rand(0,3)) {
@@ -488,7 +492,7 @@ class AppointmentsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 	}
-	public function editAppointment (Request $request, Response $response):Response {
+	public function editAppointment (Request $request, Response $response, $args):Response {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
 
@@ -498,20 +502,21 @@ class AppointmentsCtrl extends Controller {
 				$response_obj = $this->createCalendarResponseObj();
 
 				$start = new \DateTime($body['start']);
-				$edited_appointment = $this->generateAppointment(clone $start);
-				$edited_appointment['start'] = $start->format('Y-m-d H:i');
+				$edited_offtime = $this->generateAppointment(clone $start);
+				$edited_offtime['id'] = $args['appointment_id'];
+				$edited_offtime['start'] = $start->format('Y-m-d H:i');
 				$duration = $body['duration'];
-				$edited_appointment['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
-				$edited_appointment['off_time'] = null;
-				$edited_appointment['total_price'] = $body['total_price'];
-				$edited_appointment['note'] = $body['note'];
-				$edited_appointment['address'] = $body['address'];
-				$edited_appointment['worker_id'] = $body['worker_id'];
+				$edited_offtime['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$edited_offtime['off_time'] = null;
+				$edited_offtime['total_price'] = $body['total_price'];
+				$edited_offtime['note'] = $body['note'];
+				$edited_offtime['address'] = $body['address'];
+				$edited_offtime['worker_id'] = $body['worker_id'];
 
-				$edited_appointment['is_recurring'] = empty($body['recurring_total_amount']); // undefined or = 0
-				$edited_appointment['recurring_rule'] = $body['recurring_rule'];
+				$edited_offtime['is_recurring'] = empty($body['recurring_total_amount']); // undefined or = 0
+				$edited_offtime['recurring_rule'] = $body['recurring_rule'] ?? null;
 
-				$response_obj['appointment_data'] = $edited_appointment;
+				$response_obj['appointment_data'] = $edited_offtime;
 				return $response->withJson($response_obj);
 			} else {
 				$body = $response->getBody();
@@ -521,7 +526,24 @@ class AppointmentsCtrl extends Controller {
 		} else {
 			$is_body_correct = $this->checkMeetingCorrectness($body);
 			if ($is_body_correct['is_correct']) {
-				return $response->withStatus(204);
+				$response_obj = $this->createCalendarResponseObj();
+
+				$start = new \DateTime($body['start']);
+				$edited_offtime = $this->generateAppointment(clone $start);
+				$edited_offtime['id'] = $args['appointment_id'];
+				$edited_offtime['start'] = $start->format('Y-m-d H:i');
+				$duration = $body['duration'];
+				$edited_offtime['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$edited_offtime['off_time'] = $body['off_time'];
+				$edited_offtime['note'] = $body['note'];
+				$edited_offtime['address'] = $body['address'];
+				$edited_offtime['worker_id'] = $body['worker_id'];
+
+				$edited_offtime['is_recurring'] = empty($body['recurring_total_amount']); // undefined or = 0
+				$edited_offtime['recurring_rule'] = $body['recurring_rule'] ?? null;
+
+				$response_obj['appointment_data'] = $edited_offtime;
+				return $response->withJson($response_obj);
 			} else {
 				$body = $response->getBody();
 				$body->write($is_body_correct['msg']);
@@ -535,7 +557,7 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkMeetingCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			if ($body['recurring_total_amount'] == 99) {
+			if (isset($body['recurring_total_amount']) && $body['recurring_total_amount'] == 99) {
 				$dates_count = rand(1, 6);
 				$dates = [];
 				for ($i=0; $i < $dates_count; $i++) {
@@ -545,7 +567,28 @@ class AppointmentsCtrl extends Controller {
 				sort($dates);
 				return $response->withStatus(409)->withJson([ "error" => "overlapping",  "overlappingEvents" => $dates ]);
 			} else {
-				return $response->withStatus(201)->withJson([ "appointment_id" => rand(0, 150), "is_notification_sent" => false, ]);
+				$response_obj = $this->createCalendarResponseObj();
+
+				$start = new \DateTime($body['start']);
+				$added_offtime = $this->generateAppointment(clone $start);
+				$added_offtime['start'] = $start->format('Y-m-d H:i');
+				$duration = $body['duration'];
+				$added_offtime['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$added_offtime['off_time'] = 'meeting';
+				$added_offtime['note'] = $body['note'];
+				$added_offtime['address'] = $body['address'];
+				$added_offtime['worker_id'] = $body['worker_id'];
+				$added_offtime['recurring_rule'] = $body['recurring_rule'] ?? null;
+
+				$response_obj['appointment_data'] = $added_offtime;
+				if (rand(0,3)) {
+					$response_obj['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+					if (rand(0,1)) {
+						$response_obj['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+					}
+				}
+
+				return $response->withStatus(201)->withJson($response_obj);
 			}
 		} else {
 			$body = $response->getBody();
@@ -569,7 +612,28 @@ class AppointmentsCtrl extends Controller {
 				sort($dates);
 				return $response->withStatus(409)->withJson([ "error" => "overlapping",  "overlappingEvents" => $dates ]);
 			} else {
-				return $response->withStatus(201)->withJson([ "appointment_id" => rand(0, 150), "is_notification_sent" => false, ]);
+				$response_obj = $this->createCalendarResponseObj();
+
+				$start = new \DateTime($body['start']);
+				$added_offtime = $this->generateAppointment(clone $start);
+				$added_offtime['start'] = $start->format('Y-m-d H:i');
+				$duration = $body['duration'];
+				$added_offtime['end'] = (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i');
+				$added_offtime['off_time'] = 'break';
+				$added_offtime['note'] = $body['note'];
+				$added_offtime['address'] = $body['address'];
+				$added_offtime['worker_id'] = $body['worker_id'];
+				$added_offtime['recurring_rule'] = $body['recurring_rule'] ?? null;
+
+				$response_obj['appointment_data'] = $added_offtime;
+				if (rand(0,3)) {
+					$response_obj['bonus_points'] = ['actions' => [['type' => 'earn_regular', 'points' => rand(1,10) * 10]]];
+					if (rand(0,1)) {
+						$response_obj['bonus_points']['actions'] []= ['type' => 'complete_3_tasks', 'points' => rand(1,10) * 10];
+					}
+				}
+
+				return $response->withStatus(201)->withJson($response_obj);
 			}
 		} else {
 			$body = $response->getBody();
@@ -650,7 +714,7 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'recurring_step_days', 'recurring_total_amount', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -690,7 +754,7 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkBreakCorrectness (array $body): array {
-		$correct_body = ['start', 'duration', 'recurring_step_days', 'recurring_total_amount', 'worker_id', 'added'];
+		$correct_body = ['start', 'duration', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
