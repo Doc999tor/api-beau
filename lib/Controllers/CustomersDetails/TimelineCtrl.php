@@ -65,7 +65,7 @@ class TimelineCtrl extends Controller {
 			"date" => $date->format('Y-m-d H:i'),
 			"end" => $end->format('Y-m-d H:i'),
 			"added_date" => $added_date->format('Y-m-d H:i'),
-			"worker_id" => rand(1, 5),
+			"worker_id" => rand(1, 3),
 			"worker_name" => Utils::generatePhrase('', 1, 2),
 			"worker_profile_image" => (rand(1,2)%2 ? 1 : Utils::generatePhrase('', 1, 2)) . '.jpg',
 			"services" => array_map(function ($v) {
