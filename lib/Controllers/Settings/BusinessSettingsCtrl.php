@@ -16,6 +16,18 @@ class BusinessSettingsCtrl extends Controller {
 			return $response->withStatus(400)->getBody()->write('business_name has to exist and be more than 1 symbol');
 		}
 	}
+	public function uploadBusinessLogo (Request $request, Response $response):Response {
+		$is_body_correct = \Lib\Controllers\CustomersDetails\MediaCtrl::checkMedia($request, 'file');
+
+		if ($is_body_correct['is_correct']) {
+			return $response->withJson(['business_logo' => 'logo.jpg'])->withStatus(204);
+		} else {
+			$body = $response->getBody();
+			$body->write("<br>" . $is_body_correct['msg']);
+			return $response->withStatus(400);
+		}
+	}
+
 	public function setBusinessPhoneNumber (Request $request, Response $response) {
 		$body = $request->getParsedBody();
 
@@ -50,6 +62,15 @@ class BusinessSettingsCtrl extends Controller {
 			return $response->withStatus(204);
 		} else {
 			return $response->withStatus(400)->getBody()->write('thank_you_message has to exist and be more than 1 symbol');
+		}
+	}
+	public function setAppointmentConfirmation (Request $request, Response $response) {
+		$body = $request->getParsedBody();
+
+		if (!empty($body['appointment_confirmation'])) {
+			return $response->withStatus(204);
+		} else {
+			return $response->withStatus(400)->getBody()->write('appointment_confirmation has to exist and be more than 1 symbol');
 		}
 	}
 	public function setWebsite (Request $request, Response $response) {
