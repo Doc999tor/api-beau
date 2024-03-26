@@ -48,7 +48,7 @@ class MediaCtrl extends Controller {
 			$is_correct = false; $http_status = 400; $msg .= $file_name . " is not sent or sent not under \"$file_name\" field<br>";
 		} else if ((int)$request->getHeaderLine('Content-Length') > \Lib\Helpers\Utils::returnBytes('8M' /*ini_get('post_max_size')*/)) { # files larger than post_max_size just stripped from the request
 			$is_correct = false; $http_status = 413; $msg .= 'file is too big, it should be under ' . '8M' /*ini_get("post_max_size")*/ . "<br>";
-		} else if (!isset($body['date']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) {
+		} else if (isset($body['date']) && !\DateTime::createFromFormat('Y-m-d H:i:s', $body['date'])) {
 			$is_correct = false; $http_status = 400; $msg .= 'date has to be YYYY-MM-DD hh:mm:ss format, like 2021-01-01 02:09:54<br>';
 		}
 

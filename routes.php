@@ -246,10 +246,12 @@ $app->group('/settings', function () use ($app) {
 	$app->post('/calendar/import', 'CalendarSettingsCtrl:importCalendar');
 
 	$app->put('/business/business_name', 'BusinessSettingsCtrl:setBusinessName');
+	$app->post('/business/business_logo', 'BusinessSettingsCtrl:uploadBusinessLogo');
 	$app->put('/business/business_phone_number', 'BusinessSettingsCtrl:setBusinessPhoneNumber');
 	$app->put('/business/business_location', 'BusinessSettingsCtrl:setBusinessLocation');
 	$app->put('/business/is_meeting_at_client_location', 'BusinessSettingsCtrl:setIsMeetingAtClientLocation');
 	$app->put('/business/thank_you_message', 'BusinessSettingsCtrl:setThankYouMessage');
+	$app->put('/business/appointment_confirmation', 'BusinessSettingsCtrl:setAppointmentConfirmation');
 	$app->put('/business/website', 'BusinessSettingsCtrl:setWebsite');
 	$app->put('/business/facebook', 'BusinessSettingsCtrl:setFacebook');
 	$app->put('/business/instagram', 'BusinessSettingsCtrl:setInstagram');
