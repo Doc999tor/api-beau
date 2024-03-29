@@ -8,8 +8,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class AuthCtrl extends Controller {
 	public function checkLogin (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
+		if (count($req_body) === 1) {
+			$req_body = json_decode($request->getBody()->getContents(), true);
+		}
 		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['current-password']);
-		return $response->withStatus($error_code);
+		$response = $response->withStatus($error_code);
+		if ($error_code === 201) {
+			return $response->withJson(['start_page' => '/kz/calendar']);
+		} else {
+			return $response;
+		}
 	}
 	public function checkLoginPersonalCabinet (Request $request, Response $response):Response {
 		$req_body = json_decode($request->getBody()->getContents(), true);
@@ -47,12 +55,13 @@ class AuthCtrl extends Controller {
 
 	public function signup (Request $request, Response $response):Response {
 		$req_body = $request->getParsedBody();
+		if (count($req_body) === 1) {
+			$req_body = json_decode($request->getBody()->getContents(), true);
+		}
 
 		$is_body_correct = $this->checkSignupDataCorrectness($req_body);
 		if ($is_body_correct['is_correct']) {
 			$body = $response->getBody();
-			$body->write("/{$req_body['lang']}/calendar");
-
 			switch ($is_body_correct['error_code']) {
 				case 404: $error_code = 201; break; # 404 means it's a unrecognized email
 				case 409:
@@ -60,7 +69,12 @@ class AuthCtrl extends Controller {
 				default: $error_code = $is_body_correct['error_code'];
 			}
 
-			return $response->withStatus($error_code);
+			$response = $response->withStatus($error_code);
+			if ($error_code === 201) {
+				return $response->withJson(['start_page' => "/{$req_body['lang']}/calendar"]);
+			} else {
+				return $response;
+			}
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
@@ -149,7 +163,7 @@ class AuthCtrl extends Controller {
 			if ($pass === 'existing_pass') {
 				$error_code = 201; # found
 			} else {
-				// $error_code = 409; # email exists, pass doesn't
+				$error_code = 409; # email exists, pass doesn't
 			}
 		}
 
