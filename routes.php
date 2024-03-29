@@ -185,7 +185,8 @@ $app->group('/customers-details', function () use ($app) {
 			$prefix = 'CustomersDetails\TimelineCtrl:';
 			$app->get('/appointments', $prefix . 'getAppointments');
 			$app->get('/gallery', $prefix . 'getGallery');
-			$app->get('/debts', $prefix . 'getDepts');
+			$app->get('/debts', $prefix . 'getDebts');
+			$app->get('/inventory', $prefix . 'getDebts');
 			$app->get('/notes', $prefix . 'getNotes');
 			$app->get('/sms', $prefix . 'getSms');
 			$app->get('/punch_cards', $prefix . 'getPunchCards');
