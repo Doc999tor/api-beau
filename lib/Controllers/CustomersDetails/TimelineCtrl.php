@@ -25,9 +25,13 @@ class TimelineCtrl extends Controller {
 		$params = $request->getQueryParams();
 		return $response->withJson($this->timelineGenericMethod('gallery', $args['client_id']));
 	}
-	public function getDepts (Request $request, Response $response):Response {
+	public function getDebts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('depts'));
+		return $response->withJson($this->timelineGenericMethod('debts'));
+	}
+	public function getInventory (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+		return $response->withJson($this->timelineGenericMethod('debts'));
 	}
 	public function getNotes (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();
@@ -99,7 +103,7 @@ class TimelineCtrl extends Controller {
 		if (!(rand(1, 3) % 3)) { $media['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
 		return $media;
 	}
-	private function generateDepts(\DateTime $date, int $id, int $client_id = 1): array {
+	private function generateDebts(\DateTime $date, int $id, int $client_id = 1): array {
 		$is_note = !(rand(1, 4) % 4);
 
 		$is_deleted = !(rand(1, 5) % 5);
@@ -115,7 +119,7 @@ class TimelineCtrl extends Controller {
 			"sum" => (string)rand(1,30) . (rand(1,2) % 2 ? '5' : '0'),
 			"date" => $date->format('Y-m-d H:i'),
 		];
-		if ($is_note) { $dept['desc'] = Utils::generatePhrase('', 1, 21); }
+		if ($is_note) { $dept['desc'] = $this->faker->paragraphs(rand(1, 3), true); }
 		if ($is_modified) { $dept['modified_date'] = $modified_date->format('Y-m-d H:i'); }
 		if ($is_deleted) {
 			$dept['is_deleted'] = $is_deleted;
