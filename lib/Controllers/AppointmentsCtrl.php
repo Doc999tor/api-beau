@@ -390,7 +390,7 @@ class AppointmentsCtrl extends Controller {
 			$appointment['note'] = $this->faker->sentence(rand(1,15));
 		}
 
-		if (!rand(0,5)) {
+		if (!rand(0,3)) {
 			$freq_list = ['DAILY', 'WEEKLY', 'MONTHLY'];
 			$freq_value = $freq_list[array_rand($freq_list)];
 			$freq = 'FREQ=' . $freq_value . ';';
@@ -714,7 +714,7 @@ class AppointmentsCtrl extends Controller {
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
 	private function checkMeetingCorrectness (array $body): array {
-		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'address', 'worker_id', 'added'];
+		$correct_body = ['off_time', 'start', 'duration', 'end', 'is_all_day', 'note', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'added'];
 
 		$is_correct = true; $msg = '';
 
