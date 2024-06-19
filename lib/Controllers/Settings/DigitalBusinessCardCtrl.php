@@ -3,10 +3,8 @@
 namespace Lib\Controllers\Settings;
 
 use \Lib\Controllers\Controller;
-use \Lib\Controllers\ServicesCtrl;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use \Lib\Helpers\Utils;
 
 class DigitalBusinessCardCtrl extends Controller {
 	public function addCard (Request $request, Response $response):Response {
@@ -342,7 +340,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 	}
 	private function checkOnlineBookingCorrectness (array $body): array {
-		$correct_body = ['is_online_booking_enabled'];
+		$correct_body = ['is_online_booking_enabled', 'available_days_from_today', 'only_available_days_from_today', 'available_bookings', 'message_before_online_booking', 'message_after_online_booking'];
 
 		$is_correct = true;
 		$msg = '';
@@ -354,6 +352,14 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 
 		if (!isset($body['is_online_booking_enabled']) || !is_bool($body['is_online_booking_enabled'])) { $is_correct = false; $msg .= 'is_online_booking_enabled has to be boolean' . "<br>"; }
+
+		if (isset($body['available_days_from_today']) && !is_int($body['available_days_from_today'])) { $is_correct = false; $msg .= ' available_days_from_today has to be an integer <br>'; }
+		if (isset($body['only_available_days_from_today']) && !is_int($body['only_available_days_from_today'])) { $is_correct = false; $msg .= ' only_available_days_from_today has to be an integer <br>'; }
+		if (isset($body['available_bookings']) && !is_int($body['available_bookings'])) { $is_correct = false; $msg .= ' available_bookings has to be an integer <br>'; }
+
+		if (!empty($body['message_before_online_booking']) && mb_strlen($body['message_before_online_booking']) < 3) { $is_correct = false; $msg .= 'message_before_online_booking too short' . "<br>"; }
+		if (!empty($body['message_after_online_booking']) && mb_strlen($body['message_after_online_booking']) < 3) { $is_correct = false; $msg .= 'message_after_online_booking too short' . "<br>"; }
+
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 }

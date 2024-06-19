@@ -97,7 +97,7 @@ class AuthCtrl extends Controller {
 
 		$is_body_correct = $this->checkSetPasswordCorrectness($req_body);
 		if ($is_body_correct['is_correct']) {
-			return $response->withStatus(201);
+			return $response->withStatus(201)->withJson(['start_page' => '/kz/calendar']);
 		} else {
 			$body = $response->getBody();
 			$body->write($is_body_correct['msg']);
