@@ -251,7 +251,7 @@ class AppointmentsCtrl extends Controller {
 		$appointment_id = filter_var($args['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
 		$body = json_decode($request->getBody()->getContents(), true);
 
-		$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up'];
+		$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up', 'cancellation_by_client', ];
 
 		if (!isset($body['added']) || !\date_create($body['added'])) {
 			$response_body = $response->getBody();
@@ -314,8 +314,8 @@ class AppointmentsCtrl extends Controller {
 			"id" => (string) rand(1, 1000),
 			"start" => $start->format('Y-m-d H:i'),
 			'end' => (clone $start)->add(new \DateInterval('PT' . ( (int) ($duration/60) ) .'H' . ($duration%60) . 'M'))->format('Y-m-d H:i'),
-			'total_price' => (string) $total_price,
-			'prepayment' => (string) $prepayment,
+			'total_price' => $total_price,
+			'prepayment' => $prepayment,
 			'phone' => '0' . $phone,
 			'phone_canonical' => '+' . $phone,
 			"services" => array_map(function ($v) {

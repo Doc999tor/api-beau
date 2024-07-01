@@ -53,6 +53,10 @@ $app->group('/appointments', function () use ($app) {
 
 	$app->put('/{appointment_id:\d+}/confirmation', $prefix . 'confirm');
 
+	$app->post('/{appointment_id:\d+}/delete_request', function (Request $request, Response $response):Response {
+		return $response->withStatus(201);
+	});
+
 	$app->get('/settings', $prefix . 'getCalendarSettings');
 	$app->get('/settings/holidays', $prefix . 'getHolidays');
 });
