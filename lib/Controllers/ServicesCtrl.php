@@ -36,6 +36,39 @@ class ServicesCtrl extends Controller {
 		return $response->withJson($services);
 	}
 	public function getAllRT (Request $request, Response $response) {
+		$params = $request->getQueryParams();
+		if (!empty($params['sorting_criteria'])) {
+			$services = [];
+			$services_count = rand(0, 10);
+			for ($k=1; $k <= $services_count; $k++) {
+				$service = self::generateServiceRT(++$service_id);
+				$service['category_id'] = rand(1, 5);
+				$service['category_name'] = Utils::generateWord(5);
+				$services []= $service;
+			}
+
+			$sorting_criteria = $params['sorting_criteria'];
+			$multiplier = 1;
+			switch ($sorting_criteria) {
+				case 'total_income':
+					$multiplier = round(rand(0, 100000) / 100, 2);
+					break;
+				case 'appointment_count':
+					$multiplier = 1;
+					break;
+			}
+
+			foreach ($services as &$service) {
+				$service[$sorting_criteria] = round(rand(0, 100) * $multiplier, 2);
+			}
+			$order_directions = ['desc' => -1, 'asc' => 1];
+			usort($services, function($a, $b) use ($sorting_criteria, $order_directions, $params) {
+				return ($a[$sorting_criteria] <=> $b[$sorting_criteria]) * $order_directions[$params['order']];
+			});
+
+			return $response->withJson($services);
+		}
+
 		$categories = [];
 
 		$categories_count = rand(0, 5);
