@@ -132,7 +132,7 @@ class WorkersCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo', 'email_appointments_notifications'];
+		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo', 'email_appointments_notifications', 'permissions'];
 
 		$is_correct = true;
 		$msg = '';
