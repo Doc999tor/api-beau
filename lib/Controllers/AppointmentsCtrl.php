@@ -157,6 +157,12 @@ class AppointmentsCtrl extends Controller {
 						unset($appointment[$key]);
 					}
 				}
+				if (!rand(0,3)) {
+					$appointment['end'] = null;
+				}
+				if (!rand(0,3)) {
+					$appointment['total_price'] = null;
+				}
 				$appointments []= $appointment;
 			}
 		}
@@ -188,7 +194,10 @@ class AppointmentsCtrl extends Controller {
 		$slots_order_nums = rand(0,3) ? array_rand(range(1, $max_available_slots), rand(8, 15)) : [];
 		sort($slots_order_nums);
 		$slots_start_times = array_map(function (int $offset) use ($start_time) {
-			return ['time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 15 . 'M'))->format('H:i')];
+			return [
+				'time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 15 . 'M'))->format('H:i'),
+				'is_suggested' => (bool) rand(0,1),
+			];
 		}, $slots_order_nums);
 		return $response->withJson($slots_start_times);
 	}
@@ -421,6 +430,8 @@ class AppointmentsCtrl extends Controller {
 
 		if (!rand(0,5)) {
 			$appointment['deleted_date'] = (new \DateTime)->sub(new \DateInterval('P' . rand(0, 7) . 'D'))->format('Y-m-d H:i:s');
+			$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up', 'cancellation_by_client_online_booking', ];
+			$appointment['cancellation_reason'] = $cancellation_reasons[array_rand($cancellation_reasons)];
 		}
 
 		if (!rand(0,4)) {
