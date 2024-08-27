@@ -87,7 +87,7 @@ class TimelineCtrl extends Controller {
 			$deleted_date->sub(new \DateInterval('P' . rand(1, 5) . 'D'));
 			$appointment['deleted_date'] = $deleted_date->format('Y-m-d H:i');
 
-			$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up'];
+			$cancellation_reasons = ['cancellation_by_me', 'cancellation_by_client_prepayment_remained', 'cancellation_by_client_no_prepayment', 'client_didnt_show_up', 'cancellation_by_client_online_booking', ];
 			$appointment['cancellation_reason'] = $cancellation_reasons[array_rand($cancellation_reasons)];
 		}
 		if (!(rand(1, 3) % 3)) { $appointment['note'] = Utils::generatePhrase('', 1, rand(1, 21)); }
