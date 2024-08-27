@@ -78,6 +78,12 @@ class ServicesCtrl extends Controller {
 			$services_count = rand(0, 10);
 			for ($k=1; $k <= $services_count; $k++) {
 				$service = self::generateServiceRT(++$service_id);
+				if (rand(0, 3) === 0) {
+					$service['is_price_hidden_online_booking'] = true;
+				}
+				if (rand(0, 3) === 0) {
+					$service['is_duration_hidden_online_booking'] = true;
+				}
 				$services []= $service;
 			}
 
@@ -112,6 +118,7 @@ class ServicesCtrl extends Controller {
 		return [
 			"service_id" => $id,  // AvodaID
 			"service_name" => Utils::generatePhrase('', 1, 6), // Name
+			"public_name" => Utils::generatePhrase('', 1, 6), // Name
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
@@ -136,13 +143,21 @@ class ServicesCtrl extends Controller {
 		];
 	}
 	public static function generateServiceCalendar ($id) {
-		return [
+		$service = [
 			"id" => $id,  // AvodaID
 			"name" => Utils::generatePhrase('', 1, 6), // Name
+			"public_name" => Utils::generatePhrase('', 1, 6), // Name
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			'count' => rand(1, 3),
 		];
+		if (rand(0, 3) === 0) {
+			$service['is_price_hidden_online_booking'] = true;
+		}
+		if (rand(0, 3) === 0) {
+			$service['is_duration_hidden_online_booking'] = true;
+		}
+		return $service;
 	}
 
 	public function add (Request $request, Response $response):Response {
@@ -249,7 +264,7 @@ class ServicesCtrl extends Controller {
 		}
 	}
 	private function checkBodyCorrectness($body) {
-		$correct_body = ['name', 'duration', 'price', 'color', 'category_id'];
+		$correct_body = ['name', 'public_name', 'duration', 'price', 'color', 'category_id'];
 
 		$is_correct = true;
 		$msg = '';
