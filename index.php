@@ -17,7 +17,7 @@ $app->add(new \Lib\Middlewares\HeadersMiddleware())
 		"origin" => ["*"],
 		"methods" => ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
 		"headers.allow" => ['X-Requested-With', 'Content-Type', 'Cache-Control'],
-		"headers.expose" => ['Retry-After', 'X-Total-Count'],
+		"headers.expose" => ['Retry-After', 'X-Total-Count', 'Authorization'],
 		"credentials" => true,
 		"cache" => 86400,
 	]));
