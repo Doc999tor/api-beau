@@ -172,7 +172,7 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
+		$correct_body = ['business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'tiktok', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
 
 		$is_correct = true;
 		$msg = '';
@@ -340,7 +340,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 	}
 	private function checkOnlineBookingCorrectness (array $body): array {
-		$correct_body = ['is_online_booking_enabled', 'available_days_from_today', 'only_available_days_from_today', 'available_bookings', 'message_before_online_booking', 'message_after_online_booking'];
+		$correct_body = ['is_online_booking_enabled', 'online_booking_slots_suggestions', 'available_days_from_today', 'only_available_days_from_today', 'available_bookings', 'message_before_online_booking', 'message_after_online_booking', 'cancellation_policy', 'cancellation_allowed_days_from_today', 'cancellation_email_notification_only_days_from_today',];
 
 		$is_correct = true;
 		$msg = '';
@@ -352,6 +352,7 @@ class DigitalBusinessCardCtrl extends Controller {
 		}
 
 		if (!isset($body['is_online_booking_enabled']) || !is_bool($body['is_online_booking_enabled'])) { $is_correct = false; $msg .= 'is_online_booking_enabled has to be boolean' . "<br>"; }
+		if (!isset($body['online_booking_slots_suggestions']) || !is_bool($body['online_booking_slots_suggestions'])) { $is_correct = false; $msg .= 'online_booking_slots_suggestions has to be boolean' . "<br>"; }
 
 		if (isset($body['available_days_from_today']) && !is_int($body['available_days_from_today'])) { $is_correct = false; $msg .= ' available_days_from_today has to be an integer <br>'; }
 		if (isset($body['only_available_days_from_today']) && !is_int($body['only_available_days_from_today'])) { $is_correct = false; $msg .= ' only_available_days_from_today has to be an integer <br>'; }

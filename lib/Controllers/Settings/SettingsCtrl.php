@@ -236,6 +236,7 @@ class SettingsCtrl extends Controller {
 			'show_calendar_to',
 			'slot_duration',
 			'default_event_length',
+			'calendar_slots_suggestions',
 			'is_income_shown',
 			'is_cancellation_reason_shown',
 			'default_cancellation_reason',
@@ -256,6 +257,7 @@ class SettingsCtrl extends Controller {
 		if (empty($body['show_calendar_to']) || !(\DateTime::createFromFormat('H:i', $body['show_calendar_to']))) { $is_correct = false; $msg .= 'show_calendar_to supposed to be: hh:mm time' . "<br>"; }
 		if (empty($body['slot_duration']) || !(in_array($body['slot_duration'], [5, 10, 15, 20, 30, 60]))) { $is_correct = false; $msg .= 'slot_duration supposed to be: 5 | 10 | 15 | 20 | 30 | 60' . "<br>"; }
 		if (empty($body['default_event_length']) || !(in_array($body['default_event_length'], ['5', '10', '15', '20', '30', '60', '90', '120']))) { $is_correct = false; $msg .= 'default_event_length supposed to be: 5 | 10 | 15 | 20 | 30 | 60 | 90 | 120' . "<br>"; }
+		if (!isset($body['calendar_slots_suggestions']) || !is_bool($body['calendar_slots_suggestions'])) { $is_correct = false; $msg .= 'calendar_slots_suggestions supposed to be boolean' . "<br>"; }
 		if (!isset($body['address_based']) || !is_bool($body['address_based'])) { $is_correct = false; $msg .= 'address_based supposed to be boolean' . "<br>"; }
 		if (!isset($body['is_income_shown']) || !is_bool($body['is_income_shown'])) { $is_correct = false; $msg .= 'is_income_shown supposed to be boolean' . "<br>"; }
 
