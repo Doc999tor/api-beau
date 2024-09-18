@@ -14,7 +14,9 @@ class AuthCtrl extends Controller {
 		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['current-password']);
 		$response = $response->withStatus($error_code);
 		if ($error_code === 201) {
-			return $response->withJson(['start_page' => '/kz/calendar']);
+			return $response
+				->withHeader('Authorization', base64_encode($req_body['email'] . ':' . $req_body['current-password']))
+				->withJson(['start_page' => '/kz/calendar']);
 		} else {
 			return $response;
 		}
@@ -23,7 +25,9 @@ class AuthCtrl extends Controller {
 		$req_body = json_decode($request->getBody()->getContents(), true);
 
 		$error_code = $this->checkExistingCreds($req_body['email'], $req_body['pass']);
-		return $response->withStatus($error_code);
+		return $response
+			->withHeader('Authorization', base64_encode($req_body['email'] . ':' . $req_body['pass']))
+			->withStatus($error_code);
 	}
 
 	public function checkSignup (Request $request, Response $response):Response {
@@ -50,7 +54,9 @@ class AuthCtrl extends Controller {
 		}
 
 		$error_code = $this->checkNonExistingCreds($req_body['email'], $req_body['pass']);
-		return $response->withStatus($error_code);
+		return $response
+			->withHeader('Authorization', base64_encode($req_body['email'] . ':' . $req_body['pass']))
+			->withStatus($error_code);
 	}
 
 	public function signup (Request $request, Response $response):Response {
@@ -71,7 +77,9 @@ class AuthCtrl extends Controller {
 
 			$response = $response->withStatus($error_code);
 			if ($error_code === 201) {
-				return $response->withJson(['start_page' => "/{$req_body['lang']}/calendar"]);
+				return $response
+					->withHeader('Authorization', base64_encode($req_body['email'] . ':' . $req_body['pass']))
+					->withJson(['start_page' => "/{$req_body['lang']}/calendar"]);
 			} else {
 				return $response;
 			}
