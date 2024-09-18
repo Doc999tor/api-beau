@@ -26,7 +26,7 @@ class ServicesCtrl extends Controller {
 		}
 
 		$services = [];
-		for ($i=0; $i < $limit; $i++) {
+		for ($i=0, $end = rand(1, $limit); $i <= $end; $i++) {
 			$services []= self::generateService(mt_rand(2, 150), $q, $is_one_category);
 		}
 
@@ -71,11 +71,11 @@ class ServicesCtrl extends Controller {
 
 		$categories = [];
 
-		$categories_count = rand(0, 5);
+		$categories_count = rand(0, 3);
 		$service_id = 0;
 		for ($i=1; $i <= $categories_count; $i++) {
 			$services = [];
-			$services_count = rand(0, 10);
+			$services_count = rand(0, 5);
 			for ($k=1; $k <= $services_count; $k++) {
 				$service = self::generateServiceRT(++$service_id);
 				if (rand(0, 3) === 0) {
