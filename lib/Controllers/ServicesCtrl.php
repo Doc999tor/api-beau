@@ -123,6 +123,10 @@ class ServicesCtrl extends Controller {
 			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
 			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
 			'is_open_online' => (bool) rand(0, 1),
+			'is_group' => (bool) rand(0, 2),
+			'group_amount' => ((bool) rand(0, 2))
+				? rand(3, 5)
+				: 1,
 		];
 	}
 	public static function generateService($id, $q = '', $is_one_category = false) {
@@ -280,6 +284,10 @@ class ServicesCtrl extends Controller {
 		if (isset($body['price']) && !is_numeric($body['price'])) { $is_correct = false; $msg .= 'price has to be a number' . "<br>"; }
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit((string) $body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
+
+		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be a number' . "<br>"; }
+		if (isset($body['is_group']) && !is_bool($body['is_group'])) { $is_correct = false; $msg .= 'is_group has to be a number' . "<br>"; }
+		if (isset($body['group_amount']) && !ctype_digit((string) $body['group_amount'])) { $is_correct = false; $msg .= 'group_amount has to be an integer' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

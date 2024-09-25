@@ -8,7 +8,7 @@
             "name": "Listen for Xdebug",
             "type": "php",
             "request": "launch",
-            "port": 9003
+            "port": 3003
         },
         {
             "name": "Launch currently open script",
@@ -33,11 +33,11 @@
                 "-dxdebug.mode=debug",
                 "-dxdebug.start_with_request=yes",
                 "-S",
-                "localhost:9000"
+                "localhost:3000"
             ],
             "program": "",
             "cwd": "${workspaceRoot}",
-            "port": 9003,
+            "port": 3003,
             "serverReadyAction": {
                 "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
                 "uriFormat": "http://localhost:%s",
