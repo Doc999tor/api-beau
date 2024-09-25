@@ -189,17 +189,28 @@ class AppointmentsCtrl extends Controller {
 			return $response->withStatus(400);
 		}
 
-		$start_time = (new \DateTime())->setTime(10, 0);
-		$max_available_slots = 8 * 4 + 1; # 10:00-18:00 including
-		$slots_order_nums = rand(0,3) ? array_rand(range(1, $max_available_slots), rand(8, 15)) : [];
-		sort($slots_order_nums);
-		$slots_start_times = array_map(function (int $offset) use ($start_time) {
-			return [
-				'time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 15 . 'M'))->format('H:i'),
-				'is_suggested' => (bool) rand(0,1),
-			];
-		}, $slots_order_nums);
-		return $response->withJson($slots_start_times);
+		$available_slots = [];
+		$start_date = new \DateTime($params['date']);
+
+		$period = new \DatePeriod((clone $start_date)->sub(new \DateInterval('P7D')), new \DateInterval('P1D'), (clone $start_date)->add(new \DateInterval('P7D')));
+
+		foreach ($period as $date) {
+			$start_time = (clone $date)->setTime(10, 0);
+			$max_available_slots = 8 * 2 + 1; // 10:00-18:00 including
+			$slots_order_nums = rand(0, 1)
+				? array_rand(range(1, $max_available_slots), rand(4, 15))
+				: [];
+			sort($slots_order_nums);
+			$daily_slots = array_map(function (int $offset) use ($start_time) {
+				return [
+					'time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 30 . 'M'))->format('H:i'),
+					'is_suggested' => (bool) rand(0, 1),
+				];
+			}, $slots_order_nums);
+			$available_slots[$date->format('Y-m-d')] = $daily_slots;
+		}
+
+		return $response->withJson(['workers' => [$params['worker_id'] => ['dates' => $available_slots]]]);
 	}
 
 	public function singleChange (Request $request, Response $response, array $args):Response {
@@ -364,6 +375,9 @@ class AppointmentsCtrl extends Controller {
 			$clients []= $client;
 		}
 		$appointment['clients'] = $clients;
+		if (!rand(0,3)) {
+			$appointment['clients_limit'] = rand(3, 8);
+		}
 
 		if (rand(0,5)) {
 			$client_id = rand(1, 120);
@@ -476,6 +490,7 @@ class AppointmentsCtrl extends Controller {
 				$added_appointment['address'] = $body['address'];
 				$added_appointment['worker_id'] = $body['worker_id'];
 				$added_appointment['recurring_rule'] = $body['recurring_rule'] ?? null;
+				$added_appointment['clients_limit'] = $body['clients_limit'];
 
 				$response_obj['appointment_data'] = $added_appointment;
 				if (rand(0,3)) {
@@ -667,7 +682,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
+		$correct_body = ['client_id', 'clients', 'clients_limit', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -686,6 +701,7 @@ class AppointmentsCtrl extends Controller {
 				$is_correct = false; $msg .= 'clients has to be an array of integers, -1 is not permitted <br>';
 			}
 		}
+		if (isset($body['clients_limit']) && !is_numeric($body['clients_limit'])) { $is_correct = false; $msg .= ' clients_limit has to be an integer <br>'; }
 
 		$services = is_array($body['services']) ? $body['services'] : json_decode($body['services']);
 		if (gettype($services) !== 'array' || count(array_filter($services, function ($s) {
@@ -799,7 +815,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAvailableSlotsParams(array $params) {
-		$correct_body = ['date', 'worker_id', 'duration'];
+		$correct_body = ['date', 'worker_id', 'duration', 'service_id'];
 
 		$is_correct = true; $msg = '';
 
@@ -807,7 +823,8 @@ class AppointmentsCtrl extends Controller {
 
 		if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
-		if (!isset($params['duration']) || !ctype_digit($params['duration'])) { $is_correct = false; $msg .= ' duration has to be an integer <br>'; }
+		if (isset($params['duration']) && !ctype_digit($params['duration'])) { $is_correct = false; $msg .= ' duration has to be an integer <br>'; }
+		if (isset($params['service_id']) && !ctype_digit($params['service_id'])) { $is_correct = false; $msg .= ' service_id has to be an integer <br>'; }
 
 		return ['is_correct' => $is_correct, "msg" => $msg];
 	}
