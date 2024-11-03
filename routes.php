@@ -24,6 +24,7 @@ $app->group('/appointments', function () use ($app) {
 	$app->get('/{bid:\w+}/personal_cabinet', $prefix . 'getCalendarCabinet');
 	// http://localhost:3000/appointments/available_slots?date=2020-01-01&worker_id=1&duration=120
 	$app->get('/available_slots', $prefix . 'getAvailableSlots');
+	$app->get('/available_slots/all_dates', $prefix . 'getAvailableSlotsAllDates');
 
 	$app->post('', $prefix . 'addAppointment'); // custom returned object
 
