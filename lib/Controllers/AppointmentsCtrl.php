@@ -210,7 +210,44 @@ class AppointmentsCtrl extends Controller {
 			$available_slots[$date->format('Y-m-d')] = $daily_slots;
 		}
 
-		return $response->withJson(['workers' => [$params['worker_id'] => ['dates' => $available_slots]]]);
+		return $response->withJson($available_slots[$params['date']]);
+	}
+	public function getAvailableSlotsAllDates (Request $request, Response $response):Response {
+		$params = $request->getQueryParams();
+
+		$is_params_correct = $this->checkAvailableSlotsParams($params);
+		if (!$is_params_correct['is_correct']) {
+			$body = $response->getBody();
+			$body->write($is_params_correct['msg']);
+			return $response->withStatus(400);
+		}
+
+		$available_slots = [];
+		$start_date = new \DateTime($params['date']);
+
+		$period = new \DatePeriod((clone $start_date)->sub(new \DateInterval('P7D')), new \DateInterval('P1D'), (clone $start_date)->add(new \DateInterval('P7D')));
+
+		foreach ($period as $date) {
+			$start_time = (clone $date)->setTime(10, 0);
+			$max_available_slots = 8 * 2 + 1; // 10:00-18:00 including
+			$slots_order_nums = rand(0, 1)
+				? array_rand(range(1, $max_available_slots), rand(4, 15))
+				: [];
+			sort($slots_order_nums);
+			$daily_slots = array_map(function (int $offset) use ($start_time) {
+				return [
+					'time' => (clone $start_time)->add(new \DateInterval('PT' . $offset * 30 . 'M'))->format('H:i'),
+					'is_suggested' => (bool) rand(0, 1),
+				];
+			}, $slots_order_nums);
+			$available_slots[$date->format('Y-m-d')] = $daily_slots;
+		}
+
+		return $response->withJson(['workers' => [
+			$params['worker_id'] ?? '11' => ['dates' => $available_slots],
+			'7' => ['dates' => $available_slots],
+			'77' => ['dates' => $available_slots],
+		]]);
 	}
 
 	public function singleChange (Request $request, Response $response, array $args):Response {
@@ -475,7 +512,16 @@ class AppointmentsCtrl extends Controller {
 
 		$is_body_correct = $this->checkAppointmentCorrectness($body);
 		if ($is_body_correct['is_correct']) {
-			$status = rand(0,3) ? 201 : 402;
+			switch ($body['note']) {
+				case '402':
+				case '403':
+					$status = (int) $body['note'];
+					break;
+
+				default:
+					$status = 201;
+					break;
+			}
 			if ($status === 201) {
 				$response_obj = $this->createCalendarResponseObj();
 
@@ -820,8 +866,6 @@ class AppointmentsCtrl extends Controller {
 		$is_correct = true; $msg = '';
 
 		if ((!isset($params['date']) || !\DateTime::createFromFormat('Y-m-d', $params['date']))) { $is_correct = false; $msg .= 'date has to exist and to be YYYY-MM-DD format, like 2020-01-01 <br>'; }
-
-		if (!isset($params['worker_id']) || !ctype_digit($params['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (isset($params['duration']) && !ctype_digit($params['duration'])) { $is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 		if (isset($params['service_id']) && !ctype_digit($params['service_id'])) { $is_correct = false; $msg .= ' service_id has to be an integer <br>'; }

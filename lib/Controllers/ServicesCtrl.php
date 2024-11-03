@@ -115,13 +115,14 @@ class ServicesCtrl extends Controller {
 	}
 
 	public static function generateServiceRT(int $id): array {
+		$colors = ['#5de0c8', '#5dd6ee', '#80c4ff', '#9da5e3', '#bb81ee', '#ff80ab', '#ffacac', '#ffda12'];
 		return [
 			"service_id" => $id,  // AvodaID
 			"service_name" => Utils::generatePhrase('', 1, 6), // Name
 			"public_name" => Utils::generatePhrase('', 1, 6), // Name
 			"duration" => 15 * Utils::rand_with_average(1, 40, 4, 0.1), // minutes < 10*60, TimeTipul
 			"price" => 50 * Utils::rand_with_average(2, 100, 10, 0.1), // float, PriceTipul
-			"color" => '#' . dechex(mt_rand(0x000000, 0xFFFFFF)), // int, Color
+			"color" => $colors[array_rand($colors)],
 			'is_open_online' => (bool) rand(0, 1),
 			'is_group' => (bool) rand(0, 2),
 			'group_amount' => ((bool) rand(0, 2))
