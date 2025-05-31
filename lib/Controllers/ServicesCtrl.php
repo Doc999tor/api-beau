@@ -42,6 +42,7 @@ class ServicesCtrl extends Controller {
 			$services_count = rand(0, 10);
 			for ($k=1; $k <= $services_count; $k++) {
 				$service = self::generateServiceRT(++$service_id);
+				$service['order'] = $k;
 				$service['category_id'] = rand(1, 5);
 				$service['category_name'] = Utils::generateWord(5);
 				$services []= $service;
@@ -78,6 +79,7 @@ class ServicesCtrl extends Controller {
 			$services_count = rand(0, 5);
 			for ($k=1; $k <= $services_count; $k++) {
 				$service = self::generateServiceRT(++$service_id);
+				$service['order'] = $k;
 				if (rand(0, 3) === 0) {
 					$service['is_price_hidden_online_booking'] = true;
 				}
@@ -293,18 +295,13 @@ class ServicesCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkSingleDetailCorrectness($body) {
-		$correct_body = ['is_open_online'];
+		$correct_body = ['is_open_online', 'order'];
 
 		$is_correct = true;
 		$msg = '';
 
-		$diff_keys = array_diff($correct_body, array_keys($body));
-		if (!empty($diff_keys)) {
-			$is_correct = false;
-			$msg = implode(', ', $diff_keys) . ' argument should exist';
-		}
-
 		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be a number' . "<br>"; }
+		if (isset($body['order']) && !is_int($body['order'])) { $is_correct = false; $msg .= 'order has to be an integer' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

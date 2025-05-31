@@ -172,7 +172,12 @@ class DigitalBusinessCardCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'tiktok', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]'];
+		$correct_body = [
+			'business_type_id', 'profession_name', 'is_personal_cabinet_enabled', 'business_name', 'business_description', 'phone', 'address', 'instagram', 'facebook', 'telegram', 'viber', 'whatsapp', 'tiktok', 'slug', 'added', 'logo', 'cover', 'gallery', 'gallery[]',
+			'personal_cabinet_message_after_registration', 'personal_cabinet_email_after_registration', 'personal_cabinet_message_on_visit',
+			// 'is_online_booking_enabled',
+			'online_booking_slots_suggestions', 'available_days_from_today', 'only_available_days_from_today', 'available_bookings', 'message_before_online_booking', 'message_after_online_booking', 'cancellation_policy', 'cancellation_allowed_days_from_today', 'cancellation_email_notification_only_days_from_today',
+		];
 
 		$is_correct = true;
 		$msg = '';
@@ -191,13 +196,24 @@ class DigitalBusinessCardCtrl extends Controller {
 		if (empty($body['is_personal_cabinet_enabled']) || !in_array($body['is_personal_cabinet_enabled'], ['true', 'false'])) { $is_correct = false; $msg .= 'is_personal_cabinet_enabled has to be boolean' . "<br>"; }
 		if (!empty($body['profession_name']) && mb_strlen($body['profession_name']) < 3) { $is_correct = false; $msg .= 'profession_name too short' . "<br>"; }
 		if (!empty($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
-		if (!empty($body['telegram']) && mb_strlen($body['telegram']) < 3) { $is_correct = false; $msg .= 'telegram too short' . "<br>"; }
-		if (!empty($body['viber']) && !in_array($body['viber'], ['true', 'false'])) { $is_correct = false; $msg .= 'viber is not correct' . "<br>"; }
+		if (!empty($body['telegram']) && !in_array($body['telegram'], ['true', 'false'])) { $is_correct = false; $msg .= 'telegram has to be boolean' . "<br>"; }
+		if (!empty($body['viber']) && !in_array($body['viber'], ['true', 'false'])) { $is_correct = false; $msg .= 'viber has to be boolean' . "<br>"; }
+		if (!empty($body['whatsapp']) && !in_array($body['whatsapp'], ['true', 'false'])) { $is_correct = false; $msg .= 'whatsapp has to be boolean' . "<br>"; }
 		if (!empty($body['instagram']) && mb_strlen($body['instagram']) < 3) { $is_correct = false; $msg .= 'instagram too short' . "<br>"; }
 		if (!empty($body['facebook']) && mb_strlen($body['facebook']) < 3) { $is_correct = false; $msg .= 'facebook too short' . "<br>"; }
 
+		if (!empty($body['personal_cabinet_message_after_registration']) && mb_strlen($body['personal_cabinet_message_after_registration']) < 3) { $is_correct = false; $msg .= 'personal_cabinet_message_after_registration too short' . "<br>"; }
+		if (!empty($body['personal_cabinet_email_after_registration']) && mb_strlen($body['personal_cabinet_email_after_registration']) < 3) { $is_correct = false; $msg .= 'personal_cabinet_email_after_registration too short' . "<br>"; }
+		if (!empty($body['personal_cabinet_message_on_visit']) && mb_strlen($body['personal_cabinet_message_on_visit']) < 3) { $is_correct = false; $msg .= 'personal_cabinet_message_on_visit too short' . "<br>"; }
 
-		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
+		if (!isset($body['online_booking_slots_suggestions']) || !in_array($body['online_booking_slots_suggestions'], ['true', 'false'])) { $is_correct = false; $msg .= 'online_booking_slots_suggestions has to be boolean' . "<br>"; }
+
+		if (isset($body['available_days_from_today']) && !intval($body['available_days_from_today'])) { $is_correct = false; $msg .= ' available_days_from_today has to be an integer <br>'; }
+		if (isset($body['only_available_days_from_today']) && !intval($body['only_available_days_from_today'])) { $is_correct = false; $msg .= ' only_available_days_from_today has to be an integer <br>'; }
+		if (isset($body['available_bookings']) && !intval($body['available_bookings'])) { $is_correct = false; $msg .= ' available_bookings has to be an integer <br>'; }
+
+		if (!empty($body['message_before_online_booking']) && mb_strlen($body['message_before_online_booking']) < 3) { $is_correct = false; $msg .= 'message_before_online_booking too short' . "<br>"; }
+		if (!empty($body['message_after_online_booking']) && mb_strlen($body['message_after_online_booking']) < 3) { $is_correct = false; $msg .= 'message_after_online_booking too short' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}

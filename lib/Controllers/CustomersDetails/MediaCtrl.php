@@ -13,13 +13,13 @@ class MediaCtrl extends Controller {
 		if ($is_body_correct['is_correct']) {
 			$uploaded_file = $request->getUploadedFiles()['file'];
 			$uploaded_file_name = $uploaded_file->getClientFilename();
-			$ext = pathinfo($uploaded_file_name)['extension'];
+			['filename' => $filename, 'extension' => $extension] = pathinfo($uploaded_file_name);
 
-			$extension = pathinfo($uploaded_file->getClientFilename(), PATHINFO_EXTENSION);
-			$filename = preg_replace('/^php/', '', basename($uploaded_file->file, '.tmp'));
-			$uploaded_file->moveTo('image' . DIRECTORY_SEPARATOR . "{$uploaded_file_name}-{$filename}.{$extension}");
+			$hash = preg_replace('/^php/', '', basename($uploaded_file->file, '.tmp'));
+			$filename = "{$filename}-{$hash}.{$extension}";
+			$uploaded_file->moveTo('image' . DIRECTORY_SEPARATOR . $filename);
 
-			return $response->withJson(["id" => rand(1, 150), "name" => bin2hex(random_bytes(4)) . ".{$ext}"])->withStatus(201);
+			return $response->withJson(["id" => rand(1, 150), "name" => $filename])->withStatus(201);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $is_body_correct['msg']);
@@ -54,9 +54,9 @@ class MediaCtrl extends Controller {
 
 		$permitted_types = ['image/jpeg', 'image/png', 'image/webp', 'image/vnd.adobe.photoshop', 'application/pdf', 'application/ogg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 'text/plain', 'audio/aac', 'audio/amr', 'audio/ac3', 'audio/mp3', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/webm', 'audio/x-pn-wav', 'audio/x-wav', 'video/mp4', 'video/avi', 'video/ogg', 'video/webm'];
 
-		if (isset($files[$file_name]) && !in_array(mime_content_type($files[$file_name]->file), $permitted_types)) {
-			 $is_correct = false; $http_status = 415; $msg .= 'MIME type is not supported';
-		}
+		// if (isset($files[$file_name]) && !in_array(mime_content_type($files[$file_name]->file), $permitted_types)) {
+		// 	 $is_correct = false; $http_status = 415; $msg .= 'MIME type is not supported';
+		// }
 		return ["is_correct" => $is_correct, 'status' => $http_status, "msg" => $msg];
 	}
 }

@@ -164,53 +164,63 @@ class SettingsCtrl extends Controller {
 	}
 
 	private function checkNotificationsBodyCorrectness($body) {
-		$correct_body = ['new_event', 'reschedule_event', 'delete_event', 'reminders_before_event', 'greetings_before_birthdays', 'automatic_filling_up_sending', ];
+		$correct_body = ['default_messenger', 'appointment_reminder'];
+		// $correct_body = ['new_event', 'reschedule_event', 'delete_event', 'reminders_before_event', 'greetings_before_birthdays', 'automatic_filling_up_sending', ];
 
 		$is_correct = true;
 		$msg = '';
 
-		$diff_keys = array_diff($correct_body, array_keys($body));
-		if (!empty($diff_keys)) {
-			$is_correct = false;
-			$msg = implode(', ', $diff_keys) . ' argument should exist';
+		// $diff_keys = array_diff($correct_body, array_keys($body));
+		// if (!empty($diff_keys)) {
+		// 	$is_correct = false;
+		// 	$msg = implode(', ', $diff_keys) . ' argument should exist';
+		// }
+		if (empty($body['default_messenger']) || !(in_array($body['default_messenger'], ['viber', 'telegram', 'whatsapp']))) { $is_correct = false; $msg .= 'default_messenger supposed to be: viber | telegram | whatsapp' . "<br>"; }
+		if (!isset($body['appointment_reminder']) || gettype($body['appointment_reminder']) !== 'array') { $is_correct = false; $msg .= 'appointment_reminder cannot be empty' . "<br>";
+		} else {
+			$is_enabled = $body['appointment_reminder']['is_enabled'];
+			if (!isset($is_enabled) || gettype($is_enabled) !== 'boolean') { $is_correct = false; $msg .= 'appointment_reminder.is_enabled is not valid' . "<br>"; }
+
+			$text = $body['appointment_reminder']['text'];
+			if (!isset($text) || mb_strlen($text) < 2) { $is_correct = false; $msg .= 'appointment_reminder.text is too short' . "<br>"; }
 		}
 
-		if (!isset($body['new_event']) || gettype($body['new_event']) !== 'array') { $is_correct = false; $msg .= 'new_event cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['new_event']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'new_event.should_send is not valid' . "<br>"; }
-		}
-		if (!isset($body['reschedule_event']) || gettype($body['reschedule_event']) !== 'array') { $is_correct = false; $msg .= 'reschedule_event cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['reschedule_event']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'reschedule_event.should_send is not valid' . "<br>"; }
-		}
-		if (!isset($body['delete_event']) || gettype($body['delete_event']) !== 'array') { $is_correct = false; $msg .= 'delete_event cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['delete_event']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'delete_event.should_send is not valid' . "<br>"; }
-		}
-		if (!isset($body['reminders_before_event']) || gettype($body['reminders_before_event']) !== 'array') { $is_correct = false; $msg .= 'reminders_before_event cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['reminders_before_event']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'reminders_before_event.should_send is not valid' . "<br>"; }
-			$mins_before = $body['reminders_before_event']['mins_before'];
-			if (!isset($mins_before) || gettype($mins_before) !== 'integer') { $is_correct = false; $msg .= 'reminders_before_event.mins_before is not valid' . "<br>"; }
-		}
-		if (!isset($body['greetings_before_birthdays']) || gettype($body['greetings_before_birthdays']) !== 'array') { $is_correct = false; $msg .= 'greetings_before_birthdays cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['greetings_before_birthdays']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'greetings_before_birthdays.should_send is not valid' . "<br>"; }
-			$days_before = $body['greetings_before_birthdays']['days_before'];
-			if (!isset($days_before) || gettype($days_before) !== 'integer') { $is_correct = false; $msg .= 'greetings_before_birthdays.days_before is not valid' . "<br>"; }
-			$time_for_sending = $body['greetings_before_birthdays']['time_for_sending'];
-			if (!isset($time_for_sending) || !\DateTime::createFromFormat('H:i', $time_for_sending)) { $is_correct = false; $msg .= 'greetings_before_birthdays.time_for_sending is not valid' . "<br>"; }
-		}
-		if (!isset($body['automatic_filling_up_sending']) || gettype($body['automatic_filling_up_sending']) !== 'array') { $is_correct = false; $msg .= 'automatic_filling_up_sending cannot be empty' . "<br>";
-		} else {
-			$should_send = $body['automatic_filling_up_sending']['should_send'];
-			if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'automatic_filling_up_sending.should_send is not valid' . "<br>"; }
-		}
+		// if (!isset($body['new_event']) || gettype($body['new_event']) !== 'array') { $is_correct = false; $msg .= 'new_event cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['new_event']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'new_event.should_send is not valid' . "<br>"; }
+		// }
+		// if (!isset($body['reschedule_event']) || gettype($body['reschedule_event']) !== 'array') { $is_correct = false; $msg .= 'reschedule_event cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['reschedule_event']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'reschedule_event.should_send is not valid' . "<br>"; }
+		// }
+		// if (!isset($body['delete_event']) || gettype($body['delete_event']) !== 'array') { $is_correct = false; $msg .= 'delete_event cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['delete_event']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'delete_event.should_send is not valid' . "<br>"; }
+		// }
+		// if (!isset($body['reminders_before_event']) || gettype($body['reminders_before_event']) !== 'array') { $is_correct = false; $msg .= 'reminders_before_event cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['reminders_before_event']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'reminders_before_event.should_send is not valid' . "<br>"; }
+		// 	$mins_before = $body['reminders_before_event']['mins_before'];
+		// 	if (!isset($mins_before) || gettype($mins_before) !== 'integer') { $is_correct = false; $msg .= 'reminders_before_event.mins_before is not valid' . "<br>"; }
+		// }
+		// if (!isset($body['greetings_before_birthdays']) || gettype($body['greetings_before_birthdays']) !== 'array') { $is_correct = false; $msg .= 'greetings_before_birthdays cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['greetings_before_birthdays']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'greetings_before_birthdays.should_send is not valid' . "<br>"; }
+		// 	$days_before = $body['greetings_before_birthdays']['days_before'];
+		// 	if (!isset($days_before) || gettype($days_before) !== 'integer') { $is_correct = false; $msg .= 'greetings_before_birthdays.days_before is not valid' . "<br>"; }
+		// 	$time_for_sending = $body['greetings_before_birthdays']['time_for_sending'];
+		// 	if (!isset($time_for_sending) || !\DateTime::createFromFormat('H:i', $time_for_sending)) { $is_correct = false; $msg .= 'greetings_before_birthdays.time_for_sending is not valid' . "<br>"; }
+		// }
+		// if (!isset($body['automatic_filling_up_sending']) || gettype($body['automatic_filling_up_sending']) !== 'array') { $is_correct = false; $msg .= 'automatic_filling_up_sending cannot be empty' . "<br>";
+		// } else {
+		// 	$should_send = $body['automatic_filling_up_sending']['should_send'];
+		// 	if (!isset($should_send) || gettype($should_send) !== 'boolean') { $is_correct = false; $msg .= 'automatic_filling_up_sending.should_send is not valid' . "<br>"; }
+		// }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
