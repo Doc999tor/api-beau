@@ -22,8 +22,12 @@ class TimelineCtrl extends Controller {
 		return $response->withJson($this->timelineGenericMethod('appointments'));
 	}
 	public function getGallery (Request $request, Response $response, $args):Response {
-		$params = $request->getQueryParams();
-		return $response->withJson($this->timelineGenericMethod('gallery', $args['client_id']));
+		$timeline_data = $this->timelineGenericMethod('gallery', $args['client_id']);
+		$timeline_data[0]['name'] = 'a4e75029329d0b8c.webm';
+		$timeline_data[1]['name'] = 'Dying-Light-2.webp';
+		// var_dump($timeline_data);
+
+		return $response->withJson(array_slice($timeline_data, 0, 2));
 	}
 	public function getDebts (Request $request, Response $response):Response {
 		$params = $request->getQueryParams();

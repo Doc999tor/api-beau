@@ -52,15 +52,17 @@ class AppointmentsCtrl extends Controller {
 				$period = new \DatePeriod($start, new \DateInterval('P1D'), $end);
 
 				$today = (new \DateTime())->format('Y-m-d');
+				$tomorrow = (new \DateTime())->modify('+1 day')->format('Y-m-d');
 
 				$appointments = [];
 				$days_count = 0;
 				foreach ($period as $date) {
 					if ($date->format('Y-m-d') === $today) {
-						$appointments []= $this->generateAppointment((clone $date)->setTime(9, 0), 60);
 						$appointments []= $this->generateAppointment((clone $date)->setTime(13, 0), 120);
 						continue;
 					}
+
+					$appointments []= $this->generateAppointment((clone $date)->setTime(9, 0), 60);
 
 					if (!rand(0,3)) { continue; } # randomly no events
 					if (++$days_count > 100) { break; }
@@ -243,11 +245,17 @@ class AppointmentsCtrl extends Controller {
 			$available_slots[$date->format('Y-m-d')] = $daily_slots;
 		}
 
-		return $response->withJson(['workers' => [
-			$params['worker_id'] ?? '11' => ['dates' => $available_slots],
-			'7' => ['dates' => $available_slots],
-			'77' => ['dates' => $available_slots],
-		]]);
+		if ($params['worker_id'] === '-1') {
+			return $response->withJson(['workers' => [
+				'11' => ['dates' => $available_slots],
+				'7' => ['dates' => $available_slots],
+				'77' => ['dates' => $available_slots],
+			]]);
+		} else {
+			return $response->withJson(['workers' => [
+				$params['worker_id'] => ['dates' => $available_slots],
+			]]);
+		}
 	}
 
 	public function singleChange (Request $request, Response $response, array $args):Response {
@@ -392,6 +400,7 @@ class AppointmentsCtrl extends Controller {
 
 		$clients = [];
 		$clients_count = rand(0,3) ? rand(2,5) : 1;
+		$preferred_messengers = ['viber', 'whatsapp', 'telegram'];
 		for ($i=0; $i < $clients_count; ++$i) {
 			$client_id = rand(1, 120);
 			$phone = rand(1000000, 999999999);
@@ -408,6 +417,9 @@ class AppointmentsCtrl extends Controller {
 			];
 			if (rand(0,2)) {
 				$client['telegram'] = 'doc999tor';
+			}
+			if (rand(0,2)) {
+				$client['preferred_messenger'] = $preferred_messengers[array_rand($preferred_messengers)];
 			}
 			$clients []= $client;
 		}
@@ -728,7 +740,7 @@ class AppointmentsCtrl extends Controller {
 	}
 
 	private function checkAppointmentCorrectness (array $body): array {
-		$correct_body = ['client_id', 'clients', 'clients_limit', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'is_online_booking', 'force', 'added'];
+		$correct_body = ['client_id', 'clients', 'clients_limit', 'phone', 'services', 'start', 'duration', 'is_reminders_set', 'note', 'info_for_client', 'zoom_link', 'total_price', 'prepayment', 'recurring_step_days', 'recurring_total_amount', 'recurring_rule', 'including_touched', 'address', 'worker_id', 'is_online_booking', 'force', 'name', 'phone', 'added'];
 
 		$is_correct = true; $msg = '';
 
@@ -755,7 +767,7 @@ class AppointmentsCtrl extends Controller {
 		})) !== count($services)) { $is_correct = false; $msg .= ' services have to be an array of {id: int, count: int} <br>'; }
 		if (!isset($body['duration']) || !is_numeric($body['duration'])) { $is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 
-		if (!isset($body['is_reminders_set']) || (!in_array($body['is_reminders_set'], ['true', 'false']) && !is_bool($body['is_reminders_set']))) { $is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
+		if (isset($body['is_reminders_set']) && (!in_array($body['is_reminders_set'], ['true', 'false']) && !is_bool($body['is_reminders_set']))) { $is_correct = false; $msg .= ' is_reminders_set has be be true or false <br>'; }
 
 		if (!isset($body['total_price']) || !is_numeric($body['total_price'])) { $is_correct = false; $msg .= ' total_price has to be a number <br>'; }
 		if (!isset($body['prepayment']) || !is_numeric($body['prepayment'])) { $is_correct = false; $msg .= ' prepayment has to be a number <br>'; }
@@ -781,6 +793,9 @@ class AppointmentsCtrl extends Controller {
 		}
 
 		if (!isset($body['worker_id']) || !ctype_digit((string) $body['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
+
+		if (isset($body['name']) && mb_strlen($body['name']) < 2) { $is_correct = false; $msg .= ' name has to be longer than 1 character <br>'; }
+		if (isset($body['phone']) && mb_strlen($body['name'] < 2) && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) { $is_correct = false; $msg .= ' phone has to be longer than 1 character <br>'; }
 
 		if (!isset($body['added']) || !\date_create($body['added'])) { $is_correct = false; $msg .= ' added has to be YYYY-MM-DDThh:mm:ss format, like 2017-12-18T02:09:54 <br>'; }
 
@@ -866,6 +881,8 @@ class AppointmentsCtrl extends Controller {
 		$is_correct = true; $msg = '';
 
 		if ((!isset($params['date']) || !\DateTime::createFromFormat('Y-m-d', $params['date']))) { $is_correct = false; $msg .= 'date has to exist and to be YYYY-MM-DD format, like 2020-01-01 <br>'; }
+
+		if (!isset($params['worker_id']) || !is_numeric($params['worker_id'])) { $is_correct = false; $msg .= ' worker_id has to be an integer <br>'; }
 
 		if (isset($params['duration']) && !ctype_digit($params['duration'])) { $is_correct = false; $msg .= ' duration has to be an integer <br>'; }
 		if (isset($params['service_id']) && !ctype_digit($params['service_id'])) { $is_correct = false; $msg .= ' service_id has to be an integer <br>'; }

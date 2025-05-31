@@ -160,6 +160,10 @@ class CustomersList extends Controller {
 		if (rand(0,10) < 9) {
 			$client['next_appointment'] = date("Y-m-d H:i", rand(time(), time() + 3600 * 24 * 30)); # 1 month forth,
 		}
+		$preferred_messengers = ['viber', 'whatsapp', 'telegram'];
+		if (rand(0,2)) {
+			$client['preferred_messenger'] = $preferred_messengers[array_rand($preferred_messengers)];
+		}
 
 		return $client;
 	}
