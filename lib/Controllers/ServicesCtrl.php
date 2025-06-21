@@ -37,11 +37,13 @@ class ServicesCtrl extends Controller {
 	}
 	public function getAllRT (Request $request, Response $response) {
 		$params = $request->getQueryParams();
+		$worker_id = isset($params['worker_id']) ? filter_var($params['worker_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+
 		if (!empty($params['sorting_criteria'])) {
 			$services = [];
 			$services_count = rand(0, 10);
 			for ($k=1; $k <= $services_count; $k++) {
-				$service = self::generateServiceRT(++$service_id);
+				$service = self::generateServiceRT(++$service_id, $worker_id);
 				$service['order'] = $k;
 				$service['category_id'] = rand(1, 5);
 				$service['category_name'] = Utils::generateWord(5);
@@ -78,7 +80,7 @@ class ServicesCtrl extends Controller {
 			$services = [];
 			$services_count = rand(0, 5);
 			for ($k=1; $k <= $services_count; $k++) {
-				$service = self::generateServiceRT(++$service_id);
+				$service = self::generateServiceRT(++$service_id, $worker_id);
 				$service['order'] = $k;
 				if (rand(0, 3) === 0) {
 					$service['is_price_hidden_online_booking'] = true;
@@ -116,8 +118,33 @@ class ServicesCtrl extends Controller {
 		return $response->withJson(self::generateService(filter_var($args['service_id'], FILTER_SANITIZE_NUMBER_INT)));
 	}
 
-	public static function generateServiceRT(int $id): array {
+	public static function generateServiceRT(int $id, $worker_id = null): array {
 		$colors = ['#5de0c8', '#5dd6ee', '#80c4ff', '#9da5e3', '#bb81ee', '#ff80ab', '#ffacac', '#ffda12'];
+
+		// Generate worker_id field with random options or use provided worker_id
+		if ($worker_id !== null) {
+			$generated_worker_id = [$worker_id];
+		} else {
+			$worker_options = [7, 11, 77];
+			$worker_id_type = rand(1, 3);
+			$generated_worker_id = [];
+
+			switch ($worker_id_type) {
+				case 1:
+					// Empty array
+					$generated_worker_id = [];
+					break;
+				case 2:
+					// Single random value
+					$generated_worker_id = [$worker_options[array_rand($worker_options)]];
+					break;
+				case 3:
+					// All three values
+					$generated_worker_id = $worker_options;
+					break;
+			}
+		}
+
 		return [
 			"service_id" => $id,  // AvodaID
 			"service_name" => Utils::generatePhrase('', 1, 6), // Name
@@ -130,6 +157,7 @@ class ServicesCtrl extends Controller {
 			'group_amount' => ((bool) rand(0, 2))
 				? rand(3, 5)
 				: 1,
+			'worker_id' => $generated_worker_id,
 		];
 	}
 	public static function generateService($id, $q = '', $is_one_category = false) {

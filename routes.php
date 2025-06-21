@@ -67,6 +67,7 @@ $app->group('/workers', function () use ($app) {
 	$prefix = 'WorkersCtrl:';
 	$app->get('', $prefix . 'getAllWorkersData');
 	$app->get('/{worker_id:\d+}', $prefix . 'getData');
+	$app->get('/{worker_id:\d+}/services', 'ServicesCtrl:getAll');
 	$app->put('/{worker_id:\d+}/services', $prefix . 'updateWorkerServices');
 });
 
