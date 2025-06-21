@@ -181,7 +181,7 @@ class WorkersCtrl extends Controller {
 
 		if (empty($body['added']) || !\DateTime::createFromFormat('Y-m-d H:i:s', $body['added'])) { $is_correct = false; $msg .= 'added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>'; }
 
-		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be boolean' . "<br>"; }
+		if (isset($body['is_open_online']) && !in_array($body['is_open_online'], ['true', 'false'], true)) { $is_correct = false; $msg .= 'is_open_online has to be string "true" or "false"' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
@@ -198,7 +198,7 @@ class WorkersCtrl extends Controller {
 		}
 		if (!count(array_keys($body))) { $is_correct = false; $msg .= 'body can\'t be empty' . "<br>"; }
 
-		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be boolean' . "<br>"; }
+		if (isset($body['is_open_online']) && !in_array($body['is_open_online'], ['true', 'false'], true)) { $is_correct = false; $msg .= 'is_open_online has to be string "true" or "false"' . "<br>"; }
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkWorkerServicesCorrectness (array $body): array {
