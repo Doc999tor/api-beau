@@ -175,7 +175,17 @@ class SettingsCtrl extends Controller {
 		// 	$is_correct = false;
 		// 	$msg = implode(', ', $diff_keys) . ' argument should exist';
 		// }
-		if (empty($body['default_messenger']) || !(in_array($body['default_messenger'], ['viber', 'telegram', 'whatsapp']))) { $is_correct = false; $msg .= 'default_messenger supposed to be: viber | telegram | whatsapp' . "<br>"; }
+		if (empty($body['default_messenger']) || !is_array($body['default_messenger'])) {
+			$is_correct = false;
+			$msg .= 'default_messenger must be a non-empty array' . "<br>";
+		} else {
+			$allowed_messengers = ['viber', 'telegram', 'whatsapp'];
+			$invalid_messengers = array_diff($body['default_messenger'], $allowed_messengers);
+			if (!empty($invalid_messengers)) {
+				$is_correct = false;
+				$msg .= 'default_messenger contains invalid values: ' . implode(', ', $invalid_messengers) . '. Allowed values: viber, telegram, whatsapp' . "<br>";
+			}
+		}
 		if (!isset($body['appointment_reminder']) || gettype($body['appointment_reminder']) !== 'array') { $is_correct = false; $msg .= 'appointment_reminder cannot be empty' . "<br>";
 		} else {
 			$is_enabled = $body['appointment_reminder']['is_enabled'];

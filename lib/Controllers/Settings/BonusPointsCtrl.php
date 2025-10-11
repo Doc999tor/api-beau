@@ -17,7 +17,9 @@ class BonusPointsCtrl extends Controller {
 		}
 
 		if ($is_correct) {
-			return $response->withStatus(204);
+			$balance = 100 + $body['bonus'];
+			$responseBody = json_encode(['balance' => $balance]);
+			return $response->withStatus(201)->withJson($responseBody);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $msg);
@@ -34,7 +36,9 @@ class BonusPointsCtrl extends Controller {
 		}
 
 		if ($is_correct) {
-			return $response->withStatus(204);
+			$balance = 100 - $body['bonus'];
+			$responseBody = json_encode(['balance' => $balance]);
+			return $response->withJson($responseBody);
 		} else {
 			$body = $response->getBody();
 			$body->write("<br>" . $msg);

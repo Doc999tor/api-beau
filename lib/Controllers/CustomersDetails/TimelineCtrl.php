@@ -25,6 +25,9 @@ class TimelineCtrl extends Controller {
 		$timeline_data = $this->timelineGenericMethod('gallery', $args['client_id']);
 		$timeline_data[0]['name'] = 'a4e75029329d0b8c.webm';
 		$timeline_data[1]['name'] = 'Dying-Light-2.webp';
+		$timeline_data[2]['name'] = 'unnamed-kSlYWR.jpg';
+		$timeline_data[3]['name'] = 'masters.png';
+		$timeline_data[4]['name'] = 'rentgen.HEIC';
 		// var_dump($timeline_data);
 
 		return $response->withJson(array_slice($timeline_data, 0, 2));
