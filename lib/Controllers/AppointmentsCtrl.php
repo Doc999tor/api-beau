@@ -247,7 +247,7 @@ class AppointmentsCtrl extends Controller {
 
 		if ($params['worker_id'] === '-1') {
 			return $response->withJson(['workers' => [
-				'11' => ['dates' => $available_slots],
+				'1' => ['dates' => $available_slots],
 				'7' => ['dates' => $available_slots],
 				'77' => ['dates' => $available_slots],
 			]]);
