@@ -125,7 +125,7 @@ class ServicesCtrl extends Controller {
 		if ($worker_id !== null) {
 			$generated_worker_id = [$worker_id];
 		} else {
-			$worker_options = [7, 11, 77];
+			$worker_options = [7, 1, 77];
 			$worker_id_type = rand(1, 3);
 			$generated_worker_id = [];
 
