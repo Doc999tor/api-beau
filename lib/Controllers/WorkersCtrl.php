@@ -26,8 +26,16 @@ class WorkersCtrl extends Controller {
 		$worker = [
 			'id' => $id,
 			'name' => $faker->firstName,
+			'description' => Utils::generatePhrase('', 1, 6) . "\n" . Utils::generatePhrase('', 1, 6),
 			'is_open_online' => (bool) rand(0, 1),
+			'gallery' => ['file1.jpg', 'file2.jpg'],
 		];
+		if (rand(1, 3) === 1) {
+			$worker['description'] = null;
+		}
+		if (rand(1, 3) === 1) {
+			$worker['gallery'] = null;
+		}
 
 		$weekend = rand(0,6);
 		$short_day = rand(0,6);
@@ -69,6 +77,10 @@ class WorkersCtrl extends Controller {
 			if (!empty($files)) {
 				$response_body['photo'] = "{$random_id}.jpg";
 			}
+			if (isset($files['gallery'])) {
+				$gallery_count = is_array($files['gallery']) ? count($files['gallery']) : 1;
+				$response_body['gallery'] = array_fill(0, $gallery_count, 'file1.jpg');
+			}
 			return $response->withStatus(rand(0,3) ? 201 : 409)->withJson($response_body);
 		} else {
 			$body = $response->getBody();
@@ -99,6 +111,10 @@ class WorkersCtrl extends Controller {
 			);
 			if (!empty($body['photo'])) {
 				$response_body['photo'] = "{$random_id}.jpg";
+			}
+			if (isset($files['gallery'])) {
+				$gallery_count = is_array($files['gallery']) ? count($files['gallery']) : 1;
+				$response_body['gallery'] = array_fill(0, $gallery_count, 'file1.jpg');
 			}
 			return $response->withJson($response_body);
 		} else {
@@ -147,7 +163,7 @@ class WorkersCtrl extends Controller {
 	}
 
 	private function checkBodyCorrectness (array $body): array {
-		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo', 'email_appointments_notifications', 'permissions', 'is_open_online'];
+		$correct_body = ['name', 'phone', 'email', 'password', 'color', 'businessHours', 'added', 'photo', 'description', 'gallery', 'email_appointments_notifications', 'permissions', 'is_open_online'];
 
 		$is_correct = true;
 		$msg = '';
@@ -165,6 +181,8 @@ class WorkersCtrl extends Controller {
 		if (empty($body['email']) || !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (empty($body['password']) || mb_strlen($body['password']) < 3) { $is_correct = false; $msg .= 'password too short' . "<br>"; }
 		if (isset($body['color']) && mb_strlen($body['color']) < 3) { $is_correct = false; $msg .= 'color too short' . "<br>"; }
+		if (isset($body['description']) && mb_strlen($body['description']) < 3) { $is_correct = false; $msg .= 'description too short' . "<br>"; }
+		if (isset($body['gallery']) && !is_array($body['gallery'])) { $is_correct = false; $msg .= 'gallery has to be an array' . "<br>"; }
 
 		if (empty($body['businessHours'])) { $is_correct = false; $msg .= 'businessHours is missing' . "<br>"; }
 		else {
@@ -233,7 +251,7 @@ class WorkersCtrl extends Controller {
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
 	private function checkFilesCorrectness(array $files): array {
-		$correct_body = ['photo', 'sign'];
+		$correct_body = ['photo', 'sign', 'gallery'];
 
 		$is_correct = true;
 		$msg = '';
@@ -244,11 +262,12 @@ class WorkersCtrl extends Controller {
 			$msg .= implode(', ', $diff_keys) . ' arguments should not exist' . "<br>";
 		}
 
-		for ($i=0; $i < count($correct_body); $i++) {
-			$file_name = $correct_body[$i];
-
-			if (isset($files[$file_name])) {
-				$file = $files[$file_name];
+		foreach ($correct_body as $file_name) {
+			if (!isset($files[$file_name])) {
+				continue;
+			}
+			$entries = is_array($files[$file_name]) ? $files[$file_name] : [$files[$file_name]];
+			foreach ($entries as $file) {
 				if ($file->getSize() === 0) { $is_correct = false; $msg .= $file_name . ' came empty' . "<br>"; }
 				if ($file->getSize() > Utils::returnBytes('10m')) { $is_correct = false; $msg .= $file_name . ' too big, more than 10mb' . "<br>"; }
 				if (substr($file->getClientMediaType(), 0, 6) !== 'image/') { $is_correct = false; $msg .= $file_name . '\'s MIME type is incorrect' . "<br>"; }
