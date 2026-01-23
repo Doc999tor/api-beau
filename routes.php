@@ -323,7 +323,7 @@ $app->group('/catalog/services', function () use ($app) {
 	$app->post  ('', $prefix . 'add')->add(new ReturnID());
 
 	$app->post  ('/categories', $prefix . 'addCategory')->add(new ReturnID());
-	$app->put   ('/categories/{category_id:\d+}', $prefix . 'renameCategory');
+	$app->put   ('/categories/{category_id:\d+}', $prefix . 'updateCategory');
 	$app->delete('/categories/{category_id:\d+}', $prefix . 'deleteCategory');
 });
 
