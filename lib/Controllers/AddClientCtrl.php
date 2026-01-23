@@ -139,7 +139,7 @@ class AddClientCtrl extends Controller {
 		if (isset($body['phone']) && $body['phone'] !== 'null' && !preg_match('/^[\d\s()+*#-]+$/', $body['phone'])) {
 			$is_correct = false; $msg .= "phone number doesn't match the pattern - /^[\d\s()+*#-]+$/<br>";
 		}
-		if ($body['email'] !== 'null' && !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
+		if (isset($body['email']) && $body['email'] !== 'null' && !preg_match('/^.*@.*\..{2,}$/', urldecode($body['email']))) { $is_correct = false; $msg .= 'email does\'nt match the pattern - /^.*@.*\..{2,}$/' . "<br>"; }
 		if (isset($body['address']) && mb_strlen($body['address']) < 3) { $is_correct = false; $msg .= 'address too short' . "<br>"; }
 
 		if (isset($body['birthdate']) && $body['birthdate'] !== 'null' && !\DateTime::createFromFormat('m-d', $body['birthdate'])) { $is_correct = false; $msg .= 'birthdate has to be MM-DD format, like 01-01' . "<br>"; }

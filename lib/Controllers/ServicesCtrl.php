@@ -38,6 +38,7 @@ class ServicesCtrl extends Controller {
 	public function getAllRT (Request $request, Response $response) {
 		$params = $request->getQueryParams();
 		$worker_id = isset($params['worker_id']) ? filter_var($params['worker_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+		$category_description = Utils::generatePhrase('', 1, 6) . "\n" . Utils::generatePhrase('', 1, 6);
 
 		if (!empty($params['sorting_criteria'])) {
 			$services = [];
@@ -46,7 +47,8 @@ class ServicesCtrl extends Controller {
 				$service = self::generateServiceRT(++$service_id, $worker_id);
 				$service['order'] = $k;
 				$service['category_id'] = rand(1, 5);
-				$service['category_name'] = Utils::generateWord(5);
+				$service['category_name'] = $this->generateCategoryName();
+				$service['category_description'] = $category_description;
 				$services []= $service;
 			}
 
@@ -68,6 +70,9 @@ class ServicesCtrl extends Controller {
 			usort($services, function($a, $b) use ($sorting_criteria, $order_directions, $params) {
 				return ($a[$sorting_criteria] <=> $b[$sorting_criteria]) * $order_directions[$params['order']];
 			});
+			if (rand(0, 1) === 0) {
+				$this->stripGalleryFromServices($services);
+			}
 
 			return $response->withJson($services);
 		}
@@ -93,10 +98,21 @@ class ServicesCtrl extends Controller {
 
 			$category = [
 				"category_id" => $i,
-				"category_name" => Utils::generateWord(5),
+				"category_name" => $this->generateCategoryName(),
 				"services" => $services,
 			];
+			$include_category_details = rand(1, 3) !== 1;
+			if ($include_category_details) {
+				$category["category_description"] = Utils::generatePhrase('', 1, 6) . "\n" . Utils::generatePhrase('', 1, 6);
+				$category["category_gallery"] = ['file1.jpg', 'file2.jpg'];
+			}
 			$categories []= $category;
+		}
+		if (rand(0, 1) === 0) {
+			foreach ($categories as &$category) {
+				$this->stripGalleryFromServices($category['services']);
+			}
+			// unset($category);
 		}
 
 		return $response->withJson($categories);
@@ -145,7 +161,7 @@ class ServicesCtrl extends Controller {
 			}
 		}
 
-		return [
+		$service = [
 			"service_id" => $id,  // AvodaID
 			"service_name" => Utils::generatePhrase('', 1, 6), // Name
 			"public_name" => Utils::generatePhrase('', 1, 6), // Name
@@ -159,6 +175,10 @@ class ServicesCtrl extends Controller {
 				: 1,
 			'worker_id' => $generated_worker_id,
 		];
+		if (rand(1, 3) !== 1) {
+			$service['gallery'] = ['file1.jpg', 'file2.jpg'];
+		}
+		return $service;
 	}
 	public static function generateService($id, $q = '', $is_one_category = false) {
 		$possible_categories = $is_one_category ? ['sole category'] : ['Hair styling', 'Cosmetics', 'Pilling', 'Massage', 'Manicure'];
@@ -196,10 +216,11 @@ class ServicesCtrl extends Controller {
 	}
 
 	public function add (Request $request, Response $response):Response {
-		$body = json_decode($request->getBody()->getContents(), true);
+		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
+		$uploaded_files = $request->getUploadedFiles();
 
-		$is_body_correct = $this->checkBodyCorrectness($body);
+		$is_body_correct = $this->checkBodyCorrectness($body, $uploaded_files);
 		if (!isset($body['added']) || empty(new \DateTime($body['added']))) {
 			$is_body_correct['is_correct'] = false;
 			$is_body_correct['msg'] .= ' added has exist and to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54 <br>';
@@ -217,8 +238,9 @@ class ServicesCtrl extends Controller {
 	public function update (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
+		$uploaded_files = $request->getUploadedFiles();
 
-		$is_body_correct = $this->checkBodyCorrectness($body);
+		$is_body_correct = $this->checkBodyCorrectness($body, $uploaded_files);
 
 		if ($is_body_correct['is_correct']) {
 			return $response->withStatus(204);
@@ -254,16 +276,19 @@ class ServicesCtrl extends Controller {
 	}
 
 	public function addCategory (Request $request, Response $response):Response {
-		$body = json_decode($request->getBody()->getContents(), true);
+		$body = $request->getParsedBody();
 		$body = is_array($body) ? $body : [];
+		$uploaded_files = $request->getUploadedFiles();
 
 		$name = filter_var($body['name'], FILTER_SANITIZE_STRING);
+		$description = isset($body['description']) ? filter_var($body['description'], FILTER_SANITIZE_STRING) : '';
 		$added = filter_var($body['added'], FILTER_SANITIZE_STRING);
 
 		$is_correct = true; $msg = '';
 		if (empty($name)) { $is_correct = false; $msg .= "name cannot be empty<br>"; }
 		// if (!\DateTime::createFromFormat('Y-m-d H:i:s', $added)) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
 		if (empty(new \DateTime($added))) { $is_correct = false; $msg .= "added has to be YYYY-MM-DD hh:mm:ss format, like 2017-12-18 02:09:54<br>"; }
+		if (isset($uploaded_files['gallery']) && !is_array($uploaded_files['gallery'])) { $is_correct = false; $msg .= "gallery has to be an array<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(201);
@@ -274,12 +299,17 @@ class ServicesCtrl extends Controller {
 		}
 	}
 
-	public function renameCategory (Request $request, Response $response):Response {
+	public function updateCategory (Request $request, Response $response):Response {
 		$body = $request->getParsedBody();
-		$name = filter_var($body['name'], FILTER_SANITIZE_STRING);
+		$body = is_array($body) ? $body : [];
+		$uploaded_files = $request->getUploadedFiles();
+
+		$name = isset($body['name']) ? filter_var($body['name'], FILTER_SANITIZE_STRING) : '';
+		$description = isset($body['description']) ? filter_var($body['description'], FILTER_SANITIZE_STRING) : '';
 
 		$is_correct = true; $msg = '';
 		if (empty($name)) { $is_correct = false; $msg .= "name cannot be empty<br>"; }
+		if (isset($uploaded_files['gallery']) && !is_array($uploaded_files['gallery'])) { $is_correct = false; $msg .= "gallery has to be an array<br>"; }
 
 		if ($is_correct) {
 			return $response->withStatus(204);
@@ -298,8 +328,8 @@ class ServicesCtrl extends Controller {
 			return $response->withStatus(204);
 		}
 	}
-	private function checkBodyCorrectness($body) {
-		$correct_body = ['name', 'public_name', 'duration', 'price', 'color', 'category_id'];
+	private function checkBodyCorrectness($body, array $uploaded_files = []) {
+		$correct_body = ['name', 'public_name', 'duration', 'price', 'color', 'category_id', 'is_open_online', 'is_group', 'group_amount'];
 
 		$is_correct = true;
 		$msg = '';
@@ -316,9 +346,11 @@ class ServicesCtrl extends Controller {
 		if (isset($body['color']) && !($body['color'][0] === '#' && $this->checkColorValue(substr($body['color'], 1)))) { $is_correct = false; $msg .= $body['color'] . ' color has to be a valid hex value' . "<br>"; }
 		if (isset($body['category_id']) && !ctype_digit((string) $body['category_id'])) { $is_correct = false; $msg .= 'category_id has to be an integer' . "<br>"; }
 
-		if (isset($body['is_open_online']) && !is_bool($body['is_open_online'])) { $is_correct = false; $msg .= 'is_open_online has to be a number' . "<br>"; }
-		if (isset($body['is_group']) && !is_bool($body['is_group'])) { $is_correct = false; $msg .= 'is_group has to be a number' . "<br>"; }
+		if (isset($body['is_open_online']) && !in_array($body['is_open_online'], ['true', 'false'], true)) { $is_correct = false; $msg .= 'is_open_online has to be boolean' . "<br>"; }
+		if (isset($body['is_group']) && !in_array($body['is_group'], ['true', 'false'], true)) { $is_correct = false; $msg .= 'is_group has to be boolean' . "<br>"; }
 		if (isset($body['group_amount']) && !ctype_digit((string) $body['group_amount'])) { $is_correct = false; $msg .= 'group_amount has to be an integer' . "<br>"; }
+		if (!array_key_exists('gallery', $uploaded_files)) { $is_correct = false; $msg .= 'gallery has to be provided<br>'; }
+		if (isset($uploaded_files['gallery']) && !is_array($uploaded_files['gallery'])) { $is_correct = false; $msg .= 'gallery has to be an array<br>'; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
 	}
@@ -332,6 +364,23 @@ class ServicesCtrl extends Controller {
 		if (isset($body['order']) && !is_int($body['order'])) { $is_correct = false; $msg .= 'order has to be an integer' . "<br>"; }
 
 		return ["is_correct" => $is_correct, "msg" => $msg];
+	}
+
+	private function stripGalleryFromServices(array &$services): void {
+		foreach ($services as &$service) {
+			unset($service['gallery']);
+		}
+		// unset($service);
+	}
+
+	private function generateCategoryName(): string {
+		for ($attempt = 0; $attempt < 3; $attempt++) {
+			$name = Utils::generateWord(5);
+			if (!empty($name)) {
+				return $name;
+			}
+		}
+		return 'Category';
 	}
 
 	private function checkColorValue($color) {
